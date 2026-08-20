@@ -1,0 +1,122 @@
+[
+  {
+    "id": "Q-01",
+    "attribute": "Body Frame & Skeletal Build",
+    "questionText": "Which statement best describes your natural body frame and skeletal build?",
+    "version": 1.1,
+    "hasHistoricalResponses": true,
+    "options": [
+      { "text": "Thin, tall or short, lean, joints easily click or crack", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Medium build, good muscle tone, joints are moderate and flexible", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Broad, heavy skeletal frame, tends to gain weight easily, sturdy joints", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-02",
+    "attribute": "Skin Texture & Temperature",
+    "questionText": "Touch your arm and face. What describes your skin quality best?",
+    "version": 1.0,
+    "hasHistoricalResponses": true,
+    "options": [
+      { "text": "Dry, rough, cool to touch, easily chapped, thin skin", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Warm, soft, oily in T-zone, prone to redness, moles/freckles or acne", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Thick, smooth, soft, cool, oily, remains moist and glowing", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-03",
+    "attribute": "Digestion & Appetite Strength",
+    "questionText": "How would you characterize your daily digestion and appetite levels?",
+    "version": 1.2,
+    "hasHistoricalResponses": false,
+    "options": [
+      { "text": "Irregular (Vishamagni). Sometimes hungry, sometimes forget meals, gas/bloating", "vata": 3, "pitta": 1, "kapha": 0 },
+      { "text": "Intense & Sharp (Tikshnagni). Must eat on time, gets irritable if meals are delayed", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Slow & Steady (Mandagni). Can skip meals easily, digestion takes prolonged hours", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-04",
+    "attribute": "Sleep Pattern & Quality",
+    "questionText": "What type of sleep cycle and quality do you experience most consistently?",
+    "version": 1.0,
+    "hasHistoricalResponses": true,
+    "options": [
+      { "text": "Light, fitful, easily disturbed by noises, awake in early hours", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Moderate and sound (6-7 hours sufficient), easily return to sleep", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Deep, heavy, hard to wake up, groggy even after 8+ hours of rest", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-05",
+    "attribute": "Response to Weather & Climate",
+    "questionText": "Which seasonal climate or temperature causes you the most discomfort?",
+    "version": 1.0,
+    "hasHistoricalResponses": true,
+    "options": [
+      { "text": "Cold, dry, and windy winter weather; loves warm sunshine and hot baths", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Hot, humid summer sun; easily overheats and sweats profusely", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Cold, damp, rainy and cloudy weather; thrives in dry warmth", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-06",
+    "attribute": "Speech & Communication Style",
+    "questionText": "How would others describe your speaking speed and communication manner?",
+    "version": 1.0,
+    "hasHistoricalResponses": false,
+    "options": [
+      { "text": "Fast, talkative, wanders between diverse ideas, can skip words", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Sharp, persuasive, articulate, precise, authoritative tone", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Slow, melodious, calm, deliberate, listens more than speaks", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-07",
+    "attribute": "Hair Quality & Characteristics",
+    "questionText": "What describes your natural hair texture and scalp condition?",
+    "version": 1.0,
+    "hasHistoricalResponses": true,
+    "options": [
+      { "text": "Dry, brittle, frizzy, thin strands, prone to split ends", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Fine, straight, silky, early greying, thinning or reddish tinge", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Thick, lustrous, wavy, dark, oily, abundantly strong", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-08",
+    "attribute": "Emotional Reaction to Stress",
+    "questionText": "Under high acute stress or pressure, what is your typical emotional reflex?",
+    "version": 1.1,
+    "hasHistoricalResponses": true,
+    "options": [
+      { "text": "Anxiety, worry, racing thoughts, restlessness, nervousness", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Irritation, impatience, anger, critical or confrontational", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Withdrawal, stubbornness, procrastination, emotional eating", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-09",
+    "attribute": "Physical Stamina & Activity Level",
+    "questionText": "How would you evaluate your energy bursts and physical endurance?",
+    "version": 1.0,
+    "hasHistoricalResponses": false,
+    "options": [
+      { "text": "Quick bursts of high energy followed by sudden fatigue/exhaustion", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Strong, focused stamina, enjoys competitive sports and challenges", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "High endurance and steady physical reserve, slow to start exercising", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  },
+  {
+    "id": "Q-10",
+    "attribute": "Memory & Learning Speed",
+    "questionText": "How does your cognitive retention and mental processing operate?",
+    "version": 1.0,
+    "hasHistoricalResponses": true,
+    "options": [
+      { "text": "Grasps concepts quickly but forgets quickly; creative and imaginative", "vata": 3, "pitta": 0, "kapha": 0 },
+      { "text": "Sharp intellect, logical comprehension, distinct memory for facts", "vata": 0, "pitta": 3, "kapha": 0 },
+      { "text": "Takes time to learn new topics, but once learned never forgets", "vata": 0, "pitta": 0, "kapha": 3 }
+    ]
+  }
+]

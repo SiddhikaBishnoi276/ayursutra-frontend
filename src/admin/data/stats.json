@@ -1,0 +1,26 @@
+{
+  "todaySessions": 28,
+  "completedSessions": 18,
+  "scheduledRemaining": 10,
+  "sessionGrowth": "+12%",
+  "activeStaffCount": 4,
+  "activeDoctors": 1,
+  "activeTherapists": 3,
+  "totalRooms": 4,
+  "occupiedRooms": 3,
+  "availableRooms": 1,
+  "maintenanceRooms": 1,
+  "occupancyRate": 75,
+  "operationsAlertsCount": 2,
+  "topAlert": "1 complication, 1 SMS delivery failure",
+  "averageOccupancy": 78,
+  "dailySessionVolume": 28,
+  "noShowRate": 3.5,
+  "performanceScore": 94,
+  "sessionTrend": [18, 22, 15, 29, 25, 32, 28],
+  "systemHealth": [
+    { "name": "Database Connection", "status": "Healthy", "type": "db" },
+    { "name": "SMS/WhatsApp Gateway", "status": "2 Failed Items", "type": "gateway", "failedCount": 2 },
+    { "name": "Treatment Scheduling Engine", "status": "Healthy", "type": "engine" }
+  ]
+}

@@ -202,6 +202,7 @@ function App() {
           
           {/* Role Based Dashboard Routes */}
           <Route path="/admin-dashboard" element={<AdminPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
           <Route path="/therapist-dashboard" element={<TherapistDashboard />} />
           <Route path="/solo-practitioner-dashboard" element={<SoloPractitionerDashboard />} />

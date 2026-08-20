@@ -35,18 +35,11 @@ export interface TherapyPackage {
     status: 'Active' | 'Pending Audit';
 }
 
-export interface RoomEquipment {
-    id: string;
-    name: string;
-    status: 'Operational' | 'Requires Service';
-}
-
 export interface Room {
     id: string;
     name: string;               // "Room 101"
     type: string;               // "Droni Special Suite"
     status: 'Available' | 'Occupied' | 'Under Maintenance';
-    equipment: RoomEquipment[];
     currentSessionId?: string;
 }
 

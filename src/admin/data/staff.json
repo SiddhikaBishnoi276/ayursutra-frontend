@@ -1,0 +1,48 @@
+[
+  {
+    "id": "S-101",
+    "fullName": "Dr. Ravi Sharma",
+    "email": "dr.sharma@ayursutra.com",
+    "role": "doctor",
+    "specialization": "Kaya Chikitsa & Panchakarma Specialist",
+    "gender": "Male",
+    "registrationNum": "AYU-2019-1024",
+    "status": "Active"
+  },
+  {
+    "id": "S-102",
+    "fullName": "Pooja Nair",
+    "email": "pooja.nair@ayursutra.com",
+    "role": "therapist",
+    "specialization": "Basti-trained & Abhyanga Specialist",
+    "gender": "Female",
+    "status": "Active"
+  },
+  {
+    "id": "S-103",
+    "fullName": "Arjun Mehta",
+    "email": "arjun.mehta@ayursutra.com",
+    "role": "therapist",
+    "specialization": "Vamana-certified & Udvartana Specialist",
+    "gender": "Male",
+    "status": "Active"
+  },
+  {
+    "id": "S-104",
+    "fullName": "Meera Pillai",
+    "email": "meera.pillai@ayursutra.com",
+    "role": "therapist",
+    "specialization": "Shirodhara expert",
+    "gender": "Female",
+    "status": "Active"
+  },
+  {
+    "id": "S-105",
+    "fullName": "Vikram Joshi",
+    "email": "vikram.joshi@ayursutra.com",
+    "role": "therapist",
+    "specialization": "Potli Massage Specialist",
+    "gender": "Male",
+    "status": "Suspended"
+  }
+]

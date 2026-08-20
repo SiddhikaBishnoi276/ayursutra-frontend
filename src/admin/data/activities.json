@@ -1,0 +1,42 @@
+[
+  {
+    "id": "AL-01",
+    "user": "Dr. Ravi Sharma",
+    "role": "Doctor",
+    "action": "Created new package template \"5-Day Nasya Cleansing\"",
+    "time": "2 hours ago",
+    "severity": "info"
+  },
+  {
+    "id": "AL-02",
+    "user": "Therapist Pooja Nair",
+    "role": "Therapist",
+    "action": "Flagged complication on Patient Anil (mild rash during Swedana)",
+    "time": "3 hours ago",
+    "severity": "critical"
+  },
+  {
+    "id": "AL-03",
+    "user": "Admin",
+    "role": "Admin",
+    "action": "Set Room 104 to Maintenance for oil pump repair",
+    "time": "5 hours ago",
+    "severity": "warning"
+  },
+  {
+    "id": "AL-04",
+    "user": "System Service",
+    "role": "System",
+    "action": "Failed to deliver credentials SMS to Patient Rahul Verma",
+    "time": "Yesterday",
+    "severity": "critical"
+  },
+  {
+    "id": "AL-05",
+    "user": "Therapist Arjun Mehta",
+    "role": "Therapist",
+    "action": "Completed Udvartana session for Patient Priya (Room 101)",
+    "time": "Yesterday",
+    "severity": "info"
+  }
+]

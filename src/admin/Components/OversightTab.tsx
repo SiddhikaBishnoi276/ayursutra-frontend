@@ -1,269 +1,267 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { NotificationLog, TherapyPackage, ActivityLog } from '../types/admin.types';
-import { 
-    Send, 
-    RefreshCw, 
-    AlertCircle, 
-    CheckCircle2, 
-    Clock, 
-    ShieldAlert, 
-    Activity,
-    Lock
-} from 'lucide-react';
+import { Card } from '../../Common/Components/Card';
+import { Badge } from '../../Common/Components/Badge';
+import { Button } from '../../Common/Components/Button';
+import { Table, Column } from '../../Common/Components/Table';
+import { EmptyState } from '../../Common/Components/EmptyState';
+import { ProtocolStageStepper } from './ProtocolStageStepper';
+import { ShieldCheck, RefreshCw, Send, CheckCircle2, AlertCircle, FileCheck, Layers } from 'lucide-react';
 
 interface OversightTabProps {
-    notifications: NotificationLog[];
-    packages: TherapyPackage[];
-    activities: ActivityLog[];
-    onRetryNotification: (id: string) => void;
-    onApprovePackage: (id: string) => void;
+  notifications: NotificationLog[];
+  packages: TherapyPackage[];
+  activities: ActivityLog[];
+  onRetryNotification?: (id: string) => void;
+  onApprovePackage?: (id: string) => void;
 }
 
-export const OversightTab = ({ 
-    notifications, 
-    packages, 
-    activities, 
-    onRetryNotification, 
-    onApprovePackage 
-}: OversightTabProps) => {
-    const [subTab, setSubTab] = useState<'notifications' | 'packages' | 'credentials'>('notifications');
-    const [retryingId, setRetryingId] = useState<string | null>(null);
+export const OversightTab: React.FC<OversightTabProps> = ({
+  notifications,
+  packages,
+  activities,
+  onRetryNotification,
+  onApprovePackage,
+}) => {
+  const [activeSubTab, setActiveSubTab] = useState<'notifications' | 'protocolAudit' | 'activityLog'>('notifications');
 
-    // Toast alert
-    const [toastMsg, setToastMsg] = useState<string | null>(null);
+  const doctorPackages = packages.filter((p) => p.createdBy === 'doctor' || p.status === 'Pending Audit');
+  const failedNotificationsCount = notifications.filter((n) => n.status === 'Failed').length;
 
-    const handleRetry = (id: string) => {
-        setRetryingId(id);
-        setTimeout(() => {
-            onRetryNotification(id);
-            setRetryingId(null);
-            setToastMsg('Notification dispatched successfully via secondary SMS Gateway.');
-            setTimeout(() => setToastMsg(null), 3000);
-        }, 1200);
-    };
-
-    const pendingAudits = packages.filter(p => p.status === 'Pending Audit');
-
-    return (
-        <div className="flex flex-col gap-6">
-            
-            {/* Header */}
-            <div>
-                <h2 className="text-xl font-bold text-slate-800 tracking-tight">System Oversight & Auditing</h2>
-                <p className="text-sm text-slate-500">Track credential delivery, resolve gateway failures, and approve medical templates.</p>
-            </div>
-
-            {/* Sub-navigation Toggles */}
-            <div className="flex border-b border-slate-200">
-                <button
-                    onClick={() => setSubTab('notifications')}
-                    className={`px-4 py-2.5 text-xs font-bold border-b-2 transition ${
-                        subTab === 'notifications' 
-                            ? 'border-emerald-900 text-emerald-950 font-extrabold' 
-                            : 'border-transparent text-slate-400 hover:text-slate-700'
-                    }`}
-                >
-                    Notification Delivery Status ({notifications.length})
-                </button>
-                <button
-                    onClick={() => setSubTab('packages')}
-                    className={`px-4 py-2.5 text-xs font-bold border-b-2 transition relative ${
-                        subTab === 'packages' 
-                            ? 'border-emerald-900 text-emerald-950 font-extrabold' 
-                            : 'border-transparent text-slate-400 hover:text-slate-700'
-                    }`}
-                >
-                    Protocol Audits
-                    {pendingAudits.length > 0 && (
-                        <span className="ml-1.5 rounded-full bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.2">
-                            {pendingAudits.length}
-                        </span>
-                    )}
-                </button>
-                <button
-                    onClick={() => setSubTab('credentials')}
-                    className={`px-4 py-2.5 text-xs font-bold border-b-2 transition ${
-                        subTab === 'credentials' 
-                            ? 'border-emerald-900 text-emerald-950 font-extrabold' 
-                            : 'border-transparent text-slate-400 hover:text-slate-700'
-                    }`}
-                >
-                    Patient Credentials Tracker
-                </button>
-            </div>
-
-            {/* Sub-Tab 1: Notifications Status */}
-            {subTab === 'notifications' && (
-                <div className="flex flex-col gap-4">
-                    <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-2xs">
-                        <table className="w-full text-left text-sm border-collapse">
-                            <thead>
-                                <tr className="border-b border-slate-200 bg-slate-50 text-xs font-bold uppercase tracking-wider text-slate-500">
-                                    <th className="px-5 py-4">Recipient</th>
-                                    <th className="px-5 py-4">Role</th>
-                                    <th className="px-5 py-4">Channel</th>
-                                    <th className="px-5 py-4">Message Log</th>
-                                    <th className="px-5 py-4">Delivery Status</th>
-                                    <th className="px-5 py-4 text-right">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {notifications.map((log) => {
-                                    const isFailed = log.status === 'Failed';
-                                    return (
-                                        <tr 
-                                            key={log.id} 
-                                            className={`hover:bg-slate-50/50 transition ${
-                                                isFailed ? 'bg-red-50/30' : ''
-                                            }`}
-                                        >
-                                            <td className="px-5 py-4 font-bold text-slate-800">{log.recipientName}</td>
-                                            <td className="px-5 py-4">
-                                                <span className="text-[10px] font-bold uppercase tracking-wide text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
-                                                    {log.recipientRole}
-                                                </span>
-                                            </td>
-                                            <td className="px-5 py-4 font-semibold text-slate-650">{log.channel}</td>
-                                            <td className="px-5 py-4 max-w-xs truncate text-xs text-slate-500 font-medium" title={log.message}>
-                                                {log.message}
-                                            </td>
-                                            <td className="px-5 py-4">
-                                                {log.status === 'Sent' ? (
-                                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/50">
-                                                        Delivered
-                                                    </span>
-                                                ) : (
-                                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-800 bg-red-50 px-2 py-0.5 rounded-full border border-red-200/50">
-                                                        Failed
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td className="px-5 py-4 text-right">
-                                                {isFailed && (
-                                                    <button
-                                                        onClick={() => handleRetry(log.id)}
-                                                        disabled={retryingId === log.id}
-                                                        className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-950 transition disabled:opacity-50"
-                                                    >
-                                                        {retryingId === log.id ? (
-                                                            <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                                                        ) : (
-                                                            <RefreshCw className="h-3.5 w-3.5" />
-                                                        )}
-                                                        Retry Gateway
-                                                    </button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )}
-
-            {/* Sub-Tab 2: Protocol Audits */}
-            {subTab === 'packages' && (
-                <div className="flex flex-col gap-4">
-                    {pendingAudits.length > 0 ? (
-                        <div className="grid grid-cols-1 gap-4">
-                            {pendingAudits.map((pkg) => (
-                                <div key={pkg.id} className="rounded-xl border border-amber-200 bg-amber-50/10 p-5 flex flex-col gap-4">
-                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                                        <div>
-                                            <div className="flex items-center gap-2">
-                                                <h3 className="font-extrabold text-slate-800 text-base">{pkg.name}</h3>
-                                                <span className="text-[10px] font-bold uppercase text-amber-800 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded">
-                                                    Needs Doctor Verification
-                                                </span>
-                                            </div>
-                                            <p className="text-xs text-slate-500 font-medium mt-1 leading-relaxed">{pkg.description}</p>
-                                        </div>
-                                        <button
-                                            onClick={() => onApprovePackage(pkg.id)}
-                                            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-emerald-900 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-950 transition shadow-sm"
-                                        >
-                                            Audit & Publish
-                                        </button>
-                                    </div>
-
-                                    {/* Stages preview */}
-                                    <div className="border-t border-amber-200/50 pt-3">
-                                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Procedural stages ({pkg.stages.length})</h4>
-                                        <div className="mt-2 flex flex-wrap gap-2">
-                                            {pkg.stages.map((stg) => (
-                                                <span key={stg.id} className="text-xs font-semibold bg-white border border-slate-200 text-slate-650 px-2.5 py-1 rounded-lg">
-                                                    {stg.stageName} (Day {stg.dayOffset})
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-xs text-slate-400 font-medium">
-                            No doctor-submitted protocols require auditing at this time.
-                        </div>
-                    )}
-                </div>
-            )}
-
-            {/* Sub-Tab 3: Credentials Tracker */}
-            {subTab === 'credentials' && (
-                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-2xs flex flex-col gap-4">
-                    <div>
-                        <h3 className="text-base font-bold text-slate-850 tracking-tight flex items-center gap-2">
-                            <Lock className="h-5 w-5 text-emerald-800" />
-                            Patient Login Credentials Tracker
-                        </h3>
-                        <p className="text-xs text-slate-500 mt-0.5 font-medium">Tracks automated TEMP-PIN generations and credential tokens delivery to new patients.</p>
-                    </div>
-
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-xs border-collapse">
-                            <thead>
-                                <tr className="border-b border-slate-200 bg-slate-50 font-bold uppercase text-slate-400">
-                                    <th className="px-4 py-3">Patient Account</th>
-                                    <th className="px-4 py-3">Temp Login ID</th>
-                                    <th className="px-4 py-3">Verification Hash</th>
-                                    <th className="px-4 py-3">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 font-medium text-slate-650">
-                                <tr>
-                                    <td className="px-4 py-3.5 font-bold text-slate-800">Rahul Verma</td>
-                                    <td className="px-4 py-3.5 font-mono">rahulv</td>
-                                    <td className="px-4 py-3.5 font-mono text-slate-400">0x9a8f...102a</td>
-                                    <td className="px-4 py-3.5 text-red-750">SMS Delivery Failed (Retry Pending)</td>
-                                </tr>
-                                <tr>
-                                    <td className="px-4 py-3.5 font-bold text-slate-800">Sandeep Patil</td>
-                                    <td className="px-4 py-3.5 font-mono">sandeepp</td>
-                                    <td className="px-4 py-3.5 font-mono text-slate-400">0x4b7c...9081</td>
-                                    <td className="px-4 py-3.5 text-emerald-700">✓ Logged In (Token Active)</td>
-                                </tr>
-                                <tr>
-                                    <td className="px-4 py-3.5 font-bold text-slate-800">Anil Kadam</td>
-                                    <td className="px-4 py-3.5 font-mono">anilkadam</td>
-                                    <td className="px-4 py-3.5 font-mono text-slate-400">0x2f11...8763</td>
-                                    <td className="px-4 py-3.5 text-emerald-700">WhatsApp Delivered (Pending First Login)</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )}
-
-            {/* Success Toast */}
-            {toastMsg && (
-                <div className="fixed bottom-5 right-5 z-30 flex items-center gap-2.5 rounded-xl bg-slate-900 px-4.5 py-3 text-sm font-bold text-white shadow-xl animate-in slide-in-from-bottom-2 duration-300">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                    <span>{toastMsg}</span>
-                </div>
-            )}
-
+  const notifColumns: Column<NotificationLog>[] = [
+    {
+      header: 'Recipient',
+      accessorKey: 'recipientName',
+      render: (item) => (
+        <div>
+          <p className="font-bold text-gray-900 font-serif">{item.recipientName}</p>
+          <Badge variant={item.recipientRole === 'staff' ? 'info' : 'ayur'} size="sm" className="mt-1">
+            {item.recipientRole === 'staff' ? 'Staff Member' : 'Patient'}
+          </Badge>
         </div>
-    );
+      ),
+    },
+    {
+      header: 'Gateway Channel',
+      accessorKey: 'channel',
+      render: (item) => (
+        <span className="font-semibold text-xs text-gray-700 bg-[#f4f7f4] px-2.5 py-1 rounded-lg border border-ayur-sand/50">
+          {item.channel}
+        </span>
+      ),
+    },
+    {
+      header: 'Dispatch Payload',
+      accessorKey: 'message',
+      render: (item) => (
+        <p className="text-xs text-gray-600 font-medium max-w-md line-clamp-2">
+          {item.message}
+        </p>
+      ),
+    },
+    {
+      header: 'Status',
+      accessorKey: 'status',
+      render: (item) => (
+        <Badge
+          variant={item.status === 'Sent' ? 'success' : 'danger'}
+          size="sm"
+        >
+          {item.status}
+        </Badge>
+      ),
+    },
+    {
+      header: 'Timestamp',
+      accessorKey: 'timestamp',
+      render: (item) => (
+        <span className="text-xs text-gray-500 font-medium whitespace-nowrap">
+          {item.timestamp}
+        </span>
+      ),
+    },
+    {
+      header: 'Action',
+      render: (item) =>
+        item.status === 'Failed' ? (
+          <Button
+            variant="ayur"
+            size="sm"
+            onClick={() => onRetryNotification?.(item.id)}
+            icon={<RefreshCw className="w-3.5 h-3.5" />}
+          >
+            Retry
+          </Button>
+        ) : (
+          <span className="text-xs text-ayur-green-mid font-semibold flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            Delivered
+          </span>
+        ),
+    },
+  ];
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl font-black text-gray-900 font-serif tracking-tight">
+          System Oversight & Audit Center
+        </h1>
+        <p className="text-sm text-ayur-green-mid font-medium mt-1">
+          Monitor communications gateway logs, audit doctor-submitted therapy blueprints, and track operations.
+        </p>
+      </div>
+
+      {/* Sub-Navigation Pill Tabs */}
+      <div className="flex items-center gap-2 border-b border-gray-200 pb-3">
+        <button
+          type="button"
+          onClick={() => setActiveSubTab('notifications')}
+          className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+            activeSubTab === 'notifications'
+              ? 'bg-ayur-primary text-white border-ayur-primary shadow-xs'
+              : 'bg-white text-gray-600 border-ayur-sand/80 hover:bg-[#fbf9f5]'
+          }`}
+        >
+          <span>SMS/WhatsApp Delivery Logs ({notifications.length})</span>
+          {failedNotificationsCount > 0 && (
+            <span className="ml-2 px-1.5 py-0.2 rounded-full bg-rose-500 text-white text-[10px] font-bold">
+              {failedNotificationsCount} Failed
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveSubTab('protocolAudit')}
+          className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+            activeSubTab === 'protocolAudit'
+              ? 'bg-ayur-primary text-white border-ayur-primary shadow-xs'
+              : 'bg-white text-gray-600 border-ayur-sand/80 hover:bg-[#fbf9f5]'
+          }`}
+        >
+          <span>Doctor Protocol Audits ({doctorPackages.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveSubTab('activityLog')}
+          className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+            activeSubTab === 'activityLog'
+              ? 'bg-ayur-primary text-white border-ayur-primary shadow-xs'
+              : 'bg-white text-gray-600 border-ayur-sand/80 hover:bg-[#fbf9f5]'
+          }`}
+        >
+          <span>Audit Activity Stream ({activities.length})</span>
+        </button>
+      </div>
+
+      {/* Section 1: Notifications Status */}
+      {activeSubTab === 'notifications' && (
+        <Table<NotificationLog>
+          columns={notifColumns}
+          data={notifications}
+          keyExtractor={(item) => item.id}
+          emptyMessage="No notification logs recorded."
+        />
+      )}
+
+      {/* Section 2: Doctor Protocol Audits */}
+      {activeSubTab === 'protocolAudit' && (
+        <div className="flex flex-col gap-5">
+          {doctorPackages.length === 0 ? (
+            <EmptyState
+              icon={FileCheck}
+              title="All Protocols Audited"
+              message="No doctor-submitted protocols currently require administrative audit."
+            />
+          ) : (
+            doctorPackages.map((pkg) => (
+              <Card key={pkg.id} className="flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2.5 flex-wrap">
+                      <h3 className="text-lg font-bold text-gray-900 font-serif">
+                        {pkg.name}
+                      </h3>
+                      <Badge variant="warning" size="sm">
+                        Submitted by {pkg.authorName}
+                      </Badge>
+                      <Badge
+                        variant={pkg.status === 'Active' ? 'success' : 'warning'}
+                        size="sm"
+                      >
+                        {pkg.status}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-gray-500 font-medium mt-1">
+                      {pkg.targetDosha} • {pkg.durationDays} Days Duration • {pkg.stages.length} Stages
+                    </p>
+                  </div>
+
+                  {pkg.status !== 'Active' ? (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      icon={<CheckCircle2 className="w-4 h-4" />}
+                      onClick={() => onApprovePackage?.(pkg.id)}
+                    >
+                      Approve & Standardize Protocol
+                    </Button>
+                  ) : (
+                    <Badge variant="success" size="md">
+                      Approved & Live
+                    </Badge>
+                  )}
+                </div>
+
+                <p className="text-xs text-gray-600 font-medium leading-relaxed">
+                  {pkg.description}
+                </p>
+
+                {/* Stages */}
+                <div className="pt-3 border-t border-gray-100">
+                  <ProtocolStageStepper stages={pkg.stages} />
+                </div>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* Section 3: Activity Stream */}
+      {activeSubTab === 'activityLog' && (
+        <Card>
+          <div className="flex flex-col divide-y divide-gray-100">
+            {activities.map((log) => (
+              <div key={log.id} className="py-3.5 flex items-start gap-3">
+                <Badge
+                  variant={
+                    log.severity === 'critical'
+                      ? 'danger'
+                      : log.severity === 'warning'
+                      ? 'warning'
+                      : 'info'
+                  }
+                  size="sm"
+                  className="uppercase tracking-wider font-bold shrink-0 mt-0.5"
+                >
+                  {log.severity}
+                </Badge>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-gray-900 leading-snug">
+                    {log.action}
+                  </p>
+                  <p className="text-[11px] text-gray-500 font-medium mt-0.5">
+                    User: {log.user} ({log.role}) • {log.time}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </div>
+  );
 };

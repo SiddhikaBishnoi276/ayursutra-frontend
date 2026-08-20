@@ -1,0 +1,58 @@
+[
+  {
+    "id": "PKG-001",
+    "name": "7-Day Virechana Protocol",
+    "description": "Standard Pitta-dosha purification detox protocol featuring herbal oil ingestion, steam therapy, and controlled purgation.",
+    "targetDosha": "Pitta Shodhana",
+    "durationDays": 7,
+    "stages": [
+      { "id": "STG-11", "stageName": "Snehana (Oleation)", "stageCategory": "Poorvakarma", "dayOffset": 0, "durationMinutes": 45 },
+      { "id": "STG-12", "stageName": "Swedana (Sudation)", "stageCategory": "Poorvakarma", "dayOffset": 3, "durationMinutes": 30 },
+      { "id": "STG-13", "stageName": "Virechana (Purgation)", "stageCategory": "Pradhanakarma", "dayOffset": 4, "durationMinutes": 480 },
+      { "id": "STG-14", "stageName": "Samsarjana Krama (Diet)", "stageCategory": "Paschatkarma", "dayOffset": 5, "durationMinutes": 2880 }
+    ],
+    "preProcedureInstructions": "Light warm diet, avoid cold beverages, drink lukewarm water.",
+    "postProcedureInstructions": "Introduce thin rice gruel gradually, avoid physical strain.",
+    "dietFramework": "Peyadi Samsarjana Diet Schedule.",
+    "createdBy": "admin",
+    "authorName": "Clinic Administrator",
+    "status": "Active"
+  },
+  {
+    "id": "PKG-002",
+    "name": "5-Day Karma Basti Protocol",
+    "description": "Vata-balancing therapeutic oil & decoction enema cycle designed for deep tissue lubrication and system rejuvenation.",
+    "targetDosha": "Vata Shodhana",
+    "durationDays": 5,
+    "stages": [
+      { "id": "STG-21", "stageName": "Abhyanga (Oil Massage)", "stageCategory": "Poorvakarma", "dayOffset": 0, "durationMinutes": 60 },
+      { "id": "STG-22", "stageName": "Niruha Basti (Decoction)", "stageCategory": "Pradhanakarma", "dayOffset": 2, "durationMinutes": 45 },
+      { "id": "STG-23", "stageName": "Anuvasana Basti (Oil)", "stageCategory": "Pradhanakarma", "dayOffset": 3, "durationMinutes": 30 },
+      { "id": "STG-24", "stageName": "Snehana Food Regimen", "stageCategory": "Paschatkarma", "dayOffset": 4, "durationMinutes": 1440 }
+    ],
+    "preProcedureInstructions": "Empty stomach preferred before enemas.",
+    "postProcedureInstructions": "Rest for 1 hour after administration.",
+    "dietFramework": "Manda-Peya warm soft foods.",
+    "createdBy": "admin",
+    "authorName": "Clinic Administrator",
+    "status": "Active"
+  },
+  {
+    "id": "PKG-003",
+    "name": "5-Day Nasya Cleansing Template",
+    "description": "Doctor-submitted nasal therapy template to clear channels and relieve upper-respiratory congestion.",
+    "targetDosha": "Kapha Pacification",
+    "durationDays": 5,
+    "stages": [
+      { "id": "STG-31", "stageName": "Shiro-Abhyanga & Swedana", "stageCategory": "Poorvakarma", "dayOffset": 0, "durationMinutes": 30 },
+      { "id": "STG-32", "stageName": "Nasya (Nasal drop instillation)", "stageCategory": "Pradhanakarma", "dayOffset": 2, "durationMinutes": 15 },
+      { "id": "STG-33", "stageName": "Kavala & Gandusha (Gargling)", "stageCategory": "Paschatkarma", "dayOffset": 3, "durationMinutes": 15 }
+    ],
+    "preProcedureInstructions": "Avoid heavy meals 2 hours prior.",
+    "postProcedureInstructions": "Do not sleep or drink water immediately after Nasya.",
+    "dietFramework": "Warm light foods, ginger water.",
+    "createdBy": "doctor",
+    "authorName": "Dr. Ravi Sharma",
+    "status": "Pending Audit"
+  }
+]

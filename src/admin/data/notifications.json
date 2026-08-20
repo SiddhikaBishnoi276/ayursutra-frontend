@@ -1,0 +1,38 @@
+[
+  {
+    "id": "NL-01",
+    "recipientName": "Rahul Verma",
+    "recipientRole": "patient",
+    "channel": "SMS",
+    "message": "Your AyurSutra login: User ID: rahulv, Temp Pin: 9812. Login at portal.ayursutra.com",
+    "status": "Failed",
+    "timestamp": "2026-08-19 18:45"
+  },
+  {
+    "id": "NL-02",
+    "recipientName": "Meera Pillai",
+    "recipientRole": "staff",
+    "channel": "WhatsApp",
+    "message": "Onboarding complete! Your credentials: meerap@ayursutra.com. Welcome to clinical system.",
+    "status": "Sent",
+    "timestamp": "2026-08-19 17:30"
+  },
+  {
+    "id": "NL-03",
+    "recipientName": "Priya Nair",
+    "recipientRole": "staff",
+    "channel": "SMS",
+    "message": "Urgent Alert: Session scheduled in Room 102 with Patient Sandeep at 2:00 PM.",
+    "status": "Sent",
+    "timestamp": "2026-08-19 13:15"
+  },
+  {
+    "id": "NL-04",
+    "recipientName": "Anil Kadam",
+    "recipientRole": "patient",
+    "channel": "WhatsApp",
+    "message": "AyurSutra alert: Complication reported during Swedana session has been logged by Dr. Ravi.",
+    "status": "Failed",
+    "timestamp": "2026-08-19 11:00"
+  }
+]
