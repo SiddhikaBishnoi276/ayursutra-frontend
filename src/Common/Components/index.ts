@@ -10,3 +10,5 @@ export * from './ActivityFeedItem';
 export * from './EmptyState';
 export * from './Sidebar';
 export * from './Topbar';
+export * from './ErrorBoundary';
+export * from './BackButton';

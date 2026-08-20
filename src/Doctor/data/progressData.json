@@ -1,0 +1,122 @@
+{
+  "PAT-101": {
+    "timeline": [
+      {
+        "day": 1,
+        "date": "2026-08-14",
+        "stage": "Poorvakarma",
+        "sessionName": "Deepana & Pachana Priming",
+        "clinicalVASScore": 8.0,
+        "patientReportedVASScore": 8.5,
+        "pulseBpm": 76,
+        "bloodPressure": "130/84",
+        "agniStatus": "Visham",
+        "sleepQualityRating": 3,
+        "therapistNotes": "Patient reported stiffness upon lumbar flexion. Trikatu well tolerated."
+      },
+      {
+        "day": 2,
+        "date": "2026-08-15",
+        "stage": "Poorvakarma",
+        "sessionName": "Agni Deepana Day 2",
+        "clinicalVASScore": 7.5,
+        "patientReportedVASScore": 7.5,
+        "pulseBpm": 74,
+        "bloodPressure": "128/82",
+        "agniStatus": "Manda",
+        "sleepQualityRating": 3,
+        "therapistNotes": "Digestive lightness felt. Commenced preliminary oil application."
+      },
+      {
+        "day": 3,
+        "date": "2026-08-16",
+        "stage": "Poorvakarma",
+        "sessionName": "Abhyanga & Swedana (Snehana)",
+        "clinicalVASScore": 6.0,
+        "patientReportedVASScore": 6.5,
+        "pulseBpm": 72,
+        "bloodPressure": "124/80",
+        "agniStatus": "Sama",
+        "sleepQualityRating": 4,
+        "therapistNotes": "Smooth sweat induction. Muscle spasm in quadratus lumborum relaxed."
+      },
+      {
+        "day": 4,
+        "date": "2026-08-17",
+        "stage": "Pradhanakarma",
+        "sessionName": "Kati Basti Session 1",
+        "clinicalVASScore": 4.5,
+        "patientReportedVASScore": 5.0,
+        "pulseBpm": 70,
+        "bloodPressure": "122/78",
+        "agniStatus": "Sama",
+        "sleepQualityRating": 4,
+        "therapistNotes": "Sahacharadi taila retention for 35 mins. Significant pain reduction."
+      },
+      {
+        "day": 5,
+        "date": "2026-08-18",
+        "stage": "Pradhanakarma",
+        "sessionName": "Kati Basti & Nadi Swedana",
+        "clinicalVASScore": 3.0,
+        "patientReportedVASScore": 3.5,
+        "pulseBpm": 72,
+        "bloodPressure": "120/76",
+        "agniStatus": "Sama",
+        "sleepQualityRating": 5,
+        "therapistNotes": "Patient walked without lumbar support aid. Good flexibility."
+      },
+      {
+        "day": 6,
+        "date": "2026-08-19",
+        "stage": "Pradhanakarma",
+        "sessionName": "Pradhana Virechana Karma",
+        "clinicalVASScore": 2.5,
+        "patientReportedVASScore": 2.5,
+        "pulseBpm": 68,
+        "bloodPressure": "118/76",
+        "agniStatus": "Sama",
+        "sleepQualityRating": 5,
+        "therapistNotes": "14 healthy Vegas evacuated. Clear Pitta elimination without excessive exhaustion."
+      },
+      {
+        "day": 7,
+        "date": "2026-08-20",
+        "stage": "Paschatkarma",
+        "sessionName": "Samsarjana Krama Discharge",
+        "clinicalVASScore": 1.5,
+        "patientReportedVASScore": 2.0,
+        "pulseBpm": 70,
+        "bloodPressure": "120/76",
+        "agniStatus": "Sama",
+        "sleepQualityRating": 5,
+        "therapistNotes": "Treatment cycle completed with optimal clinical recovery. Prescribed Rasayana."
+      }
+    ],
+    "comparativeReport": {
+      "patientId": "PAT-101",
+      "patientName": "Rahul Verma",
+      "diagnosis": "Vata-Kaphaja Katigraha",
+      "treatmentDurationDays": 7,
+      "preTreatment": {
+        "vasPainScore": 8.5,
+        "bloodPressure": "130/84",
+        "radialPulse": 76,
+        "mobilityIndex": "Severely restricted forward flexion (Schober test 2.1 cm)",
+        "sleepHours": 5,
+        "agniStatus": "Vishamagni (Irregular)"
+      },
+      "postTreatment": {
+        "vasPainScore": 1.8,
+        "bloodPressure": "120/76",
+        "radialPulse": 70,
+        "mobilityIndex": "Full pain-free range of motion (Schober test 4.8 cm)",
+        "sleepHours": 7.5,
+        "agniStatus": "Samagni (Optimal balance)"
+      },
+      "reliefPercentage": 82,
+      "adherencePercentage": 96.5,
+      "prognosisSummary": "Outstanding therapeutic recovery. Kati Basti retention followed by regulated Virechana relieved lumbosacral Vata-Kapha obstruction completely."
+    }
+  }
+}

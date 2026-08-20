@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'ayur';
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'ayur' | 'danger';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -25,6 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
     outline: 'bg-transparent border border-ayur-green-mid/30 text-ayur-primary hover:bg-[#f4f7f4]',
     ghost: 'bg-transparent text-ayur-green-mid hover:text-ayur-primary hover:bg-[#f4f7f4]',
     ayur: 'bg-ayur-brown text-white hover:bg-[#9e5c3b] border border-transparent shadow-xs',
+    danger: 'bg-rose-600 text-white hover:bg-rose-700 border border-transparent shadow-xs',
   };
 
   const sizeStyles: Record<ButtonSize, string> = {

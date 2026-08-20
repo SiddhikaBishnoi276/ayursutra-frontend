@@ -4,6 +4,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const apiSlice = createApi({
     reducerPath: 'api', // authApi ka reducerPath 'authApi' hai, isliye clash nahi hoga
     baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
-    tagTypes: ['Staff', 'Package'],
+    tagTypes: ['Staff', 'Package', 'DoctorPatients', 'Progress', 'DoctorDiet', 'DoctorPlan'],
     endpoints: () => ({}),
 });

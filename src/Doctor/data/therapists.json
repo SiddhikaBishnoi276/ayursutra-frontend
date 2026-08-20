@@ -1,0 +1,38 @@
+[
+  {
+    "id": "TH-01",
+    "name": "Dr. Sandeep Kulkarni",
+    "gender": "Male",
+    "specializations": ["Kati Basti", "Sarvanga Abhyanga", "Virechana Karma"],
+    "rating": 4.9,
+    "activeWorkload": 2,
+    "isAvailable": true
+  },
+  {
+    "id": "TH-02",
+    "name": "Therapist Arjun Nair",
+    "gender": "Male",
+    "specializations": ["Patra Pinda Sweda", "Janu Basti", "Greeva Basti"],
+    "rating": 4.8,
+    "activeWorkload": 1,
+    "isAvailable": true
+  },
+  {
+    "id": "TH-03",
+    "name": "Therapist Lakshmi Menon",
+    "gender": "Female",
+    "specializations": ["Shirodhara", "Nasya Karma", "Mukha Lepam", "Abhyanga"],
+    "rating": 4.9,
+    "activeWorkload": 2,
+    "isAvailable": true
+  },
+  {
+    "id": "TH-04",
+    "name": "Therapist Deepa Radhakrishnan",
+    "gender": "Female",
+    "specializations": ["Snehapana Care", "Virechana Monitoring", "Kashaya Basti"],
+    "rating": 4.7,
+    "activeWorkload": 0,
+    "isAvailable": true
+  }
+]

@@ -18,6 +18,7 @@ export interface TopbarProps {
   adminEmail?: string;
   notifications?: TopbarNotification[];
   unreadCount?: number;
+  onMenuToggle?: () => void;
 }
 
 export const Topbar: React.FC<TopbarProps> = ({
@@ -39,6 +40,7 @@ export const Topbar: React.FC<TopbarProps> = ({
     },
   ],
   unreadCount = 2,
+  onMenuToggle,
 }) => {
   const [openDropdown, setOpenDropdown] = useState<'notifications' | 'profile' | null>(null);
   const dropdownRef = useClickOutside(() => setOpenDropdown(null));
@@ -49,10 +51,33 @@ export const Topbar: React.FC<TopbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-10 flex h-20 w-full items-center justify-between border-b border-ayur-sand/60 bg-white px-6 md:px-8 shadow-2xs">
-      {/* Left: Clinic Context */}
-      <div className="flex items-center gap-3.5">
-        <h2 className="text-base font-bold text-gray-900 tracking-tight font-serif">
+    <header className="sticky top-0 z-10 flex h-20 w-full items-center justify-between border-b border-ayur-sand/60 bg-white px-4 sm:px-6 md:px-8 shadow-2xs">
+      {/* Left: Hamburger (Mobile) + Clinic Context */}
+      <div className="flex items-center gap-3">
+        {onMenuToggle && (
+          <button
+            type="button"
+            onClick={onMenuToggle}
+            className="flex md:hidden p-2 rounded-xl border border-ayur-sand/80 text-gray-700 hover:bg-[#fbf9f5] hover:text-ayur-primary transition cursor-pointer"
+            title="Open Navigation Menu"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+        )}
+
+        <h2 className="text-sm sm:text-base font-bold text-gray-900 tracking-tight font-serif truncate max-w-[200px] sm:max-w-none">
           {clinicName}
         </h2>
         <span className="hidden sm:inline-block h-4 w-px bg-ayur-sand/80"></span>
@@ -60,7 +85,7 @@ export const Topbar: React.FC<TopbarProps> = ({
           variant="ayur"
           size="sm"
           icon={<Sparkles className="w-3 h-3 text-ayur-brown" />}
-          className="hidden sm:inline-flex"
+          className="hidden lg:inline-flex"
         >
           {certificationLabel}
         </Badge>
