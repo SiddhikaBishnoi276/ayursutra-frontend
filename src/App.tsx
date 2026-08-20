@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-ro
 import { LandingPage } from './auth/page/LandingPage';
 import AdminPage from './Admin/Pages/AdminPage';
 import DoctorPage from './Doctor/Pages/DoctorPage';
+import TherapistPage from './Therapist/Pages/TherapistPage';
 
 // Beautiful Clinical Placeholders
 const DoctorDashboard = () => (
@@ -206,7 +207,9 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/doctor-dashboard" element={<DoctorPage />} />
           <Route path="/doctor" element={<DoctorPage />} />
-          <Route path="/therapist-dashboard" element={<TherapistDashboard />} />
+          <Route path="/therapist-dashboard" element={<TherapistPage />} />
+          <Route path="/therapist" element={<TherapistPage />} />
+          <Route path="/therapist/*" element={<TherapistPage />} />
           <Route path="/solo-practitioner-dashboard" element={<SoloPractitionerDashboard />} />
           <Route path="/patient-dashboard" element={<PatientDashboard />} />
 
