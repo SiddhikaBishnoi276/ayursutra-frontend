@@ -1,30 +1,49 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { LoginRequest, LoginResponse } from '../types/login';
+import { LoginRequest, LoginResponse, ROLE_DASHBOARD_MAP } from '../types/login';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/v1/' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: '/api/v1/auth/',
+    prepareHeaders: (headers) => {
+      headers.set('Content-Type', 'application/json');
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
-      // We use queryFn to bypass the real network request and return mock JSON
+      // TODO: Replace queryFn with real endpoint when backend is ready:
+      // query: (body) => ({ url: 'login', method: 'POST', body }),
       queryFn: async (arg) => {
-        // Simulate a 1-second network delay for the hackathon presentation
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        
-        // Mock JSON Response based on the role selected
+        // Simulate network delay
+        await new Promise((resolve) => setTimeout(resolve, 1200));
+
+        // Basic mock validation — backend will handle real auth
+        if (!arg.email || !arg.password) {
+          return { error: { status: 400, data: { message: 'Email and password are required.' } } };
+        }
+
+        const mockNames: Record<string, string> = {
+          admin: 'Clinic Admin',
+          doctor: 'Dr. Suresh Menon',
+          therapist: 'Priya Nair',
+          patient: 'Amit Sharma',
+          mtb: 'MTB Coordinator',
+        };
+
         const mockResponse: LoginResponse = {
-          token: 'mock-jwt-token-12345',
+          token: `mock-jwt-${arg.role}-token-${Date.now()}`,
           user: {
-            id: 'u-1',
-            name: arg.role === 'admin' ? 'Clinic Admin' : arg.role === 'doctor' ? 'Dr. Suresh' : 'Therapist Priya',
+            id: `u-${arg.role}-1`,
+            name: mockNames[arg.role] ?? arg.role,
             email: arg.email,
             role: arg.role,
-            clinicId: 'clinic-xyz'
-          }
+            clinicId: 'clinic-ayursutra-001',
+          },
         };
-        
+
         return { data: mockResponse };
-      }
+      },
     }),
   }),
 });

@@ -1,11 +1,59 @@
+/* Google Fonts — Playfair Display (headings) + Inter (body) */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
 /* Import Tailwind's base, components, and utilities in one line */
 @import "tailwindcss";
 
-
 @theme {
-  --color-ayur-primary: #062c21;
-  --color-ayur-green-mid: #5a7c50;
-  --color-ayur-green-light: #9cb48c;
-  --color-ayur-brown: #b56b45;
-  --color-ayur-sand: #e2bfa7;
+  /* ─── Core Brand Colors ─── */
+  --color-ayur-bg:             #FDFDFA;
+  --color-ayur-section-bg:     #F9F8F2;
+  --color-ayur-card-bg:        #FFFFFF;
+  --color-ayur-light-green:    #E9EBDD;
+
+  /* ─── Primary (Dark Forest Green) ─── */
+  --color-ayur-primary:        #033015;
+  --color-ayur-primary-hover:  #0C3B17;
+
+  /* ─── Typography ─── */
+  --color-ayur-heading:        #033015;
+  --color-ayur-body:           #30352F;
+  --color-ayur-muted:          #667064;
+
+  /* ─── Borders & Accents ─── */
+  --color-ayur-border:         #E1E4DA;
+  --color-ayur-gold:           #C9B884;
+  --color-ayur-brown:          #8B5E3C;
+  --color-ayur-icon-green:     #3F913F;
+
+  /* ─── Legacy tokens (keep for backward compat) ─── */
+  --color-ayur-green-mid:      #5a7c50;
+  --color-ayur-green-light:    #9cb48c;
+  --color-ayur-sand:           #e2bfa7;
+
+  /* ─── Fonts ─── */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+}
+
+/* ─── Global Base Styles ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #FDFDFA;
+  color: #30352F;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: #033015;
+}
+
+* {
+  box-sizing: border-box;
 }

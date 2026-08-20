@@ -6,6 +6,8 @@ import { LandingPage } from './auth/page/LandingPage';
 const AdminDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Admin Dashboard Prototype (Coming Next)</div>;
 const DoctorDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Doctor Dashboard</div>;
 const TherapistDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Therapist Dashboard</div>;
+const PatientDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Patient Dashboard (Coming Soon)</div>;
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
           <Route path="/therapist-dashboard" element={<TherapistDashboard />} />
+          <Route path="/patient-dashboard" element={<PatientDashboard />} />
 
           {/* Catch all unmatched routes and send to home */}
           <Route path="*" element={<Navigate to="/" />} />
