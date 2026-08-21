@@ -41,6 +41,12 @@ export interface Room {
     type: string;               // "Droni Special Suite"
     status: 'Available' | 'Occupied' | 'Under Maintenance';
     currentSessionId?: string;
+    therapistName?: string;
+    patientName?: string;
+    doctorName?: string;
+    stageName?: string;
+    durationMinutes?: number;
+    scheduledTime?: string;
 }
 
 export interface PrakritiWeightOption {

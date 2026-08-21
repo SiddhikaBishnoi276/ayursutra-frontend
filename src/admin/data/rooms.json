@@ -10,7 +10,13 @@
     "name": "Room 102",
     "type": "Swedana Steam Chamber",
     "status": "Occupied",
-    "currentSessionId": "SESS-9081"
+    "currentSessionId": "SESS-9081",
+    "therapistName": "Priya Nair",
+    "patientName": "Suresh Patel",
+    "doctorName": "Dr. Sandeep Rathore",
+    "stageName": "Kati Basti (Day 7/7)",
+    "durationMinutes": 45,
+    "scheduledTime": "11:30 AM"
   },
   {
     "id": "103",
