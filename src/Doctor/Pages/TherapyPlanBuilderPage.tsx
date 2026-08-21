@@ -135,6 +135,7 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [planError, setPlanError] = useState<string | null>(null);
 
   // Patient-matched packages list
   const displayedPackages = useMemo(() => {
@@ -146,12 +147,26 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
     setSelectedPackageId(pkg.id);
     setCurrentStep('builder');
     setIsSubmitted(false);
+    setPlanError(null);
   };
 
   const handleConfirmPlan = async () => {
-    await confirmAndDispatchPlan();
-    setIsSubmitted(true);
+    try {
+      setPlanError(null);
+      await confirmAndDispatchPlan();
+      setIsSubmitted(true);
+    } catch (err: any) {
+      console.error('Failed to create therapy plan:', err);
+      const message =
+        err?.data?.error ||
+        err?.data?.message ||
+        err?.error ||
+        err?.message ||
+        'Failed to generate therapy plan. Please try again.';
+      setPlanError(message);
+    }
   };
+
 
   const totalPlanDays = customStages.reduce((acc: number, s: TherapyStage) => acc + s.durationDays, 0);
 
@@ -627,6 +642,16 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
 
           {/* Right 1 Col: Therapist Selection & Diet Notes */}
           <div className="flex flex-col gap-5 sticky top-6">
+            {planError && (
+              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 flex items-start gap-2.5 text-xs">
+                <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold block">Plan Generation Blocked</span>
+                  <span className="text-[11px] leading-relaxed block mt-0.5">{planError}</span>
+                </div>
+              </div>
+            )}
+
             {/* Action Button */}
             {!isSubmitted ? (
               <Button
@@ -639,6 +664,7 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
                 {isSubmitting ? 'Generating Schedule...' : 'Confirm Plan & Generate Schedule'}
               </Button>
             ) : (
+
               onPlanCreated && (
                 <Button
                   variant="primary"
