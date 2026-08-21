@@ -55,7 +55,7 @@ export const ProtocolStageStepper: React.FC<ProtocolStageStepperProps> = ({
                 <div className="mt-2 flex items-center justify-between text-[11px] text-gray-500 font-medium pt-2 border-t border-gray-100">
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3 h-3 text-ayur-green-mid" />
-                    Day {stage.dayOffset + 1}
+                    Day {(stage.dayOffset ?? 0) + 1}
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3 text-ayur-green-mid" />
