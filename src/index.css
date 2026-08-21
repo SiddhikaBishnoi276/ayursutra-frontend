@@ -1,12 +1,12 @@
-/* Google Fonts — Playfair Display (headings) + Inter (body) */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+/* Google Fonts — Poppins & Lexend (headings) + Inter (body) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lexend:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
 
 /* Import Tailwind's base, components, and utilities in one line */
 @import "tailwindcss";
 
 @theme {
   /* ─── Core Brand Colors ─── */
-  --color-ayur-bg:             #FDFDFA;
+  --color-ayur-bg:             #F0F7F0;
   --color-ayur-section-bg:     #F9F8F2;
   --color-ayur-card-bg:        #FFFFFF;
   --color-ayur-light-green:    #E9EBDD;
@@ -32,7 +32,7 @@
   --color-ayur-sand:           #e2bfa7;
 
   /* ─── Fonts ─── */
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Poppins',lexend, system-ui, sans-serif;
   --font-body:    'Inter', system-ui, sans-serif;
 }
 
@@ -43,7 +43,7 @@ html {
 
 body {
   font-family: var(--font-body);
-  background-color: #FDFDFA;
+  background-color: #f3f5d0;
   color: #30352F;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

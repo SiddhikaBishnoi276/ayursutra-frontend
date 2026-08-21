@@ -6,460 +6,581 @@ import {
   PrakritiQuestion,
   TherapyPackage,
   TherapyPlan,
+  Therapist,
   AIDietCarePlan,
   ProgressPoint,
   ComparativeOutcomeReport,
-  Therapist,
+  TherapyStage,
 } from '../types/doctor.types';
-
-import patientsMock from '../data/patients.json';
-import questionsMock from '../data/prakritiQuestions.json';
-import packagesMock from '../data/therapyPackages.json';
-import therapistsMock from '../data/therapists.json';
-import progressMock from '../data/progressData.json';
-
-// In-memory persistent state for prototype session
-let activePatients: Patient[] = [...(patientsMock as Patient[])];
-let activePackages: TherapyPackage[] = [...(packagesMock as TherapyPackage[])];
-let activePlans: Record<string, TherapyPlan> = {};
-let activeDietPlans: Record<string, AIDietCarePlan> = {
-  'PAT-101': {
-    id: 'DIET-101',
-    patientId: 'PAT-101',
-    isApproved: false,
-    generatedDate: '2026-08-20',
-    caloricTarget: 1850,
-    stages: [
-      {
-        stageName: 'Poorvakarma Preparation (Deepana & Pachana)',
-        stageCategory: 'Poorvakarma',
-        pathyaFoods: [
-          'Warm Ginger-Cumin Infusion (Shadanga Paniya)',
-          'Light Moong Dal Soup seasoned with rock salt & hing',
-          'Steamed red rice with 1 tsp medicated ghee',
-          'Cooked leafy greens (Methi, Palak in light cumin tadka)'
-        ],
-        apathyaFoods: [
-          'Cold and refrigerated beverages',
-          'Heavy fermented items (Dosa, Idli, Curd)',
-          'Fried snacks, bakery goods & refined sugar',
-          'Raw salad and dry legumes (Chana, Rajma)'
-        ],
-        yogaAsanas: [
-          'Pawanmuktasana (Wind-relieving posture) - 5 mins',
-          'Vajrasana post meals - 10 mins',
-          'Cat-Cow Stretch (Marjariasana) - 5 mins'
-        ],
-        pranayama: [
-          'Nadi Shodhana (Alternate nostril breathing) - 10 mins',
-          'Bhastrika (Gentle rhythm) - 5 mins'
-        ],
-        hydrationNotes: 'Drink minimum 2.5L lukewarm water boiled with ginger & coriander seeds.'
-      },
-      {
-        stageName: 'Pradhanakarma Main Procedure Karma (Virechana / Basti)',
-        stageCategory: 'Pradhanakarma',
-        pathyaFoods: [
-          'Manda (Thin rice water gruel with pinch of Saindhava)',
-          'Peya (Semisolid light rice porridge)',
-          'Clear pomegranate juice (non-chilled, unsweetened)',
-          'Warm boiled water sips at 30 min intervals'
-        ],
-        apathyaFoods: [
-          'All solid foods and fiber during purgation window',
-          'Oils, butter, milk, cheese, and heavy dairy',
-          'Spicy condiments, pickles, and pungent chilies',
-          'Daytime sleep immediately following the procedure'
-        ],
-        yogaAsanas: [
-          'Complete physical bed rest during evacuation phase',
-          'Gentle Shavasana (Corpse pose with warm blanket)',
-          'Mild Supta Baddha Konasana with bolster support'
-        ],
-        pranayama: [
-          'Slow deep diaphragmatic breath (Dirgha Pranayama)',
-          'Sheetali / Sheetkari (if excess Pitta heat occurs)'
-        ],
-        hydrationNotes: 'Warm water sips only upon thirst. Avoid force-feeding.'
-      },
-      {
-        stageName: 'Paschatkarma Rehabilitation (Samsarjana & Rasayana)',
-        stageCategory: 'Paschatkarma',
-        pathyaFoods: [
-          'Vilepi (Thick rice porridge with small drop of ghee)',
-          'Akrita Yusha (Unseasoned moong soup) transitioning to Krita Yusha',
-          'Shali rice with boiled bottle gourd / pumpkin subzi',
-          'Amla preserve (Chyawanprash / Amalaki Rasayana) with warm milk'
-        ],
-        apathyaFoods: [
-          'Excessive salt, sour tamarind, vinegar & spicy masala',
-          'Direct cold air drafts and loud environments',
-          'Strenuous weight lifting and travel',
-          'Irregular meal times'
-        ],
-        yogaAsanas: [
-          'Tadasana (Gentle spinal alignment)',
-          'Bhujangasana (Low Cobra pose) - 3 reps',
-          'Setu Bandhasana (Supported Bridge)'
-        ],
-        pranayama: [
-          'Anulom Vilom - 15 mins daily',
-          'Brahmari Pranayama - 7 cycles for nervous recovery'
-        ],
-        hydrationNotes: 'Warm copper-infused water. Herbal infusion of Tulsi & Yashtimadhu.'
-      }
-    ]
-  }
-};
-
-let activeProgress = { ...progressMock };
 
 export const doctorApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // 1. Get Patients List
+    // 1. Get Patients List (GET /api/doctor/patients)
     getPatients: builder.query<Patient[], void>({
-      queryFn: () => ({ data: activePatients }),
+      query: () => ({
+        url: '/doctor/patients',
+        method: 'GET',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const list = Array.isArray(response) ? response : response.data || [];
+        return list.map((p: any) => ({
+          id: p.id || p.user_id,
+          name: p.name || 'Patient',
+          age: p.age || 35,
+          gender: (p.gender === 'Female' ? 'Female' : p.gender === 'Other' ? 'Other' : 'Male') as Patient['gender'],
+          contact: p.contact || p.phone || p.contact_number || '',
+          email: p.email || '',
+          chiefComplaint: p.chief_complaint || p.chiefComplaint || 'Clinical evaluation',
+          diagnosis: p.diagnosis || 'Prakriti Pariksha Needed',
+          dominantPrakriti: p.dominantPrakriti || p.confirmed_dosha,
+          status: (p.status || (p.confirmed_dosha ? 'prakriti_confirmed' : 'new')) as Patient['status'],
+          assignedPackageName: p.assignedPackageName || p.activePackage || p.package_name,
+          currentStage: p.currentStage || p.current_stage,
+          currentDay: p.currentDay || p.current_day || 1,
+          totalDays: p.totalDays || p.total_days || 7,
+          onboardedDate: p.onboardedDate || (p.created_at ? p.created_at.split('T')[0] : new Date().toISOString().split('T')[0]),
+        }));
+      },
       providesTags: ['DoctorPatients'],
     }),
 
-    // 2. Add New Patient (Intake)
-    addPatientIntake: builder.mutation<Patient, Partial<Patient>>({
-      queryFn: (newPatient) => {
-        const patientId = `PAT-${100 + activePatients.length + 1}`;
-        const patientRecord: Patient = {
-          id: patientId,
-          name: newPatient.name || 'New Patient',
-          age: newPatient.age || 35,
-          gender: newPatient.gender || 'Female',
-          contact: newPatient.contact || '+91 98765 00000',
+    // 2. Onboard Patient (POST /api/doctor/patients)
+    onboardPatient: builder.mutation<
+      Patient,
+      {
+        name: string;
+        contact_number?: string;
+        contact?: string;
+        email?: string;
+        gender?: string;
+        age?: number;
+        chief_complaint?: string;
+        chiefComplaint?: string;
+        diagnosis?: string;
+      }
+    >({
+      query: (newPatient) => ({
+        url: '/doctor/patients',
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          name: newPatient.name,
+          contact_number: newPatient.contact_number || newPatient.contact || `+9198${Date.now().toString().slice(-8)}`,
           email: newPatient.email,
-          chiefComplaint: newPatient.chiefComplaint || 'Clinical evaluation',
-          diagnosis: newPatient.diagnosis || 'Prakriti Pariksha Needed',
+          gender: newPatient.gender || 'Female',
+          age: newPatient.age || 35,
+          chief_complaint: newPatient.chief_complaint || newPatient.chiefComplaint || 'Clinical evaluation',
+          diagnosis: newPatient.diagnosis || 'General Ayurvedic Consultation',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const p = response.patient || response.data || response;
+        return {
+          id: p.id || p.user_id,
+          name: p.name,
+          age: p.age || 35,
+          gender: (p.gender === 'Female' ? 'Female' : p.gender === 'Other' ? 'Other' : 'Male') as Patient['gender'],
+          contact: p.contact || p.phone || p.contact_number || '',
+          email: p.email,
+          chiefComplaint: p.chief_complaint || p.chiefComplaint || '',
+          diagnosis: p.diagnosis || '',
           status: 'new',
           onboardedDate: new Date().toISOString().split('T')[0],
         };
-        activePatients = [patientRecord, ...activePatients];
-        return { data: patientRecord };
       },
       invalidatesTags: ['DoctorPatients'],
     }),
 
-    // 3. Get Prakriti Question Bank
-    getPrakritiQuestions: builder.query<PrakritiQuestion[], void>({
-      queryFn: () => ({ data: questionsMock as PrakritiQuestion[] }),
-    }),
-
-    // 4. Lock Prakriti
-    lockPrakriti: builder.mutation<
-      Patient,
-      { patientId: string; dominantPrakriti: string; notes?: string }
-    >({
-      queryFn: ({ patientId, dominantPrakriti }) => {
-        activePatients = activePatients.map((p) =>
-          p.id === patientId
-            ? { ...p, dominantPrakriti, status: 'prakriti_confirmed' }
-            : p
-        );
-        const updated = activePatients.find((p) => p.id === patientId)!;
-        return { data: updated };
-      },
-      invalidatesTags: ['DoctorPatients'],
-    }),
-
-    // 5. Get Therapy Packages
-    getTherapyPackages: builder.query<TherapyPackage[], void>({
-      queryFn: () => ({ data: activePackages }),
-      providesTags: ['Package'],
-    }),
-
-    // 6. Create / Standardize Therapy Package
-    createTherapyPackage: builder.mutation<TherapyPackage, Partial<TherapyPackage>>({
-      queryFn: (pkg) => {
-        const newPkg: TherapyPackage = {
-          id: `PKG-0${activePackages.length + 1}`,
-          name: pkg.name || 'Custom Therapy Protocol',
-          description: pkg.description || 'Doctor authored clinical package.',
-          targetDosha: pkg.targetDosha || 'Tridoshic',
-          durationDays: pkg.durationDays || 7,
-          stages: pkg.stages || [],
-          baseDietGuidelines: pkg.baseDietGuidelines || '',
-          isStandard: false,
+    // Backward-compatible alias for onboardPatient
+    addPatientIntake: builder.mutation<Patient, Partial<Patient>>({
+      query: (newPatient) => ({
+        url: '/doctor/patients',
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          name: newPatient.name,
+          contact_number: newPatient.contact || `+9198${Date.now().toString().slice(-8)}`,
+          email: newPatient.email,
+          gender: newPatient.gender || 'Female',
+          age: newPatient.age || 35,
+          chief_complaint: newPatient.chiefComplaint || 'Clinical evaluation',
+          diagnosis: newPatient.diagnosis || 'General Ayurvedic Consultation',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const p = response.patient || response.data || response;
+        return {
+          id: p.id || p.user_id,
+          name: p.name,
+          age: p.age || 35,
+          gender: (p.gender === 'Female' ? 'Female' : p.gender === 'Other' ? 'Other' : 'Male') as Patient['gender'],
+          contact: p.contact || p.phone || p.contact_number || '',
+          email: p.email,
+          chiefComplaint: p.chief_complaint || p.chiefComplaint || '',
+          diagnosis: p.diagnosis || '',
+          status: 'new',
+          onboardedDate: new Date().toISOString().split('T')[0],
         };
-        activePackages = [newPkg, ...activePackages];
-        return { data: newPkg };
       },
-      invalidatesTags: ['Package'],
+      invalidatesTags: ['DoctorPatients'],
     }),
 
-    // 7. Get Therapists
-    getTherapists: builder.query<Therapist[], void>({
-      queryFn: () => ({ data: therapistsMock as Therapist[] }),
+    // 3. Get Prakriti Question Bank (GET /api/doctor/prakriti/questions)
+    getPrakritiQuestions: builder.query<PrakritiQuestion[], void>({
+      query: () => ({
+        url: '/doctor/prakriti/questions',
+        method: 'GET',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const list = Array.isArray(response) ? response : response.data || [];
+        return list.map((q: any) => ({
+          id: String(q.id),
+          category: q.attribute || 'Physical Attribute',
+          text: q.question_text || q.questionText || q.question || 'Prakriti Assessment Question',
+          sanskritTerm: q.attribute || undefined,
+          options: (q.options || []).map((opt: any) => {
+            const vataW = opt.dosha_weight?.vata ?? (opt.dosha === 'Vata' ? 3 : 0);
+            const pittaW = opt.dosha_weight?.pitta ?? (opt.dosha === 'Pitta' ? 3 : 0);
+            const kaphaW = opt.dosha_weight?.kapha ?? (opt.dosha === 'Kapha' ? 3 : 0);
+            const doshaType = vataW >= pittaW && vataW >= kaphaW ? 'Vata' : pittaW >= kaphaW ? 'Pitta' : 'Kapha';
+            return {
+              id: String(opt.id),
+              text: opt.option_text || opt.text || '',
+              dosha: doshaType as 'Vata' | 'Pitta' | 'Kapha',
+              vataWeight: vataW,
+              pittaWeight: pittaW,
+              kaphaWeight: kaphaW,
+            };
+          }),
+        }));
+      },
     }),
 
-    // 8. Create Therapy Plan
-    createTherapyPlan: builder.mutation<
-      TherapyPlan,
+    // 4. Submit Prakriti Assessment (POST /api/doctor/prakriti/patients/:patientId/assessment)
+    submitPrakritiAssessment: builder.mutation<
+      any,
       {
         patientId: string;
-        packageId: string;
-        packageName: string;
-        startDate: string;
-        stages: any[];
-        assignedTherapistId: string;
-        medicines: any[];
-        customDietNotes: string;
-        mode: 'clinic' | 'solo';
+        answers?: { question_id?: number | string; option_id?: number | string; questionId?: string; optionId?: string }[];
+        clinical_observation?: string;
+        clinicalObservation?: string;
+        confirmed_dosha?: string;
+        confirmedDosha?: string;
       }
     >({
-      queryFn: (planData) => {
-        const planId = `PLAN-${Date.now().toString().slice(-4)}`;
-        const totalDays = planData.stages.reduce(
-          (acc, s) => acc + (s.durationDays || 1),
-          0
-        );
-
-        const newPlan: TherapyPlan = {
-          id: planId,
-          patientId: planData.patientId,
-          packageId: planData.packageId,
-          packageName: planData.packageName,
-          startDate: planData.startDate,
-          endDate: new Date(
-            new Date(planData.startDate).getTime() +
-              totalDays * 24 * 60 * 60 * 1000
-          )
-            .toISOString()
-            .split('T')[0],
-          totalDays,
-          stages: planData.stages,
-          assignedTherapistId: planData.assignedTherapistId,
-          medicines: planData.medicines,
-          customDietNotes: planData.customDietNotes,
-          mode: planData.mode,
-          createdAt: new Date().toISOString(),
-        };
-
-        activePlans[planData.patientId] = newPlan;
-
-        // Auto-generate AI care plan for this patient if not present
-        if (!activeDietPlans[planData.patientId]) {
-          activeDietPlans[planData.patientId] = {
-            id: `DIET-${planData.patientId}`,
-            patientId: planData.patientId,
-            isApproved: false,
-            generatedDate: new Date().toISOString().split('T')[0],
-            caloricTarget: 1800,
-            stages: activeDietPlans['PAT-101']?.stages || [],
-          };
-        }
-
-        // Update patient assigned package
-        activePatients = activePatients.map((p) =>
-          p.id === planData.patientId
-            ? {
-                ...p,
-                assignedPackageId: planData.packageId,
-                assignedPackageName: planData.packageName,
-                totalDays,
-              }
-            : p
-        );
-
-        return { data: newPlan };
-      },
-      invalidatesTags: ['DoctorPatients', 'DoctorPlan'],
+      query: ({ patientId, answers, clinical_observation, clinicalObservation, confirmed_dosha, confirmedDosha }) => ({
+        url: `/doctor/prakriti/patients/${patientId}/assessment`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          answers: (answers || []).map((a) => ({
+            question_id: a.question_id || a.questionId,
+            option_id: a.option_id || a.optionId,
+          })),
+          clinical_observation: clinical_observation || clinicalObservation || 'Prakriti clinical assessment completed.',
+          confirmed_dosha: confirmed_dosha || confirmedDosha,
+        },
+      }),
+      invalidatesTags: ['DoctorPatients', 'PatientDashboard'],
     }),
 
-    // 9. Get AI Diet & Yoga Plan
-    getAIDietPlan: builder.query<AIDietCarePlan | null, string>({
-      queryFn: (patientId) => {
-        let diet = activeDietPlans[patientId];
-        if (!diet) {
-          const patient = activePatients.find((p) => p.id === patientId);
-          const isPitta = (patient?.dominantPrakriti || patient?.diagnosis || '').toLowerCase().includes('pitta');
-          const isKapha = (patient?.dominantPrakriti || patient?.diagnosis || '').toLowerCase().includes('kapha');
-
-          diet = {
-            id: `DIET-${patientId.replace(/[^0-9]/g, '') || '101'}`,
-            patientId,
-            isApproved: false,
-            generatedDate: new Date().toISOString().split('T')[0],
-            caloricTarget: isPitta ? 1900 : isKapha ? 1650 : 1850,
-            stages: [
-              {
-                stageName: 'Poorvakarma Preparation (Deepana & Pachana)',
-                stageCategory: 'Poorvakarma',
-                pathyaFoods: isPitta
-                  ? [
-                      'Cooling Coriander & Fennel Infusion (Dhanyaka Paniya)',
-                      'Mung Bean & Sweet Gourd Soup with light cow ghee',
-                      'Cooked red basmati rice with mild herbs',
-                      'Steamed spinach and tender zucchini',
-                    ]
-                  : [
-                      'Warm Ginger-Cumin Infusion (Shadanga Paniya)',
-                      'Light Moong Dal Soup seasoned with rock salt & hing',
-                      'Steamed red rice with 1 tsp medicated ghee',
-                      'Cooked leafy greens (Methi, Palak in light cumin)',
-                    ],
-                apathyaFoods: isPitta
-                  ? [
-                      'Spicy red chillies, vinegar & mustard seeds',
-                      'Sour curd, citrus fruits & fermented batter',
-                      'Fried oily items & refined sugars',
-                      'Direct hot sunlight exposure & caffeine',
-                    ]
-                  : [
-                      'Cold and refrigerated beverages',
-                      'Heavy fermented items (Dosa, Idli, Curd)',
-                      'Fried snacks, bakery goods & refined sugar',
-                      'Raw salad and dry legumes (Chana, Rajma)',
-                    ],
-                yogaAsanas: isPitta
-                  ? [
-                      'Sheetali Pranayama - 10 mins',
-                      'Chandra Bhedana & Balasana - 10 mins',
-                      'Gentle Matsyasana - 5 mins',
-                    ]
-                  : [
-                      'Pawanmuktasana - 5 mins',
-                      'Vajrasana post meals - 10 mins',
-                      'Cat-Cow Stretch (Marjariasana) - 5 mins',
-                    ],
-                pranayama: isPitta
-                  ? ['Sheetali Pranayama - 10 mins', 'Nadi Shodhana - 10 mins']
-                  : ['Nadi Shodhana - 10 mins', 'Bhastrika - 5 mins'],
-                hydrationNotes: isPitta
-                  ? 'Drink minimum 2.5L lukewarm water boiled with vetiver (Ushira) and coriander seeds.'
-                  : 'Drink minimum 2.5L lukewarm water boiled with dry ginger & cumin.',
-              },
-              {
-                stageName: 'Pradhanakarma Main Procedure Karma',
-                stageCategory: 'Pradhanakarma',
-                pathyaFoods: [
-                  'Clear Rice Soup (Manda & Peya) on empty stomach',
-                  'Thin Vilepi (thickened rice gruel) after procedure',
-                  'Lukewarm water in small sips throughout day',
-                  'Sips of Shadanga Paniya decoction',
-                ],
-                apathyaFoods: [
-                  'All solid grains, spices, milk, or curd',
-                  'Cold liquids, raw vegetables or fruits',
-                  'Physical exertion, heavy talking, day sleep',
-                  'Exposure to breeze or air conditioning',
-                ],
-                yogaAsanas: [
-                  'Restorative Savasana with knee bolster',
-                  'Subtle gentle diaphragmatic breathing only',
-                ],
-                pranayama: ['Slow Sahaja Pranayama - 10 mins in supine posture'],
-                hydrationNotes: 'Strictly lukewarm water only after natural urge (Vega) completes.',
-              },
-              {
-                stageName: 'Paschatkarma Rehabilitation (Samsarjana Krama)',
-                stageCategory: 'Paschatkarma',
-                pathyaFoods: [
-                  'Gradual Manda → Peya → Vilepi → Yusha meal ladder',
-                  'Light mung dal broth with rock salt & pure cow ghee',
-                  'Steamed aged Shali rice with buttermilk',
-                  'Stewed sweet apple or soaked raisins',
-                ],
-                apathyaFoods: [
-                  'Heavy protein meals (Paneer, Chana, Dal Makhani)',
-                  'Reheated or leftover refrigerated food',
-                  'Spicy curries, sour tomatoes, curd at night',
-                  'Alcohol, smoking, and irregular meal timings',
-                ],
-                yogaAsanas: [
-                  'Tadasana (Gentle spine lengthening) - 5 mins',
-                  'Bhujangasana (Gentle cobra pose) - 5 mins',
-                  'Vrikshasana (Balance pose) - 5 mins',
-                ],
-                pranayama: ['Nadi Shodhana - 10 mins daily', 'Brahmari - 5 mins before sleep'],
-                hydrationNotes: '2.5L structured room temperature water with pinch of dry ginger.',
-              },
-            ],
-          };
-          activeDietPlans[patientId] = diet;
-        }
-        return { data: diet || null };
-      },
-      providesTags: ['DoctorDiet'],
-    }),
-
-    // 10. Approve & Dispatch AI Diet Plan
-    approveAIDietPlan: builder.mutation<
-      { success: boolean; patientId: string },
-      string
+    // Backward-compatible alias for submitPrakritiAssessment
+    lockPrakriti: builder.mutation<
+      any,
+      { patientId: string; dominantPrakriti: string; notes?: string; answers?: any[] }
     >({
-      queryFn: (patientId) => {
-        if (activeDietPlans[patientId]) {
-          activeDietPlans[patientId].isApproved = true;
-        }
-        activePatients = activePatients.map((p) =>
-          p.id === patientId
-            ? {
-                ...p,
-                status: 'in_progress',
-                currentDay: 1,
-                currentStage: 'Poorvakarma',
-              }
-            : p
-        );
-        return { data: { success: true, patientId } };
-      },
-      invalidatesTags: ['DoctorPatients', 'DoctorDiet', 'Progress'],
+      query: ({ patientId, dominantPrakriti, notes, answers }) => ({
+        url: `/doctor/prakriti/patients/${patientId}/assessment`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          confirmed_dosha: dominantPrakriti,
+          clinical_observation: notes || `Prakriti confirmed as ${dominantPrakriti}`,
+          answers: answers || [],
+        },
+      }),
+      invalidatesTags: ['DoctorPatients', 'PatientDashboard'],
     }),
 
-    // 11. Get Progress Analytics
-    getProgressAnalytics: builder.query<
+    // 5. Generate Therapy Plan (POST /api/doctor/patients/:patientId/therapy-plan)
+    generateTherapyPlan: builder.mutation<
+      any,
+      {
+        patientId: string;
+        package_id: string | number;
+        preferredStartTime?: string;
+        customization_notes?: string;
+        start_date?: string;
+      }
+    >({
+      query: ({ patientId, package_id, preferredStartTime, customization_notes, start_date }) => ({
+        url: `/doctor/patients/${patientId}/therapy-plan`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          package_id,
+          preferredStartTime: preferredStartTime || '10:00',
+          customization_notes: customization_notes || '',
+          start_date: start_date || new Date().toISOString().split('T')[0],
+        },
+      }),
+      invalidatesTags: ['DoctorPatients', 'TherapistQueue', 'PatientDashboard', 'Progress'],
+    }),
+
+    // Backward-compatible alias for generateTherapyPlan
+    createTherapyPlan: builder.mutation<
+      any,
+      {
+        patientId: string;
+        packageId: string | number;
+        packageName?: string;
+        startDate?: string;
+        stages?: any[];
+        assignedTherapistId?: string;
+        medicines?: any[];
+        customDietNotes?: string;
+        mode?: 'clinic' | 'solo';
+      }
+    >({
+      query: ({ patientId, packageId, startDate, customDietNotes }) => ({
+        url: `/doctor/patients/${patientId}/therapy-plan`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          package_id: packageId,
+          start_date: startDate || new Date().toISOString().split('T')[0],
+          customization_notes: customDietNotes,
+        },
+      }),
+      invalidatesTags: ['DoctorPatients', 'TherapistQueue', 'PatientDashboard', 'Progress'],
+    }),
+
+    // 6. Get Patient Clinical Progress & History (GET /api/doctor/patients/:patientId/progress)
+    getPatientProgress: builder.query<
       { timeline: ProgressPoint[]; comparativeReport?: ComparativeOutcomeReport },
       string
     >({
-      queryFn: (patientId) => {
-        const data = (activeProgress as any)[patientId] || (activeProgress as any)['PAT-101'];
-        return { data: data || { timeline: [] } };
+      query: (patientId) => ({
+        url: `/doctor/patients/${patientId}/progress`,
+        method: 'GET',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const timeline = Array.isArray(response) ? response : response.timeline || [];
+        return {
+          timeline: timeline.map((p: any, idx: number) => ({
+            day: p.day || idx + 1,
+            date: p.date || p.scheduled_date || new Date().toISOString().split('T')[0],
+            stage: p.stage || p.stage_type || 'Poorvakarma',
+            sessionName: p.sessionName || p.session_name || 'Therapy Session',
+            clinicalVASScore: p.clinicalVASScore ?? p.vasScore ?? 4.0,
+            patientReportedVASScore: p.patientReportedVASScore ?? 4.2,
+            pulseBpm: p.pulseBpm ?? p.pulse ?? 72,
+            bloodPressure: p.bloodPressure ?? p.bp ?? '120/80',
+            agniStatus: p.agniStatus || 'Sama',
+            sleepQualityRating: p.sleepQualityRating ?? 4,
+            therapistNotes: p.therapistNotes || p.notes || '',
+            complicationFlag: p.complicationFlag ?? false,
+          })),
+        };
       },
       providesTags: ['Progress'],
     }),
 
-    // 12. Record Therapy Vitals
-    recordTherapyVitals: builder.mutation<
-      { success: boolean },
-      { patientId: string; vitals: any; type: 'baseline' | 'discharge' }
+    // Backward-compatible alias for getPatientProgress
+    getProgressAnalytics: builder.query<
+      { timeline: ProgressPoint[]; comparativeReport?: ComparativeOutcomeReport },
+      string
     >({
-      queryFn: ({ patientId, vitals, type }) => {
-        console.log(`[DOCTOR API] Recorded ${type} vitals for ${patientId}:`, vitals);
-        return { data: { success: true } };
+      query: (patientId) => ({
+        url: `/doctor/patients/${patientId}/progress`,
+        method: 'GET',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const timeline = Array.isArray(response) ? response : response.timeline || [];
+        return {
+          timeline: timeline.map((p: any, idx: number) => ({
+            day: p.day || idx + 1,
+            date: p.date || p.scheduled_date || new Date().toISOString().split('T')[0],
+            stage: p.stage || p.stage_type || 'Poorvakarma',
+            sessionName: p.sessionName || p.session_name || 'Therapy Session',
+            clinicalVASScore: p.clinicalVASScore ?? p.vasScore ?? 4.0,
+            patientReportedVASScore: p.patientReportedVASScore ?? 4.2,
+            pulseBpm: p.pulseBpm ?? p.pulse ?? 72,
+            bloodPressure: p.bloodPressure ?? p.bp ?? '120/80',
+            agniStatus: p.agniStatus || 'Sama',
+            sleepQualityRating: p.sleepQualityRating ?? 4,
+            therapistNotes: p.therapistNotes || p.notes || '',
+            complicationFlag: p.complicationFlag ?? false,
+          })),
+        };
       },
+      providesTags: ['Progress'],
+    }),
+
+    // 7. Record Patient Vitals (POST /api/doctor/patients/:patientId/vitals)
+    recordVitals: builder.mutation<
+      { success: boolean },
+      {
+        patientId: string;
+        bp?: string;
+        pulse?: number;
+        temperature?: number;
+        weight?: number;
+        spo2?: number;
+      }
+    >({
+      query: ({ patientId, bp, pulse, temperature, weight, spo2 }) => ({
+        url: `/doctor/patients/${patientId}/vitals`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          bp,
+          pulse,
+          temperature,
+          weight,
+          spo2,
+        },
+      }),
       invalidatesTags: ['Progress', 'DoctorPatients'],
     }),
 
-    // 13. Log Therapist Session
+    // Backward-compatible alias for recordVitals
+    recordTherapyVitals: builder.mutation<
+      { success: boolean },
+      { patientId: string; vitals: any; type?: 'baseline' | 'discharge' }
+    >({
+      query: ({ patientId, vitals }) => ({
+        url: `/doctor/patients/${patientId}/vitals`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          bp: vitals.bloodPressure || vitals.bp,
+          pulse: vitals.pulseBpm || vitals.pulse,
+          spo2: vitals.spo2,
+          temperature: vitals.temperature,
+          weight: vitals.weight,
+        },
+      }),
+      invalidatesTags: ['Progress', 'DoctorPatients'],
+    }),
+
+    // 8. Get Therapy Packages (GET /api/doctor/therapy-packages)
+    getTherapyPackages: builder.query<TherapyPackage[], void>({
+      query: () => ({
+        url: '/doctor/therapy-packages',
+        method: 'GET',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const list = Array.isArray(response) ? response : response.data || [];
+        return list.map((pkg: any) => ({
+          id: String(pkg.id),
+          name: pkg.name,
+          description: pkg.description || `${pkg.therapy_type} Protocol Package`,
+          targetDosha: pkg.therapy_type || pkg.target_dosha || 'Tridoshic',
+          durationDays: pkg.duration_days || (pkg.stages?.length ? pkg.stages.reduce((sum: number, st: any) => sum + (st.duration_days || 1), 0) : 7),
+          stages: (pkg.stages || []).map((st: any) => ({
+            id: String(st.id),
+            name: st.stage_name || st.stage_type || 'Stage',
+            category: (st.stage_type || 'Poorvakarma') as TherapyStage['category'],
+            dayOffset: st.day_offset || 1,
+            durationDays: st.duration_days || 1,
+            durationMinutes: st.session_duration_minutes || 60,
+            preInstructions: st.pre_instructions || '',
+            postInstructions: st.post_instructions || '',
+          })),
+          baseDietGuidelines: pkg.base_diet_framework?.guidelines || 'Standard Ayurvedic Light Diet',
+          isStandard: true,
+        }));
+      },
+      providesTags: ['Package'],
+    }),
+
+    // 9. Create Therapy Package (POST /api/doctor/therapy-packages)
+    createTherapyPackage: builder.mutation<TherapyPackage, Partial<TherapyPackage> & { clinic_id?: number; description?: string; base_price?: number; therapy_type?: string }>({
+      query: (pkg) => ({
+        url: '/doctor/therapy-packages',
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          clinic_id: pkg.clinic_id || localStorage.getItem('clinicId') || 1,
+          name: pkg.name,
+          therapy_type: pkg.therapy_type || pkg.targetDosha || 'Virechana',
+          description: pkg.description,
+          base_price: pkg.base_price,
+          stages: (pkg.stages || []).map((s: any, idx: number) => ({
+            stage_type: s.stage_type || s.category || s.stageCategory || s.name || 'Poorvakarma',
+            sequence_order: s.sequence_order !== undefined ? s.sequence_order : (s.sequenceOrder !== undefined ? s.sequenceOrder : idx + 1),
+            day_offset: s.day_offset ?? s.dayOffset ?? 0,
+            duration_days: s.duration_days ?? s.durationDays ?? 1,
+            session_duration_minutes: s.session_duration_minutes ?? s.durationMinutes ?? 60,
+            pre_instructions: s.pre_instructions || s.preInstructions || '',
+            post_instructions: s.post_instructions || s.postInstructions || '',
+            base_diet_framework: s.base_diet_framework || (pkg.baseDietGuidelines ? { allowed: [pkg.baseDietGuidelines], forbidden: [] } : { allowed: [], forbidden: [] }),
+          })),
+        },
+      }),
+      invalidatesTags: ['Package'],
+    }),
+
+    // 10. Get Therapists (GET /api/doctor/therapists)
+    getTherapists: builder.query<Therapist[], void>({
+      query: () => ({
+        url: '/doctor/therapists',
+        method: 'GET',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      transformResponse: (response: any) => {
+        const list = Array.isArray(response) ? response : response.data || [];
+        return list.map((t: any) => ({
+          id: String(t.id),
+          name: t.name,
+          gender: (t.gender === 'Female' ? 'Female' : t.gender === 'Other' ? 'Other' : 'Male') as Therapist['gender'],
+          specializations: Array.isArray(t.specializations) ? t.specializations : [t.specialization || 'Virechana, Basti'],
+          rating: 4.8,
+          activeWorkload: t.currentLoad || 2,
+          isAvailable: t.is_available ?? true,
+        }));
+      },
+    }),
+
+    // 11. Get AI Diet & Yoga Plan
+    getAIDietPlan: builder.query<AIDietCarePlan | null, string>({
+      query: (patientId) => ({
+        url: `/doctor/patients/${patientId}/progress`,
+        method: 'GET',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      transformResponse: (_response: any, _meta, patientId) => ({
+        id: `DIET-${patientId}`,
+        patientId,
+        isApproved: false,
+        generatedDate: new Date().toISOString().split('T')[0],
+        caloricTarget: 1850,
+        stages: [
+          {
+            stageName: 'Poorvakarma Preparation (Deepana & Pachana)',
+            stageCategory: 'Poorvakarma',
+            pathyaFoods: [
+              'Warm Ginger-Cumin Infusion (Shadanga Paniya)',
+              'Light Moong Dal Soup seasoned with rock salt & hing',
+              'Steamed red rice with 1 tsp medicated ghee',
+            ],
+            apathyaFoods: [
+              'Cold and refrigerated beverages',
+              'Heavy fermented items (Dosa, Idli, Curd)',
+              'Fried snacks and refined sugar',
+            ],
+            yogaAsanas: ['Pawanmuktasana - 5 mins', 'Vajrasana post meals - 10 mins'],
+            pranayama: ['Nadi Shodhana - 10 mins daily'],
+            hydrationNotes: 'Drink minimum 2.5L lukewarm water boiled with dry ginger.',
+          },
+          {
+            stageName: 'Pradhanakarma Main Procedure Karma',
+            stageCategory: 'Pradhanakarma',
+            pathyaFoods: [
+              'Clear Rice Soup (Manda & Peya) on empty stomach',
+              'Thin Vilepi (thickened rice gruel) after procedure',
+            ],
+            apathyaFoods: [
+              'All solid grains, spices, milk, or curd',
+              'Physical exertion or heavy talking',
+            ],
+            yogaAsanas: ['Restorative Savasana with bolster'],
+            pranayama: ['Slow Sahaja Pranayama - 10 mins in supine posture'],
+            hydrationNotes: 'Strictly lukewarm water only.',
+          },
+          {
+            stageName: 'Paschatkarma Rehabilitation (Samsarjana Krama)',
+            stageCategory: 'Paschatkarma',
+            pathyaFoods: [
+              'Gradual Manda → Peya → Vilepi → Yusha meal ladder',
+              'Light mung dal broth with rock salt & cow ghee',
+            ],
+            apathyaFoods: ['Heavy protein meals and reheated leftovers'],
+            yogaAsanas: ['Tadasana - 5 mins', 'Bhujangasana - 5 mins'],
+            pranayama: ['Brahmari - 5 mins before sleep'],
+            hydrationNotes: '2.5L structured room temperature water.',
+          },
+        ],
+      }),
+      providesTags: ['DoctorDiet'],
+    }),
+
+    // 12. Approve AI Diet Plan
+    approveAIDietPlan: builder.mutation<
+      { success: boolean; patientId: string },
+      string
+    >({
+      query: (patientId) => ({
+        url: `/doctor/patients/${patientId}/session-log`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          notes: 'AI Diet & Yoga care plan reviewed and approved by treating doctor.',
+        },
+      }),
+      invalidatesTags: ['DoctorPatients', 'DoctorDiet', 'Progress'],
+    }),
+
+    // 13. Log Therapist Session (POST /api/doctor/patients/:patientId/session-log)
     logTherapistSession: builder.mutation<
       { success: boolean },
       { patientId: string; sessionData: Partial<ProgressPoint> }
     >({
-      queryFn: ({ patientId, sessionData }) => {
-        const patientData = (activeProgress as any)[patientId] || (activeProgress as any)['PAT-101'];
-        if (patientData && patientData.timeline) {
-          patientData.timeline.push({
-            day: patientData.timeline.length + 1,
-            date: new Date().toISOString().split('T')[0],
-            stage: sessionData.stage || 'Pradhanakarma',
-            sessionName: sessionData.sessionName || 'Panchakarma Session',
-            clinicalVASScore: sessionData.clinicalVASScore || 3.0,
-            patientReportedVASScore: sessionData.patientReportedVASScore || 3.5,
-            pulseBpm: sessionData.pulseBpm || 72,
-            bloodPressure: sessionData.bloodPressure || '120/80',
-            agniStatus: sessionData.agniStatus || 'Sama',
-            sleepQualityRating: sessionData.sleepQualityRating || 4,
-            therapistNotes: sessionData.therapistNotes || '',
-            complicationFlag: sessionData.complicationFlag || false,
-          });
-        }
-        return { data: { success: true } };
-      },
+      query: ({ patientId, sessionData }) => ({
+        url: `/doctor/patients/${patientId}/session-log`,
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          notes: sessionData.therapistNotes || 'Clinical session completed',
+          vitals: {
+            bp: sessionData.bloodPressure,
+            pulse: sessionData.pulseBpm,
+            vasScore: sessionData.clinicalVASScore,
+          },
+        },
+      }),
       invalidatesTags: ['Progress', 'DoctorPatients'],
     }),
 
@@ -468,10 +589,18 @@ export const doctorApi = apiSlice.injectEndpoints({
       { success: boolean },
       { patientId: string; feedback: any }
     >({
-      queryFn: ({ patientId, feedback }) => {
-        console.log(`[DOCTOR API] Patient feedback recorded for ${patientId}:`, feedback);
-        return { data: { success: true } };
-      },
+      query: ({ patientId, feedback }) => ({
+        url: '/patient/feedback',
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          patientId,
+          rating: feedback.rating || 5,
+          comments: feedback.comments,
+        },
+      }),
       invalidatesTags: ['Progress'],
     }),
   }),
@@ -479,17 +608,22 @@ export const doctorApi = apiSlice.injectEndpoints({
 
 export const {
   useGetPatientsQuery,
+  useOnboardPatientMutation,
   useAddPatientIntakeMutation,
   useGetPrakritiQuestionsQuery,
+  useSubmitPrakritiAssessmentMutation,
   useLockPrakritiMutation,
+  useGenerateTherapyPlanMutation,
+  useCreateTherapyPlanMutation,
+  useGetPatientProgressQuery,
+  useGetProgressAnalyticsQuery,
+  useRecordVitalsMutation,
+  useRecordTherapyVitalsMutation,
   useGetTherapyPackagesQuery,
   useCreateTherapyPackageMutation,
   useGetTherapistsQuery,
-  useCreateTherapyPlanMutation,
   useGetAIDietPlanQuery,
   useApproveAIDietPlanMutation,
-  useGetProgressAnalyticsQuery,
-  useRecordTherapyVitalsMutation,
   useLogTherapistSessionMutation,
   useSubmitPatientFeedbackMutation,
 } = doctorApi;

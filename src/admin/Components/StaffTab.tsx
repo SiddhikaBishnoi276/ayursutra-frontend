@@ -94,7 +94,7 @@ export const StaffTab: React.FC<StaffTabProps> = ({
       render: (item) => (
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-[#f4f7f4] border border-ayur-sand/60 text-ayur-primary flex items-center justify-center font-bold text-xs font-serif shrink-0">
-            {item.fullName
+            {(item.fullName || 'Staff Member')
               .split(' ')
               .map((n) => n[0])
               .join('')
