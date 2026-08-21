@@ -1,7 +1,7 @@
 // src/App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LandingPage } from './auth/page/LandingPage';
-import AdminPage from './Admin/Pages/AdminPage';
+import AdminPage from './admin/Pages/AdminPage';
 import DoctorPage from './Doctor/Pages/DoctorPage';
 import TherapistPage from './Therapist/Pages/TherapistPage';
 import TherapistDashboard from './Therapist/Pages/TherapistDashboard';

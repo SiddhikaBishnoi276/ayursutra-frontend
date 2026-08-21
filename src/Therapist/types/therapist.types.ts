@@ -62,6 +62,7 @@ export interface ObservationPayload {
 
 export interface TherapistSession {
   id: string; // e.g. "SES-101"
+  sessionId?: string;
   therapistId: string;
   therapistName: string;
   patientId: string;
@@ -78,9 +79,18 @@ export interface TherapistSession {
   dayNumber: number;
   totalDays: number;
   scheduledTime: string; // e.g. "09:00 AM"
+  scheduledStartTime?: string;
+  scheduledEndTime?: string;
   scheduledDate: string; // "YYYY-MM-DD"
   durationMinutes: number;
   roomNumber: string;
+  roomType?: string;
+  prakriti?: string;
+  prakritiBadgeColor?: string;
+  chiefComplaint?: string;
+  sequenceOrder?: number;
+  doctorName?: string;
+  dietFramework?: string;
   status: SessionStatus;
   sameGenderMatched: boolean;
   isConsecutiveWithSameTherapist: boolean;
@@ -137,6 +147,12 @@ export interface WorkloadDayStat {
 
 export interface TherapistWorkload {
   therapistId: string;
+  totalToday?: number;
+  completedToday?: number;
+  inProgressToday?: number;
+  upcomingToday?: number;
+  totalWeekSessions?: number;
+  activeTreatmentHours?: number;
   weeklyStats: WorkloadDayStat[];
   avgSessionDurationMinutes: number;
   noShowRatePercent: number;

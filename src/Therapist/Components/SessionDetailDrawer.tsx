@@ -112,7 +112,7 @@ export const SessionDetailDrawer: React.FC<SessionDetailDrawerProps> = ({
               <div className="flex items-center gap-2">
                 <Clock className="w-3.5 h-3.5 text-ayur-green-mid" />
                 <span>
-                  <strong>Time:</strong> {session.scheduledTime} ({session.durationMinutes}m)
+                  <strong>Time:</strong> {session.scheduledStartTime ? `${session.scheduledStartTime.slice(0, 5)} - ${session.scheduledEndTime ? session.scheduledEndTime.slice(0, 5) : ''}` : session.scheduledTime} ({session.durationMinutes}m)
                 </span>
               </div>
               <div className="flex items-center gap-2">
