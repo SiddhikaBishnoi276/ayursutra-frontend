@@ -12,27 +12,56 @@ export interface StaffMember {
 
 export type StageCategory = 'Poorvakarma' | 'Pradhanakarma' | 'Paschatkarma';
 
+export interface BaseDietFramework {
+    allowed?: string[];
+    forbidden?: string[];
+    guidelines?: string;
+    [key: string]: any;
+}
+
 export interface PackageStage {
-    id: string;
-    stageName: string;         // 'Snehana', 'Virechana', etc.
+    id?: string;
+    stageName?: string;         // 'Snehana', 'Virechana', etc.
+    name?: string;
+    stage_type?: StageCategory;
     stageCategory: StageCategory;
-    dayOffset: number;
-    durationMinutes: number;
+    category?: StageCategory;
+    sequence_order?: number;
+    sequenceOrder?: number;
+    day_offset?: number;
+    dayOffset?: number;
+    duration_days?: number;
+    durationDays?: number;
+    session_duration_minutes?: number;
+    durationMinutes?: number;
+    pre_instructions?: string;
+    preInstructions?: string;
+    post_instructions?: string;
+    postInstructions?: string;
+    base_diet_framework?: BaseDietFramework | any;
+    baseDietGuidelines?: string;
 }
 
 export interface TherapyPackage {
     id: string;
+    _raw_id?: number;
+    clinic_id?: number;
     name: string;               // '7-Day Virechana Protocol'
+    therapy_type?: string;
     description: string;
     targetDosha: string;
+    base_price?: number;
     durationDays: number;
+    duration_days?: number;
+    total_duration_days?: number;
     stages: PackageStage[];
     preProcedureInstructions?: string;
     postProcedureInstructions?: string;
     dietFramework?: string;
-    createdBy: 'admin' | 'doctor';
-    authorName: string;
-    status: 'Active' | 'Pending Audit';
+    createdBy?: 'admin' | 'doctor' | string;
+    authorName?: string;
+    status?: 'Active' | 'Pending Audit' | 'Inactive';
+    is_active?: boolean;
 }
 
 export interface Room {

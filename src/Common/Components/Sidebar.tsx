@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   LayoutDashboard,
   Users,
@@ -11,6 +11,9 @@ import {
   ChevronRight,
   X,
 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../app/store';
+import { getInitials } from './Topbar';
 import ayursutraLogo from '../../assets/ayursutra_logo.png';
 
 export interface NavItem {
@@ -52,6 +55,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'questionnaire', label: 'Prakriti Questionnaire', icon: ClipboardList },
   ],
 }) => {
+  const reduxUser = useSelector((state: RootState) => state.auth?.user);
+
+  const currentName = reduxUser?.name || adminName;
+  const currentEmail = reduxUser?.email || adminEmail;
+  const userInitials = useMemo(() => getInitials(currentName), [currentName]);
   return (
     <>
       {/* Mobile / Tablet Backdrop Overlay (< lg) */}
@@ -156,20 +164,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {/* Sidebar Footer */}
         <div className="p-4 border-t border-ayur-sand/40 bg-[#fbf9f5]/50">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f4f7f4] font-bold text-ayur-primary text-xs uppercase border border-ayur-sand/60 font-serif">
-              {adminName
-                .split(' ')
-                .map((n) => n[0])
-                .join('')
-                .slice(0, 2)}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#1b4332] to-[#2d6a4f] font-bold text-white text-xs uppercase border border-ayur-sand/60 font-serif shadow-xs">
+              {userInitials}
             </div>
             {(!collapsed || mobileOpen) && (
               <div className="flex flex-col min-w-0">
                 <span className="text-xs font-bold text-gray-900 truncate leading-tight font-serif">
-                  {adminName}
+                  {currentName}
                 </span>
                 <span className="text-[10px] text-gray-500 font-medium truncate mt-0.5">
-                  {adminEmail}
+                  {currentEmail}
                 </span>
               </div>
             )}
