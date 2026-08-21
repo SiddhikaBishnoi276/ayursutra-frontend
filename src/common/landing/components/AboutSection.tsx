@@ -1,7 +1,7 @@
 import React from 'react';
 import { HeartHandshake, Sprout, Cpu, Globe, CircleCheck } from 'lucide-react';
-import aboutImg from '../../../assets/05_vision_visual.jpg';
-import platformImg from '../../../assets/ayursutra-platform-dashboard.png';
+import aboutImg from '../../../assets/18-ayur.jpeg';
+import platformImg from '../../../assets/21-ayur.png';
 
 const VISION_CARDS = [
   {
@@ -53,7 +53,7 @@ export const AboutSection: React.FC = () => {
             {/* Left */}
             <div className="flex flex-col gap-4 pt-20 md:pt-28 pb-10 pr-0 lg:pr-8">
               <p
-                className="text-[12px] font-bold text-[#3F913F] tracking-[0.18em] uppercase"
+                className="text-[24px] font-bold text-[#3F913F] tracking-[0.18em] uppercase"
                 style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
               >
                 Our Vision
@@ -66,7 +66,7 @@ export const AboutSection: React.FC = () => {
                 <span className="text-[#3F913F] italic">Naturally</span>
               </h2>
               <p
-                className="text-[15px] text-[#667064] leading-[1.9] max-w-[440px]"
+                className="text-[15px] text-[#667064] leading-[1.9] max-w-[440px] pt-5"
                 style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
               >
                 We envision a world where ancient Ayurvedic wisdom and modern
@@ -75,9 +75,9 @@ export const AboutSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Right: Image — slightly down */}
-            <div className="hidden lg:block pt-10">
-              <div className="w-full h-[400px] xl:h-[440px] rounded-b-[2.5rem] overflow-hidden shadow-2xl">
+            {/* Right: Image — pushed towards bottom */}
+            <div className="hidden lg:block mt-24 lg:mt-24">
+              <div className="w-full h-[400px] xl:h-[440px] rounded-b-[2.5rem] overflow-hidden shadow-2xl translate-y-4">
                 <img
                   src={aboutImg}
                   alt="Ayurvedic nature — AyurSutra vision"
@@ -87,7 +87,7 @@ export const AboutSection: React.FC = () => {
             </div>
 
             {/* Mobile image */}
-            <div className="block lg:hidden mb-6">
+            <div className="block lg:hidden mb-6 mt-12">
               <div className="w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-xl">
                 <img
                   src={aboutImg}

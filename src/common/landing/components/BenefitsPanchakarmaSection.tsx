@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check } from 'lucide-react';
-import benefitsImage from '../../../assets/03_benefits_panchakarma.jpg';
+import benefitsImage from '../../../assets/07-ayur.jpeg';
 
 const BENEFITS = [
   "Detoxifies body and mind",
