@@ -1,6 +1,6 @@
 // src/Therapist/Components/HandoverPromptModal.tsx
 import React, { useState } from 'react';
-import { UserCheck, ArrowRightLeft, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { ArrowRightLeft, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { Modal } from '../../Common/Components/Modal';
 import { Button } from '../../Common/Components/Button';
 import { Badge } from '../../Common/Components/Badge';
@@ -46,7 +46,6 @@ export const HandoverPromptModal: React.FC<HandoverPromptModalProps> = ({
   const [handoverReason, setHandoverReason] = useState('Shift End / Relief Rotation');
 
   const selectedTherapist = availableTherapists.find((t) => t.id === selectedTherapistId);
-  const isGenderMatched = selectedTherapist?.gender === session.patientGender;
 
   const handleSubmit = async () => {
     if (!selectedTherapist) return;

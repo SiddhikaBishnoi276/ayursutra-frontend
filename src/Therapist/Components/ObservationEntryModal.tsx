@@ -1,11 +1,8 @@
 // src/Therapist/Components/ObservationEntryModal.tsx
 import React, { useState } from 'react';
 import {
-  FileCheck,
   CheckCircle2,
   AlertTriangle,
-  Flame,
-  Activity,
   HeartPulse,
   Send,
   Package,
@@ -113,8 +110,8 @@ export const ObservationEntryModal: React.FC<ObservationEntryModalProps> = ({
               {isLoading
                 ? 'Submitting…'
                 : complicationFlag
-                ? 'Submit & Flag Doctor'
-                : 'Mark Complete → Unlock Next'}
+                  ? 'Submit & Flag Doctor'
+                  : 'Mark Complete → Unlock Next'}
             </Button>
           </div>
         </div>
@@ -123,11 +120,10 @@ export const ObservationEntryModal: React.FC<ObservationEntryModalProps> = ({
       {/* Dynamic Feedback Banner */}
       {feedbackBanner && (
         <div
-          className={`p-4 rounded-2xl mb-4 text-xs font-bold font-serif flex items-center gap-3 animate-in fade-in duration-200 ${
-            feedbackBanner.type === 'success'
+          className={`p-4 rounded-2xl mb-4 text-xs font-bold font-serif flex items-center gap-3 animate-in fade-in duration-200 ${feedbackBanner.type === 'success'
               ? 'bg-emerald-100 border border-emerald-300 text-emerald-950'
               : 'bg-rose-100 border border-rose-300 text-rose-950'
-          }`}
+            }`}
         >
           {feedbackBanner.type === 'success' ? (
             <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
@@ -155,9 +151,8 @@ export const ObservationEntryModal: React.FC<ObservationEntryModalProps> = ({
             value={dosageGiven}
             onChange={(e) => setDosageGiven(e.target.value)}
             placeholder="e.g. 45 ml Mahatiktaka Ghrita, 200 ml Dashamoola Kwatha steam"
-            className={`w-full rounded-xl border p-2.5 text-xs bg-[#fbf9f5] focus:outline-none focus:ring-2 focus:ring-ayur-primary ${
-              errors.dosageGiven ? 'border-rose-500 bg-rose-50/20' : 'border-ayur-sand/80'
-            }`}
+            className={`w-full rounded-xl border p-2.5 text-xs bg-[#fbf9f5] focus:outline-none focus:ring-2 focus:ring-ayur-primary ${errors.dosageGiven ? 'border-rose-500 bg-rose-50/20' : 'border-ayur-sand/80'
+              }`}
           />
           {errors.dosageGiven && (
             <p className="text-[10px] text-rose-600 font-bold mt-1">{errors.dosageGiven}</p>
@@ -171,11 +166,10 @@ export const ObservationEntryModal: React.FC<ObservationEntryModalProps> = ({
           </label>
           <div className="grid grid-cols-2 gap-3">
             <label
-              className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
-                patientResponse === 'Normal'
+              className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${patientResponse === 'Normal'
                   ? 'bg-emerald-50 border-emerald-400 text-emerald-950 font-bold shadow-2xs'
                   : 'bg-white border-ayur-sand/70 hover:bg-gray-50'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-2">
                 <input
@@ -197,11 +191,10 @@ export const ObservationEntryModal: React.FC<ObservationEntryModalProps> = ({
             </label>
 
             <label
-              className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${
-                patientResponse === 'Abnormal'
+              className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-all ${patientResponse === 'Abnormal'
                   ? 'bg-rose-50 border-rose-400 text-rose-950 font-bold shadow-2xs'
                   : 'bg-white border-ayur-sand/70 hover:bg-gray-50'
-              }`}
+                }`}
             >
               <div className="flex items-center gap-2">
                 <input
@@ -320,9 +313,8 @@ export const ObservationEntryModal: React.FC<ObservationEntryModalProps> = ({
               onChange={(e) => setComplicationNotes(e.target.value)}
               rows={2}
               placeholder="Describe symptom, onset time, pulse shifts, or skin reactions..."
-              className={`w-full rounded-xl border p-2.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 ${
-                errors.complicationNotes ? 'border-rose-500' : 'border-rose-200'
-              }`}
+              className={`w-full rounded-xl border p-2.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 ${errors.complicationNotes ? 'border-rose-500' : 'border-rose-200'
+                }`}
             />
             {errors.complicationNotes && (
               <p className="text-[10px] text-rose-600 font-bold">{errors.complicationNotes}</p>

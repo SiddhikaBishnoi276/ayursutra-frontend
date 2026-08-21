@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { TherapistSession, ObservationPayload } from '../types/therapist.types';
 
 export const useObservationEntry = (
-  session: TherapistSession | null,
-  onCompleteSuccess?: (result: { session: TherapistSession; nextUnlocked: boolean; isFlagged: boolean }) => void
+  session: TherapistSession | null
 ) => {
   const [dosageGiven, setDosageGiven] = useState<string>('');
   const [patientResponse, setPatientResponse] = useState<'Normal' | 'Abnormal'>('Normal');

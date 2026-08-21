@@ -1,14 +1,8 @@
 // src/Therapist/Pages/AvailabilityPage.tsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  Calendar,
-  User,
   ShieldCheck,
-  Award,
-  Clock,
-  BarChart3,
-  TrendingUp,
-  MapPin,
   Plus,
   Lock,
 } from 'lucide-react';
@@ -21,10 +15,11 @@ import { AvailabilityCalendar } from '../Components/AvailabilityCalendar';
 import { useAvailability } from '../Hooks/useAvailability';
 
 export interface AvailabilityPageProps {
-  onBack: () => void;
+  onBack?: () => void;
 }
 
 export const AvailabilityPage: React.FC<AvailabilityPageProps> = ({ onBack }) => {
+  const navigate = useNavigate();
   const {
     viewMode,
     setViewMode,
@@ -47,12 +42,20 @@ export const AvailabilityPage: React.FC<AvailabilityPageProps> = ({ onBack }) =>
     removeBlockedSlot,
   } = useAvailability();
 
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate('/therapist/dashboard');
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto">
       {/* Top Header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <BackButton onClick={onBack} label="Back to Dashboard" />
+          <BackButton onClick={handleBack} label="Back to Dashboard" />
           <div>
             <h1 className="text-2xl font-serif font-black text-gray-900 tracking-tight">
               Duty Availability & Personal Workload
@@ -76,10 +79,10 @@ export const AvailabilityPage: React.FC<AvailabilityPageProps> = ({ onBack }) =>
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1b3b2b] text-white font-serif font-black text-xl shadow-md shrink-0">
               {profile?.name
                 ? profile.name
-                    .split(' ')
-                    .map((n) => n[0])
-                    .join('')
-                    .slice(0, 2)
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .slice(0, 2)
                 : 'SK'}
             </div>
 
@@ -244,22 +247,20 @@ export const AvailabilityPage: React.FC<AvailabilityPageProps> = ({ onBack }) =>
               <button
                 type="button"
                 onClick={() => setIsFullDay(true)}
-                className={`p-3 rounded-xl border text-center font-serif font-bold cursor-pointer transition ${
-                  isFullDay
-                    ? 'bg-ayur-primary text-white border-ayur-primary'
-                    : 'bg-[#fbf9f5] text-gray-700 border-ayur-sand/70'
-                }`}
+                className={`p-3 rounded-xl border text-center font-serif font-bold cursor-pointer transition ${isFullDay
+                  ? 'bg-ayur-primary text-white border-ayur-primary'
+                  : 'bg-[#fbf9f5] text-gray-700 border-ayur-sand/70'
+                  }`}
               >
                 Full Day Leave
               </button>
               <button
                 type="button"
                 onClick={() => setIsFullDay(false)}
-                className={`p-3 rounded-xl border text-center font-serif font-bold cursor-pointer transition ${
-                  !isFullDay
-                    ? 'bg-ayur-primary text-white border-ayur-primary'
-                    : 'bg-[#fbf9f5] text-gray-700 border-ayur-sand/70'
-                }`}
+                className={`p-3 rounded-xl border text-center font-serif font-bold cursor-pointer transition ${!isFullDay
+                  ? 'bg-ayur-primary text-white border-ayur-primary'
+                  : 'bg-[#fbf9f5] text-gray-700 border-ayur-sand/70'
+                  }`}
               >
                 Partial Time-Block
               </button>

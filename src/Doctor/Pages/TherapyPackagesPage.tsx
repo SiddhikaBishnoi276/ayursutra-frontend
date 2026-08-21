@@ -9,11 +9,8 @@ import { Modal } from '../../Common/Components/Modal';
 import { TherapyStageEditor } from '../Components/TherapyStageEditor';
 import { BackButton } from '../../Common/Components/BackButton';
 import {
-  FileSpreadsheet,
   Plus,
   AlertTriangle,
-  CheckCircle2,
-  Clock,
   Sparkles,
   ChevronDown,
   ChevronUp,

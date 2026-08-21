@@ -1,12 +1,11 @@
 // src/Therapist/Pages/SessionStartPage.tsx
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Play,
   PackageX,
   Sparkles,
   MapPin,
-  Clock,
-  User,
   ShieldCheck,
   AlertOctagon,
 } from 'lucide-react';
@@ -17,23 +16,37 @@ import { Button } from '../../Common/Components/Button';
 import { PreFlightChecklist } from '../Components/PreFlightChecklist';
 import { PatientContinuityBanner } from '../Components/PatientContinuityBanner';
 import { usePreFlightCheck } from '../Hooks/usePreFlightCheck';
+import { useActiveSession } from '../Hooks/useActiveSession';
+import { useGetSessionDetailQuery } from '../apis/therapistApi';
 import { TherapistSession } from '../types/therapist.types';
 
 export interface SessionStartPageProps {
-  session: TherapistSession;
-  onBack: () => void;
-  onStartSuccess: (session: TherapistSession) => void;
-  onStartSession: () => Promise<any>;
+  session?: TherapistSession;
+  onBack?: () => void;
+  onStartSuccess?: (session: TherapistSession) => void;
+  onStartSession?: () => Promise<any>;
   isLoading?: boolean;
 }
 
 export const SessionStartPage: React.FC<SessionStartPageProps> = ({
-  session,
+  session: propSession,
   onBack,
   onStartSuccess,
   onStartSession,
-  isLoading = false,
+  isLoading: propIsLoading = false,
 }) => {
+  const { sessionId } = useParams<{ sessionId: string }>();
+  const navigate = useNavigate();
+
+  const { data: fetchedSession, isLoading: isFetching } = useGetSessionDetailQuery(
+    sessionId || propSession?.id || '',
+    { skip: !!propSession || !sessionId }
+  );
+
+  const activeSessionHook = useActiveSession(sessionId || propSession?.id);
+
+  const session = propSession || fetchedSession;
+
   const {
     checklist,
     toggleCheck,
@@ -41,27 +54,55 @@ export const SessionStartPage: React.FC<SessionStartPageProps> = ({
     materialsCheck,
     hasInventoryShortage,
     isReadyToStart,
-  } = usePreFlightCheck(session);
+  } = usePreFlightCheck(session || null);
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate('/therapist/queue');
+    }
+  };
+
   const handleStart = async () => {
-    if (!isReadyToStart) return;
+    if (!isReadyToStart || !session) return;
     setErrorMsg(null);
     try {
-      const res = await onStartSession();
-      onStartSuccess(res || session);
+      let res;
+      if (onStartSession) {
+        res = await onStartSession();
+      } else {
+        res = await activeSessionHook.startSession();
+      }
+
+      if (onStartSuccess) {
+        onStartSuccess(res || session);
+      } else {
+        navigate(`/therapist/session/${res?.id || session.id}/active`);
+      }
     } catch (err: any) {
       setErrorMsg(err?.message || 'Failed to start session. Please retry.');
     }
   };
+
+  if (isFetching || !session) {
+    return (
+      <div className="flex items-center justify-center p-12 text-sm text-gray-500 font-serif">
+        Loading session pre-flight checklist...
+      </div>
+    );
+  }
+
+  const isLoading = propIsLoading || activeSessionHook.isLoading;
 
   return (
     <div className="flex flex-col gap-6 max-w-4xl mx-auto">
       {/* Top Header with Universal Back Button */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <BackButton onClick={onBack} label="Back to Queue" />
+          <BackButton onClick={handleBack} label="Back to Queue" />
           <div>
             <h1 className="text-xl sm:text-2xl font-serif font-black text-gray-900 tracking-tight">
               Pre-Session Safety & Protocol Validation
@@ -172,7 +213,7 @@ export const SessionStartPage: React.FC<SessionStartPageProps> = ({
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <Button variant="secondary" size="md" onClick={onBack}>
+          <Button variant="secondary" size="md" onClick={handleBack}>
             Cancel
           </Button>
 

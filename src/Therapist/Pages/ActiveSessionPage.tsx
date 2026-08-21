@@ -1,16 +1,13 @@
 // src/Therapist/Pages/ActiveSessionPage.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   AlertOctagon,
   CheckCircle2,
-  Clock,
   Sparkles,
-  MapPin,
-  HeartPulse,
   Package,
   FileText,
   AlertTriangle,
-  ArrowRight,
   ShieldAlert,
   ArrowRightLeft,
   RefreshCw,
@@ -29,9 +26,9 @@ import { useActiveSession } from '../Hooks/useActiveSession';
 import { TherapistSession, IncidentReportPayload, ObservationPayload } from '../types/therapist.types';
 
 export interface ActiveSessionPageProps {
-  session: TherapistSession;
-  onBack: () => void;
-  onSessionCompleteRedirect: () => void;
+  session?: TherapistSession;
+  onBack?: () => void;
+  onSessionCompleteRedirect?: () => void;
 }
 
 export const ActiveSessionPage: React.FC<ActiveSessionPageProps> = ({
@@ -39,8 +36,13 @@ export const ActiveSessionPage: React.FC<ActiveSessionPageProps> = ({
   onBack,
   onSessionCompleteRedirect,
 }) => {
+  const { sessionId } = useParams<{ sessionId: string }>();
+  const navigate = useNavigate();
+
+  const targetSessionId = sessionId || initialSession?.id || '';
+
   const {
-    session = initialSession,
+    session = initialSession || null,
     heartbeat,
     emergencyPause,
     resumeSession,
@@ -48,7 +50,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionPageProps> = ({
     handoverSession,
     simulateDoctorEdit,
     isLoading,
-  } = useActiveSession(initialSession.id);
+  } = useActiveSession(targetSessionId);
 
   const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
   const [isObservationModalOpen, setIsObservationModalOpen] = useState(false);
@@ -56,14 +58,29 @@ export const ActiveSessionPage: React.FC<ActiveSessionPageProps> = ({
   const [doctorEditBannerDismissed, setDoctorEditBannerDismissed] = useState(false);
 
   const currentSession = session || initialSession;
-  const isEmergencyPaused = currentSession.status === 'paused_emergency';
+
+  const handleNavigateBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate('/therapist/queue');
+    }
+  };
+
+  const handleRedirectComplete = () => {
+    if (onSessionCompleteRedirect) {
+      onSessionCompleteRedirect();
+    } else {
+      navigate('/therapist/queue');
+    }
+  };
 
   // Handle attempt to navigate away mid-session
   const handleAttemptBack = () => {
-    if (currentSession.status === 'in_progress') {
+    if (currentSession?.status === 'in_progress') {
       setIsHandoverModalOpen(true);
     } else {
-      onBack();
+      handleNavigateBack();
     }
   };
 
@@ -82,7 +99,7 @@ export const ActiveSessionPage: React.FC<ActiveSessionPageProps> = ({
   const handleSubmitObservation = async (observation: ObservationPayload) => {
     const res = await completeSession(observation);
     setTimeout(() => {
-      onSessionCompleteRedirect();
+      handleRedirectComplete();
     }, 1200);
     return res;
   };
@@ -95,8 +112,18 @@ export const ActiveSessionPage: React.FC<ActiveSessionPageProps> = ({
   ) => {
     await handoverSession(newTherapistId, newTherapistName, reason);
     setIsHandoverModalOpen(false);
-    onBack();
+    handleNavigateBack();
   };
+
+  if (!currentSession) {
+    return (
+      <div className="flex items-center justify-center p-12 text-sm text-gray-500 font-serif">
+        Loading active session workspace...
+      </div>
+    );
+  }
+
+  const isEmergencyPaused = currentSession.status === 'paused_emergency';
 
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto pb-12">

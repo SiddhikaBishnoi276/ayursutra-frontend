@@ -3,13 +3,8 @@ import React from 'react';
 import {
   CheckCircle2,
   XCircle,
-  AlertTriangle,
   PackageCheck,
   PackageX,
-  Sparkles,
-  ShieldAlert,
-  BedDouble,
-  UserCheck,
   CheckSquare,
   Square,
 } from 'lucide-react';

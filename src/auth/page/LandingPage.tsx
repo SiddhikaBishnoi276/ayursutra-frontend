@@ -7,4 +7,4 @@
  *
  * This file re-exports it so that App.tsx routing requires zero changes.
  */
-export { LandingPage } from '../../common/landing/LandingPage';
+export { LandingPage } from '../../Common/landing/LandingPage';

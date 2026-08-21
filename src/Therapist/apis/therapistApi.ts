@@ -4,7 +4,6 @@ import { apiSlice } from '../../apis';
 import {
   TherapistSession,
   TherapistProfile,
-  TherapistAvailability,
   TherapistWorkload,
   IncidentReportPayload,
   ObservationPayload,

@@ -1,16 +1,20 @@
 // src/App.tsx
-import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { LandingPage } from './auth/page/LandingPage';
 import AdminPage from './Admin/Pages/AdminPage';
 import DoctorPage from './Doctor/Pages/DoctorPage';
 import TherapistPage from './Therapist/Pages/TherapistPage';
+import TherapistDashboard from './Therapist/Pages/TherapistDashboard';
+import SessionQueuePage from './Therapist/Pages/SessionQueuePage';
+import SessionStartPage from './Therapist/Pages/SessionStartPage';
+import ActiveSessionPage from './Therapist/Pages/ActiveSessionPage';
+import AvailabilityPage from './Therapist/Pages/AvailabilityPage';
 
-// Placeholder Components for Dashboards (Hum inhe next step me design karenge)
-const AdminDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Admin Dashboard Prototype (Coming Next)</div>;
-const DoctorDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Doctor Dashboard</div>;
-const TherapistDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Therapist Dashboard</div>;
-const PatientDashboard = () => <div className="p-10 text-2xl font-bold text-ayur-primary">Patient Dashboard (Coming Soon)</div>;
-
+const PatientDashboard = () => (
+  <div className="p-10 text-2xl font-bold text-ayur-primary">
+    Patient Dashboard (Coming Soon)
+  </div>
+);
 
 function App() {
   return (
@@ -20,10 +24,27 @@ function App() {
           {/* Default Route: Landing Page */}
           <Route path="/" element={<LandingPage />} />
 
-          {/* Role Based Dashboard Routes */}
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-          <Route path="/therapist-dashboard" element={<TherapistDashboard />} />
+          {/* Admin Routes */}
+          <Route path="/admin-dashboard" element={<AdminPage />} />
+          <Route path="/admin/*" element={<AdminPage />} />
+
+          {/* Doctor Routes */}
+          <Route path="/doctor-dashboard" element={<DoctorPage />} />
+          <Route path="/doctor/*" element={<DoctorPage />} />
+
+          {/* Therapist Nested Routes */}
+          <Route path="/therapist" element={<TherapistPage />}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<TherapistDashboard />} />
+            <Route path="queue" element={<SessionQueuePage />} />
+            <Route path="session/:sessionId/start" element={<SessionStartPage />} />
+            <Route path="session/:sessionId/active" element={<ActiveSessionPage />} />
+            <Route path="availability" element={<AvailabilityPage />} />
+          </Route>
+          {/* Backward-compatibility redirect */}
+          <Route path="/therapist-dashboard" element={<Navigate to="/therapist/dashboard" replace />} />
+
+          {/* Patient Routes */}
           <Route path="/patient-dashboard" element={<PatientDashboard />} />
 
           {/* Catch all unmatched routes and send to home */}

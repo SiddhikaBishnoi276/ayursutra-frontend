@@ -1,14 +1,12 @@
 // src/Therapist/Pages/SessionQueuePage.tsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Search,
-  Filter,
   Clock,
   Sparkles,
   RefreshCw,
-  AlertTriangle,
 } from 'lucide-react';
-import { Badge } from '../../Common/Components/Badge';
 import { Button } from '../../Common/Components/Button';
 import { EmptyState } from '../../Common/Components/EmptyState';
 import { useSessionQueue } from '../Hooks/useSessionQueue';
@@ -17,23 +15,21 @@ import { SessionDetailDrawer } from '../Components/SessionDetailDrawer';
 import { TherapistSession } from '../types/therapist.types';
 
 export interface SessionQueuePageProps {
-  onStartSession: (session: TherapistSession) => void;
-  onResumeSession: (session: TherapistSession) => void;
+  onStartSession?: (session: TherapistSession) => void;
+  onResumeSession?: (session: TherapistSession) => void;
 }
 
 export const SessionQueuePage: React.FC<SessionQueuePageProps> = ({
   onStartSession,
   onResumeSession,
 }) => {
+  const navigate = useNavigate();
   const {
     sessions,
     filter,
     setFilter,
     stats,
-    selectedSession,
-    setSelectedSessionId,
     refetch,
-    isLoading,
   } = useSessionQueue();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -47,6 +43,22 @@ export const SessionQueuePage: React.FC<SessionQueuePageProps> = ({
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
     setActiveDrawerSession(null);
+  };
+
+  const handleStart = (session: TherapistSession) => {
+    if (onStartSession) {
+      onStartSession(session);
+    } else {
+      navigate(`/therapist/session/${session.id}/start`);
+    }
+  };
+
+  const handleResume = (session: TherapistSession) => {
+    if (onResumeSession) {
+      onResumeSession(session);
+    } else {
+      navigate(`/therapist/session/${session.id}/active`);
+    }
   };
 
   const filterTabs: { id: typeof filter.status; label: string; count: number }[] = [
@@ -147,8 +159,8 @@ export const SessionQueuePage: React.FC<SessionQueuePageProps> = ({
               key={session.id}
               session={session}
               onSelect={handleOpenDrawer}
-              onStartSession={onStartSession}
-              onResumeSession={onResumeSession}
+              onStartSession={handleStart}
+              onResumeSession={handleResume}
               onViewAlert={handleOpenDrawer}
               onViewNotes={handleOpenDrawer}
             />
@@ -161,8 +173,8 @@ export const SessionQueuePage: React.FC<SessionQueuePageProps> = ({
         session={activeDrawerSession}
         isOpen={isDrawerOpen}
         onClose={handleCloseDrawer}
-        onStartSession={onStartSession}
-        onResumeSession={onResumeSession}
+        onStartSession={handleStart}
+        onResumeSession={handleResume}
         onViewNotes={handleOpenDrawer}
       />
     </div>

@@ -15,7 +15,6 @@ import {
   User,
   ShieldCheck,
   Printer,
-  Sparkles,
 } from 'lucide-react';
 
 import { PatientSwitcher } from '../Components/PatientSwitcher';
@@ -29,7 +28,6 @@ export interface ReportsPageProps {
 
 export const ReportsPage: React.FC<ReportsPageProps> = ({ patient, onBack, onSelectPatient }) => {
   const {
-    patients,
     selectedPatientId,
     setSelectedPatientId,
     selectedPatient,

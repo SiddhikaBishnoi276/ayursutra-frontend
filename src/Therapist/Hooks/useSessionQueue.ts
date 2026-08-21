@@ -2,7 +2,7 @@
 // Hook for managing session queue filtering, searching, and metrics
 import { useState, useMemo } from 'react';
 import { useGetTherapistQueueQuery } from '../apis/therapistApi';
-import { TherapistSession, SessionQueueFilter } from '../types/therapist.types';
+import { SessionQueueFilter } from '../types/therapist.types';
 
 export const useSessionQueue = (therapistId: string = 'TH-01') => {
   const { data: queue = [], isLoading, isError, refetch } = useGetTherapistQueueQuery(therapistId);

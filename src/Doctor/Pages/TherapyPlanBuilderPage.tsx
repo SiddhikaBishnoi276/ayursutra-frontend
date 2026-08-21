@@ -16,23 +16,15 @@ import { PatientSwitcher } from '../Components/PatientSwitcher';
 import { BackButton } from '../../Common/Components/BackButton';
 import {
   Sparkles,
-  Calendar,
   CheckCircle2,
-  Send,
-  UserCheck,
-  FileCheck,
   Clock,
   ArrowRight,
   ArrowLeft,
-  ShieldCheck,
-  User,
   AlertTriangle,
-  FileSpreadsheet,
   Plus,
   ChevronDown,
   ChevronUp,
   Layers,
-  Check,
 } from 'lucide-react';
 
 export interface TherapyPlanBuilderPageProps {
@@ -167,7 +159,7 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
   const [pkgName, setPkgName] = useState('');
   const [pkgDescription, setPkgDescription] = useState('');
   const [pkgTargetDosha, setPkgTargetDosha] = useState(activePatient.dominantPrakriti || 'Pitta-Vata');
-  const [pkgDiet, setPkgDiet] = useState('');
+  const [pkgDiet, setPkgDiet] = useState('Light Laghu Ahara during treatment.');
   const [newStages, setNewStages] = useState<TherapyStage[]>([
     {
       id: 'S-NEW-1',
@@ -812,6 +804,17 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
               onChange={(e) => setPkgDescription(e.target.value)}
               placeholder="Indicated for degenerative lumbar disorders, sciatica, and deep seated Vata."
               className="rounded-xl border border-ayur-sand/80 p-2.5 text-xs bg-[#fbf9f5] focus:outline-none focus:border-ayur-primary resize-none"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="font-bold text-gray-700 uppercase text-[10px]">Base Diet Guidelines</label>
+            <input
+              type="text"
+              value={pkgDiet}
+              onChange={(e) => setPkgDiet(e.target.value)}
+              placeholder="e.g. Light warm diet, avoid spicy & sour foods."
+              className="rounded-xl border border-ayur-sand/80 px-3 py-2 text-xs bg-[#fbf9f5] focus:outline-none focus:border-ayur-primary"
             />
           </div>
 

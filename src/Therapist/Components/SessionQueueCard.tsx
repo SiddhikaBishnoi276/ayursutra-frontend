@@ -10,7 +10,6 @@ import {
   AlertCircle,
   FileText,
   ShieldCheck,
-  User,
 } from 'lucide-react';
 import { Card } from '../../Common/Components/Card';
 import { Badge } from '../../Common/Components/Badge';

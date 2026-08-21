@@ -1,9 +1,8 @@
 // src/Therapist/Components/EmergencyPauseModal.tsx
 import React from 'react';
-import { AlertOctagon, HeartPulse, Send, ShieldAlert, X } from 'lucide-react';
+import { AlertOctagon, HeartPulse, Send, ShieldAlert } from 'lucide-react';
 import { Modal } from '../../Common/Components/Modal';
 import { Button } from '../../Common/Components/Button';
-import { Badge } from '../../Common/Components/Badge';
 import { TherapistSession, IncidentReportPayload } from '../types/therapist.types';
 import { useEmergencyPause } from '../Hooks/useEmergencyPause';
 

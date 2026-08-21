@@ -4,7 +4,6 @@ import {
   ShieldCheck,
   Stethoscope,
   User,
-  Truck,
   X,
 } from "lucide-react";
 import React from "react";

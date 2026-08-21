@@ -1,20 +1,13 @@
 // src/Therapist/Components/AvailabilityCalendar.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Calendar as CalendarIcon,
   Clock,
   Plus,
   Trash2,
-  CheckCircle2,
-  AlertCircle,
-  ChevronLeft,
-  ChevronRight,
-  ShieldAlert,
 } from 'lucide-react';
 import { Card } from '../../Common/Components/Card';
-import { Badge } from '../../Common/Components/Badge';
 import { Button } from '../../Common/Components/Button';
-import { Modal } from '../../Common/Components/Modal';
 
 export interface AvailabilityCalendarProps {
   viewMode: 'week' | 'month';

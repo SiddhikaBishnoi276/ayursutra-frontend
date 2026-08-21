@@ -11,7 +11,6 @@ import {
   useSimulateDoctorMidSessionEditMutation,
 } from '../apis/therapistApi';
 import {
-  TherapistSession,
   IncidentReportPayload,
   ObservationPayload,
 } from '../types/therapist.types';
