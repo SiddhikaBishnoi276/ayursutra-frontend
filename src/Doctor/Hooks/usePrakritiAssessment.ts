@@ -136,13 +136,20 @@ export function usePrakritiAssessment(patientId: string) {
   }, [questions, answers]);
 
   const lockFinalPrakriti = async () => {
+    const formattedAnswers = Object.entries(answers).map(([qId, optId]) => ({
+      question_id: parseInt(qId, 10),
+      option_id: parseInt(optId, 10),
+    }));
+
     await lockPrakritiMutation({
       patientId,
-      dominantPrakriti: liveScore.dominant,
+      dominantPrakriti: liveScore.dominant || 'Vata-Pitta',
       notes: `${pulseObservation} | ${physicalExamNotes} | ${doctorNotes}`,
+      answers: formattedAnswers,
     }).unwrap();
     setIsLocked(true);
   };
+
 
   return {
     questions,
