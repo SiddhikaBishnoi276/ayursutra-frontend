@@ -67,10 +67,10 @@ export const SessionQueueCard: React.FC<SessionQueueCardProps> = ({
         {/* Left Side: Time, Patient Info & Stage */}
         <div className="flex items-start gap-4 min-w-0 flex-1">
           {/* Time Badge Box */}
-          <div className="flex flex-col items-center justify-center rounded-2xl bg-[#fbf9f5] border border-ayur-sand/70 p-3 min-w-[5.5rem] shrink-0 text-center">
+          <div className="flex flex-col items-center justify-center rounded-2xl bg-[#fbf9f5] border border-ayur-sand/70 p-3 min-w-[6.5rem] shrink-0 text-center">
             <span className="text-xs font-black text-ayur-primary font-serif flex items-center gap-1">
               <Clock className="w-3.5 h-3.5 text-ayur-green-mid" />
-              {session.scheduledTime}
+              {session.scheduledStartTime ? `${session.scheduledStartTime.slice(0, 5)} - ${session.scheduledEndTime ? session.scheduledEndTime.slice(0, 5) : ''}` : session.scheduledTime}
             </span>
             <span className="text-[10px] font-bold text-gray-500 mt-1">
               {session.durationMinutes} mins
