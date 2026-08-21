@@ -14,18 +14,7 @@ export function usePrakritiAssessment(patientId: string) {
 
   const patient = patients.find((p) => p.id === patientId);
 
-  const [answers, setAnswers] = useState<Record<string, string>>({
-    Q1: 'Q1-A',
-    Q2: 'Q2-A',
-    Q3: 'Q3-A',
-    Q4: 'Q4-A',
-    Q5: 'Q5-A',
-    Q6: 'Q6-A',
-    Q7: 'Q7-B',
-    Q8: 'Q8-A',
-    Q9: 'Q9-A',
-    Q10: 'Q10-A',
-  });
+  const [answers, setAnswers] = useState<Record<string, string>>({});
 
   const [pulseObservation, setPulseObservation] = useState(
     'Vataja Sarpa Gati (snake-like, fast rhythm, 76 bpm).'
@@ -38,56 +27,31 @@ export function usePrakritiAssessment(patientId: string) {
   );
   const [isLocked, setIsLocked] = useState(false);
 
-  // Sync locked state whenever patient changes
+  // Sync locked state and initialize questions when questions or patient changes
+  useEffect(() => {
+    if (questions.length > 0) {
+      setAnswers((prev) => {
+        const next: Record<string, string> = { ...prev };
+        questions.forEach((q) => {
+          if (!next[q.id] || !q.options.some((o) => o.id === next[q.id])) {
+            // Default select based on patient's dominant dosha if known, else first option
+            if (patient?.dominantPrakriti?.toLowerCase().includes('pitta') && q.options[1]) {
+              next[q.id] = q.options[1].id;
+            } else if (patient?.dominantPrakriti?.toLowerCase().includes('kapha') && q.options[2]) {
+              next[q.id] = q.options[2].id;
+            } else if (q.options[0]) {
+              next[q.id] = q.options[0].id;
+            }
+          }
+        });
+        return next;
+      });
+    }
+  }, [questions, patientId, patient?.dominantPrakriti]);
+
   useEffect(() => {
     if (patient) {
       setIsLocked(!!patient.dominantPrakriti);
-      if (patient.dominantPrakriti?.toLowerCase().includes('pitta')) {
-        setAnswers({
-          Q1: 'Q1-B',
-          Q2: 'Q2-B',
-          Q3: 'Q3-B',
-          Q4: 'Q4-B',
-          Q5: 'Q5-B',
-          Q6: 'Q6-B',
-          Q7: 'Q7-B',
-          Q8: 'Q8-B',
-          Q9: 'Q9-B',
-          Q10: 'Q10-B',
-        });
-        setPulseObservation('Manduka Gati (jumping frog rhythm, 82 bpm, hot/sharp).');
-        setPhysicalExamNotes('Warm erythematous patches with burning sensation.');
-      } else if (patient.dominantPrakriti?.toLowerCase().includes('kapha')) {
-        setAnswers({
-          Q1: 'Q1-C',
-          Q2: 'Q2-C',
-          Q3: 'Q3-C',
-          Q4: 'Q4-C',
-          Q5: 'Q5-C',
-          Q6: 'Q6-C',
-          Q7: 'Q7-C',
-          Q8: 'Q8-C',
-          Q9: 'Q9-C',
-          Q10: 'Q10-C',
-        });
-        setPulseObservation('Hamsa Gati (swan-like, slow, deep, 64 bpm).');
-        setPhysicalExamNotes('Cold, clammy skin with mucus congestion.');
-      } else {
-        setAnswers({
-          Q1: 'Q1-A',
-          Q2: 'Q2-A',
-          Q3: 'Q3-A',
-          Q4: 'Q4-A',
-          Q5: 'Q5-A',
-          Q6: 'Q6-A',
-          Q7: 'Q7-B',
-          Q8: 'Q8-A',
-          Q9: 'Q9-A',
-          Q10: 'Q10-A',
-        });
-        setPulseObservation('Vataja Sarpa Gati (snake-like, fast rhythm, 76 bpm).');
-        setPhysicalExamNotes('Dry scaly skin, tenderness in joints.');
-      }
     }
   }, [patientId, patient]);
 
@@ -136,19 +100,30 @@ export function usePrakritiAssessment(patientId: string) {
   }, [questions, answers]);
 
   const lockFinalPrakriti = async () => {
-    const formattedAnswers = Object.entries(answers).map(([qId, optId]) => ({
-      question_id: parseInt(qId, 10),
-      option_id: parseInt(optId, 10),
-    }));
+    const formattedAnswers = Object.entries(answers)
+      .map(([qId, optId]) => ({
+        question_id: parseInt(qId, 10),
+        option_id: parseInt(optId, 10),
+      }))
+      .filter((a) => !isNaN(a.question_id) && !isNaN(a.option_id));
 
     await lockPrakritiMutation({
       patientId,
       dominantPrakriti: liveScore.dominant || 'Vata-Pitta',
       notes: `${pulseObservation} | ${physicalExamNotes} | ${doctorNotes}`,
       answers: formattedAnswers,
+      tentative_vata: liveScore.vata,
+      tentative_pitta: liveScore.pitta,
+      tentative_kapha: liveScore.kapha,
+      scores: {
+        vata: liveScore.vata,
+        pitta: liveScore.pitta,
+        kapha: liveScore.kapha,
+      },
     }).unwrap();
     setIsLocked(true);
   };
+
 
 
   return {

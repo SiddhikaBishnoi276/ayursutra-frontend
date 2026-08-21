@@ -199,9 +199,18 @@ export const doctorApi = apiSlice.injectEndpoints({
     // Backward-compatible alias for submitPrakritiAssessment
     lockPrakriti: builder.mutation<
       any,
-      { patientId: string; dominantPrakriti: string; notes?: string; answers?: any[] }
+      {
+        patientId: string;
+        dominantPrakriti: string;
+        notes?: string;
+        answers?: any[];
+        tentative_vata?: number;
+        tentative_pitta?: number;
+        tentative_kapha?: number;
+        scores?: { vata: number; pitta: number; kapha: number };
+      }
     >({
-      query: ({ patientId, dominantPrakriti, notes, answers }) => ({
+      query: ({ patientId, dominantPrakriti, notes, answers, tentative_vata, tentative_pitta, tentative_kapha, scores }) => ({
         url: `/doctor/prakriti/patients/${patientId}/assessment`,
         method: 'POST',
         headers: {
@@ -211,10 +220,15 @@ export const doctorApi = apiSlice.injectEndpoints({
           confirmed_dosha: dominantPrakriti,
           clinical_observation: notes || `Prakriti confirmed as ${dominantPrakriti}`,
           answers: answers || [],
+          tentative_vata,
+          tentative_pitta,
+          tentative_kapha,
+          scores,
         },
       }),
       invalidatesTags: ['DoctorPatients', 'PatientDashboard'],
     }),
+
 
     // 5. Generate Therapy Plan (POST /api/doctor/patients/:patientId/therapy-plan)
     generateTherapyPlan: builder.mutation<
