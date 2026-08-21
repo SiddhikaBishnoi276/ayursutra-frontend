@@ -1,5 +1,5 @@
 // src/Therapist/Components/SessionDetailDrawer.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import {
   X,
   Clock,
@@ -15,6 +15,7 @@ import { Button } from '../../Common/Components/Button';
 import { TherapistSession } from '../types/therapist.types';
 import { getStatusBadgeConfig } from '../Services/therapistService';
 import { PatientContinuityBanner } from './PatientContinuityBanner';
+import { ClinicalNotesModal } from './ClinicalNotesModal';
 
 export interface SessionDetailDrawerProps {
   session: TherapistSession | null;
@@ -22,7 +23,7 @@ export interface SessionDetailDrawerProps {
   onClose: () => void;
   onStartSession: (session: TherapistSession) => void;
   onResumeSession: (session: TherapistSession) => void;
-  onViewNotes: (session: TherapistSession) => void;
+  onViewNotes?: (session: TherapistSession) => void;
 }
 
 export const SessionDetailDrawer: React.FC<SessionDetailDrawerProps> = ({
@@ -33,9 +34,18 @@ export const SessionDetailDrawer: React.FC<SessionDetailDrawerProps> = ({
   onResumeSession,
   onViewNotes,
 }) => {
+  const [isNotesModalOpen, setIsNotesModalOpen] = useState(false);
+
   if (!isOpen || !session) return null;
 
   const badgeConfig = getStatusBadgeConfig(session.status);
+
+  const handleOpenNotes = () => {
+    setIsNotesModalOpen(true);
+    if (onViewNotes) {
+      onViewNotes(session);
+    }
+  };
 
   return (
     <>
@@ -171,18 +181,31 @@ export const SessionDetailDrawer: React.FC<SessionDetailDrawerProps> = ({
             </div>
           </div>
 
-          {/* Prior Session Notes for Continuity */}
-          {session.priorSessionNotes && (
-            <div className="p-4 rounded-2xl bg-[#fbf9f5] border border-ayur-sand/70">
-              <span className="font-serif font-bold text-gray-900 text-xs block mb-1 flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-ayur-primary" />
+          {/* Prior Session Notes for Continuity & Quick Trigger to Full Notes */}
+          <div className="p-4 rounded-2xl bg-[#fbf9f5] border border-ayur-sand/70 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="font-serif font-bold text-gray-900 text-xs flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5 text-ayur-primary" />
                 Previous Session Notes (Continuity of Care)
               </span>
+              <button
+                type="button"
+                onClick={handleOpenNotes}
+                className="text-[11px] font-bold text-ayur-primary hover:underline cursor-pointer"
+              >
+                View History →
+              </button>
+            </div>
+            {session.priorSessionNotes ? (
               <p className="text-gray-700 leading-relaxed font-medium">
                 {session.priorSessionNotes}
               </p>
-            </div>
-          )}
+            ) : (
+              <p className="text-gray-500 italic">
+                Initial session of protocol. No previous notes logged.
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Drawer Footer Actions */}
@@ -192,31 +215,51 @@ export const SessionDetailDrawer: React.FC<SessionDetailDrawerProps> = ({
           </Button>
 
           {session.status === 'scheduled' && (
-            <Button
-              variant="primary"
-              size="md"
-              icon={<Play className="w-4 h-4" />}
-              onClick={() => {
-                onClose();
-                onStartSession(session);
-              }}
-            >
-              Start Pre-Flight & Session
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<FileText className="w-3.5 h-3.5" />}
+                onClick={handleOpenNotes}
+              >
+                Clinical History
+              </Button>
+              <Button
+                variant="primary"
+                size="md"
+                icon={<Play className="w-4 h-4" />}
+                onClick={() => {
+                  onClose();
+                  onStartSession(session);
+                }}
+              >
+                Start Pre-Flight & Session
+              </Button>
+            </div>
           )}
 
           {(session.status === 'in_progress' || session.status === 'paused_emergency') && (
-            <Button
-              variant="ayur"
-              size="md"
-              icon={<RotateCcw className="w-4 h-4" />}
-              onClick={() => {
-                onClose();
-                onResumeSession(session);
-              }}
-            >
-              Resume Active Workspace
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<FileText className="w-3.5 h-3.5" />}
+                onClick={handleOpenNotes}
+              >
+                Clinical History
+              </Button>
+              <Button
+                variant="ayur"
+                size="md"
+                icon={<RotateCcw className="w-4 h-4" />}
+                onClick={() => {
+                  onClose();
+                  onResumeSession(session);
+                }}
+              >
+                Resume Active Workspace
+              </Button>
+            </div>
           )}
 
           {session.status === 'completed' && (
@@ -224,16 +267,34 @@ export const SessionDetailDrawer: React.FC<SessionDetailDrawerProps> = ({
               variant="secondary"
               size="md"
               icon={<FileText className="w-4 h-4" />}
-              onClick={() => {
-                onClose();
-                onViewNotes(session);
-              }}
+              onClick={handleOpenNotes}
             >
               View Full Clinical Notes
             </Button>
           )}
+
+          {session.status === 'flagged' && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<FileText className="w-3.5 h-3.5" />}
+                onClick={handleOpenNotes}
+              >
+                View History & Alert
+              </Button>
+            </div>
+          )}
         </div>
       </aside>
+
+      {/* Embedded Clinical Notes Modal */}
+      <ClinicalNotesModal
+        isOpen={isNotesModalOpen}
+        onClose={() => setIsNotesModalOpen(false)}
+        session={session}
+        patientId={session.patientId}
+      />
     </>
   );
 };
