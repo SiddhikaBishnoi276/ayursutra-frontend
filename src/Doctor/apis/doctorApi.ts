@@ -10,6 +10,7 @@ import {
   AIDietCarePlan,
   ProgressPoint,
   ComparativeOutcomeReport,
+  TherapyStage,
 } from '../types/doctor.types';
 
 export const doctorApi = apiSlice.injectEndpoints({
