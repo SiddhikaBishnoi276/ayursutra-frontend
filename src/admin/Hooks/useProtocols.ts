@@ -4,7 +4,7 @@ import { useGetPackagesQuery, useCreatePackageMutation, useUpdatePackageMutation
 import { TherapyPackage, PackageStage } from '../types/admin.types';
 
 export const useProtocols = () => {
-  const { data: initialPackages = [], isLoading } = useGetPackagesQuery();
+  const { data: initialPackages = [], isLoading, refetch } = useGetPackagesQuery();
   const [createPackageMutation] = useCreatePackageMutation();
   const [updatePackageMutation] = useUpdatePackageMutation();
 
@@ -22,32 +22,57 @@ export const useProtocols = () => {
     if (!lower) return null;
     const match = packageList.find((p) => {
       const pLower = p.name.toLowerCase();
-      return pLower.includes(lower) || lower.includes(pLower) || 
+      return (
+        pLower.includes(lower) ||
+        lower.includes(pLower) ||
         (lower.includes('virechana') && pLower.includes('virechana')) ||
         (lower.includes('basti') && pLower.includes('basti')) ||
-        (lower.includes('nasya') && pLower.includes('nasya'));
+        (lower.includes('nasya') && pLower.includes('nasya')) ||
+        (lower.includes('vamana') && pLower.includes('vamana')) ||
+        (lower.includes('rakta') && pLower.includes('rakta'))
+      );
     });
     return match ? match.name : null;
   };
 
   const addPackage = async (data: {
     name: string;
-    description: string;
-    targetDosha: string;
-    durationDays: number;
+    therapy_type?: string;
+    targetDosha?: string;
+    description?: string;
+    base_price?: number;
+    durationDays?: number;
     stages: PackageStage[];
     preProcedureInstructions?: string;
     postProcedureInstructions?: string;
     dietFramework?: string;
+    clinic_id?: number | string;
   }) => {
+    const totalDays =
+      data.durationDays ||
+      (data.stages.length
+        ? data.stages.reduce((s, st) => s + (st.durationDays || st.duration_days || 1), 0)
+        : 7);
+
     const newPkg: TherapyPackage = {
-      ...data,
       id: `PKG-${Date.now().toString().slice(-3)}`,
+      name: data.name,
+      therapy_type: data.therapy_type || data.targetDosha || 'Virechana',
+      targetDosha: data.targetDosha || data.therapy_type || 'Virechana',
+      description: data.description || `Classical clinical protocol for ${data.name}.`,
+      base_price: data.base_price || 0,
+      durationDays: totalDays,
+      stages: data.stages,
+      preProcedureInstructions: data.preProcedureInstructions,
+      postProcedureInstructions: data.postProcedureInstructions,
+      dietFramework: data.dietFramework,
       createdBy: 'admin',
       authorName: 'Clinic Administrator',
       status: 'Active',
     };
+
     setPackageList((prev) => [newPkg, ...prev]);
+
     try {
       await createPackageMutation(newPkg).unwrap();
     } catch (err) {
@@ -101,6 +126,7 @@ export const useProtocols = () => {
   return {
     packages: packageList,
     isLoading,
+    refetch,
     checkSimilarity,
     addPackage,
     editPackage,
@@ -108,3 +134,4 @@ export const useProtocols = () => {
   };
 };
 
+export default useProtocols;

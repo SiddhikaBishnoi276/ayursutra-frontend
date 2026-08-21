@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { LoginRequest, LoginResponse } from '../types/login';
+import { setCredentials } from '../authSlice';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -34,10 +35,13 @@ export const authApi = createApi({
         };
         const token = response.token || `jwt-${user.id}-${Date.now()}`;
 
-        // Persist session in localStorage for auth headers
+        // Persist session in localStorage for auth headers & session state
         localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('userId', user.id);
         localStorage.setItem('role', user.role);
+        localStorage.setItem('name', user.name);
+        localStorage.setItem('email', user.email);
         if (user.clinicId) {
           localStorage.setItem('clinicId', user.clinicId);
         }
@@ -46,6 +50,14 @@ export const authApi = createApi({
           token,
           user,
         };
+      },
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials(data));
+        } catch {
+          // Ignore mutation errors handled by component
+        }
       },
     }),
   }),

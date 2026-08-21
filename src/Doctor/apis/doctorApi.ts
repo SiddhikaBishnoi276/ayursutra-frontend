@@ -427,7 +427,7 @@ export const doctorApi = apiSlice.injectEndpoints({
     }),
 
     // 9. Create Therapy Package (POST /api/doctor/therapy-packages)
-    createTherapyPackage: builder.mutation<TherapyPackage, Partial<TherapyPackage>>({
+    createTherapyPackage: builder.mutation<TherapyPackage, Partial<TherapyPackage> & { clinic_id?: number; description?: string; base_price?: number; therapy_type?: string }>({
       query: (pkg) => ({
         url: '/doctor/therapy-packages',
         method: 'POST',
@@ -435,13 +435,20 @@ export const doctorApi = apiSlice.injectEndpoints({
           'x-user-id': localStorage.getItem('userId') || 'default',
         },
         body: {
+          clinic_id: pkg.clinic_id || localStorage.getItem('clinicId') || 1,
           name: pkg.name,
-          therapy_type: pkg.targetDosha || 'Virechana',
-          stages: (pkg.stages || []).map((s, idx) => ({
-            stage_type: s.category || s.name || 'Poorvakarma',
-            sequence_order: idx + 1,
-            duration_days: s.durationDays || 1,
-            session_duration_minutes: s.durationMinutes || 60,
+          therapy_type: pkg.therapy_type || pkg.targetDosha || 'Virechana',
+          description: pkg.description,
+          base_price: pkg.base_price,
+          stages: (pkg.stages || []).map((s: any, idx: number) => ({
+            stage_type: s.stage_type || s.category || s.stageCategory || s.name || 'Poorvakarma',
+            sequence_order: s.sequence_order !== undefined ? s.sequence_order : (s.sequenceOrder !== undefined ? s.sequenceOrder : idx + 1),
+            day_offset: s.day_offset ?? s.dayOffset ?? 0,
+            duration_days: s.duration_days ?? s.durationDays ?? 1,
+            session_duration_minutes: s.session_duration_minutes ?? s.durationMinutes ?? 60,
+            pre_instructions: s.pre_instructions || s.preInstructions || '',
+            post_instructions: s.post_instructions || s.postInstructions || '',
+            base_diet_framework: s.base_diet_framework || (pkg.baseDietGuidelines ? { allowed: [pkg.baseDietGuidelines], forbidden: [] } : { allowed: [], forbidden: [] }),
           })),
         },
       }),
