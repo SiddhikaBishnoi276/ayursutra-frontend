@@ -1,13 +1,21 @@
 // src/admin/hooks/useRooms.ts
 import { useState, useEffect, useMemo } from 'react';
-import { useGetRoomsQuery } from '../apis/adminApi';
+import { useGetRoomsQuery, useCreateRoomMutation } from '../apis/adminApi';
 import { Room } from '../types/admin.types';
 import rawSessionsQueue from '../../Therapist/data/sessionsQueue.json';
 import rawDoctorPatients from '../../Doctor/data/patients.json';
 
 export const useRooms = () => {
   const { data: initialRooms = [], isLoading } = useGetRoomsQuery();
+  const [createRoomMutation] = useCreateRoomMutation();
   const [customRooms, setCustomRooms] = useState<Room[]>([]);
+
+  // Synchronize initialRooms from database with local customRooms state
+  useEffect(() => {
+    if (initialRooms && initialRooms.length > 0) {
+      setCustomRooms(initialRooms);
+    }
+  }, [initialRooms]);
 
   // Join rooms with session, therapist, patient, and doctor data
   const enrichedRooms = useMemo(() => {
@@ -69,17 +77,28 @@ export const useRooms = () => {
     });
   }, [initialRooms, customRooms]);
 
-  const addRoom = (data: { name: string; type: string }) => {
+  const addRoom = async (data: { name: string; type: string }) => {
+    const tempId = `TEMP-${Date.now().toString().slice(-3)}`;
     const newRoom: Room = {
-      id: `${Date.now().toString().slice(-3)}`,
+      id: tempId,
       name: data.name,
       type: data.type,
       status: 'Available',
     };
-    setCustomRooms((prev) => {
-      const current = prev.length > 0 ? prev : initialRooms;
-      return [...current, newRoom];
-    });
+
+    // Optimistically update local state for immediate feedback
+    setCustomRooms((prev) => [...prev, newRoom]);
+
+    try {
+      await createRoomMutation({
+        name: data.name,
+        type: data.type,
+      }).unwrap();
+    } catch (err) {
+      console.error('Failed to create room in DB:', err);
+      // Revert optimistic update if API call fails
+      setCustomRooms((prev) => prev.filter((r) => r.id !== tempId));
+    }
     return newRoom;
   };
 

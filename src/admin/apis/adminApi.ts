@@ -222,6 +222,7 @@ export const adminApi = apiSlice.injectEndpoints({
           name: roomData.name,
           clinic_id: roomData.clinic_id || localStorage.getItem('clinicId') || 1,
           status: roomData.status || 'available',
+          room_type: roomData.type,
         },
       }),
       invalidatesTags: ['Rooms'],
@@ -460,9 +461,35 @@ export const adminApi = apiSlice.injectEndpoints({
           hasHistoricalResponses: q.has_historical_responses || false,
         }));
       },
+      providesTags: ['Questions'],
     }),
 
-    // 13. Update Question (PUT /api/prakriti-questions/:id)
+    // 13. Create Question (POST /api/prakriti-questions)
+    createQuestion: builder.mutation<
+      PrakritiQuestion,
+      Omit<PrakritiQuestion, 'id' | 'version' | 'hasHistoricalResponses'>
+    >({
+      query: (newQ) => ({
+        url: '/prakriti-questions',
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          questionText: newQ.questionText,
+          attribute: newQ.attribute,
+          options: newQ.options.map((opt) => ({
+            text: opt.text,
+            vata: opt.vata,
+            pitta: opt.pitta,
+            kapha: opt.kapha,
+          })),
+        },
+      }),
+      invalidatesTags: ['Questions'],
+    }),
+
+    // 14. Update Question (PUT /api/prakriti-questions/:id)
     updateQuestion: builder.mutation<PrakritiQuestion, PrakritiQuestion>({
       query: (updated) => ({
         url: `/prakriti-questions/${updated.id}`,
@@ -483,6 +510,51 @@ export const adminApi = apiSlice.injectEndpoints({
           })),
         },
       }),
+      invalidatesTags: ['Questions'],
+    }),
+
+    // 15. Delete Question (DELETE /api/prakriti-questions/:id)
+    deleteQuestion: builder.mutation<{ success: boolean; message?: string }, string>({
+      query: (id) => ({
+        url: `/prakriti-questions/${id}`,
+        method: 'DELETE',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      invalidatesTags: ['Questions'],
+    }),
+
+    // 16. Update Package (PUT /api/protocols/:id)
+    updatePackage: builder.mutation<
+      TherapyPackage,
+      TherapyPackage
+    >({
+      query: (updated) => ({
+        url: `/protocols/${updated.id}`,
+        method: 'PUT',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          name: updated.name,
+          description: updated.description,
+          therapy_type: updated.targetDosha,
+          base_price: 0,
+          is_active: updated.status === 'Active',
+          stages: (updated.stages || []).map((st, idx) => ({
+            stage_type: st.stageCategory || 'Poorvakarma',
+            sequence_order: idx + 1,
+            day_offset: st.dayOffset || 0,
+            duration_days: 1,
+            session_duration_minutes: st.durationMinutes || 60,
+            pre_instructions: updated.preProcedureInstructions || '',
+            post_instructions: updated.postProcedureInstructions || '',
+            base_diet_framework: { notes: updated.dietFramework || 'Standard Diet' },
+          })),
+        },
+      }),
+      invalidatesTags: ['Protocols', 'Package'],
     }),
 
     // 14. Get Notification Logs (GET /api/notifications)
@@ -535,10 +607,13 @@ export const {
   useGetPackagesQuery,
   useCreateProtocolMutation,
   useCreatePackageMutation,
+  useUpdatePackageMutation,
   useGetActivitiesQuery,
   useGetStatsQuery,
   useGetQuestionsQuery,
+  useCreateQuestionMutation,
   useUpdateQuestionMutation,
+  useDeleteQuestionMutation,
   useGetNotificationLogsQuery,
   useRetryNotificationMutation,
 } = adminApi;
