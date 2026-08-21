@@ -79,12 +79,12 @@ export const RoleLoginForm: React.FC<RoleLoginFormProps> = ({ role, onClose }) =
     >
       {/* Modal Card */}
       <div
-        className="w-full max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-[#E8E0C0]/40 flex flex-col md:flex-row"
-        style={{ background: 'rgba(255,253,245,0.98)', maxHeight: '90vh' }}
+        className="w-full max-w-[95vw] sm:max-w-xl md:max-w-3xl rounded-3xl overflow-hidden shadow-2xl border border-[#E8E0C0]/40 flex flex-col md:flex-row max-h-[92vh] overflow-y-auto"
+        style={{ background: 'rgba(255,253,245,0.98)' }}
       >
         {/* LEFT — Branding */}
         <div
-          className="w-full md:w-[42%] flex flex-col justify-between p-8 md:p-10"
+          className="w-full md:w-[42%] flex flex-col justify-between p-5 sm:p-8 md:p-10"
           style={{
             background: 'linear-gradient(160deg, #FEFDF5 0%, #F4EFD8 100%)',
             borderRight: '1.5px solid rgba(212,201,138,0.3)',
@@ -92,14 +92,14 @@ export const RoleLoginForm: React.FC<RoleLoginFormProps> = ({ role, onClose }) =
         >
           <div>
             {/* Logo */}
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-4 sm:mb-8">
               <img
                 src={ayursutraLogo}
                 alt="AyurSutra Logo"
-                className="w-11 h-11 object-contain rounded-full shadow-sm"
+                className="w-10 h-10 sm:w-11 sm:h-11 object-contain rounded-full shadow-sm"
               />
               <span
-                className="text-2xl font-bold text-[#15803d]"
+                className="text-xl sm:text-2xl font-bold text-[#15803d]"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 AyurSūtra
@@ -108,50 +108,50 @@ export const RoleLoginForm: React.FC<RoleLoginFormProps> = ({ role, onClose }) =
 
             {/* Welcome Heading */}
             <h1
-              className="text-3xl md:text-4xl font-bold text-[#111111] mb-4 leading-snug"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#111111] mb-2 sm:mb-4 leading-snug"
               style={{ fontFamily: "'Playfair Display', serif" }}
             >
-              Welcome<br />{roleLabel}!
+              Welcome<br className="hidden sm:inline" /> {roleLabel}!
             </h1>
 
             <p
-              className="text-[14px] text-[#5a6472] leading-relaxed"
+              className="text-xs sm:text-[14px] text-[#5a6472] leading-relaxed"
               style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
             >
               Login to access your dashboard and manage your Ayurvedic health journey seamlessly.
             </p>
           </div>
 
-          {/* Image */}
-          <div className="mt-8 flex justify-center">
+          {/* Image — hidden on mobile to avoid vertical cramping */}
+          <div className="hidden md:flex mt-8 justify-center">
             <img
               src={loginImage}
               alt="Ayurvedic Login"
               className="w-full object-contain"
-              style={{ maxHeight: '200px' }}
+              style={{ maxHeight: '180px' }}
             />
           </div>
         </div>
 
         {/* RIGHT — Login Form */}
-        <div className="w-full md:w-[58%] flex flex-col justify-center p-8 md:p-10 relative">
+        <div className="w-full md:w-[58%] flex flex-col justify-center p-5 sm:p-8 md:p-10 relative">
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#F3F0E8] flex items-center justify-center hover:bg-[#E8E0C0] transition-colors"
+            className="absolute top-4 right-4 sm:top-5 sm:right-5 min-w-[40px] min-h-[40px] rounded-full bg-[#F3F0E8] flex items-center justify-center hover:bg-[#E8E0C0] transition-colors cursor-pointer"
             aria-label="Close"
           >
-            <X size={16} className="text-[#555]" />
+            <X size={18} className="text-[#555]" />
           </button>
 
           {/* Form Heading */}
           <h2
-            className="text-2xl font-bold text-[#111111] mb-1"
+            className="text-xl sm:text-2xl font-bold text-[#111111] mb-1"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             {roleLabel} Login
           </h2>
-          <p className="text-[13px] text-[#6b7280] mb-7">
+          <p className="text-xs sm:text-[13px] text-[#6b7280] mb-5 sm:mb-7">
             Enter your credentials to login
           </p>
 

@@ -79,7 +79,7 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
 
           {/* LEFT SIDE */}
           <div
-            className="w-full lg:w-[45%] flex flex-col justify-between p-10"
+            className="w-full lg:w-[45%] flex flex-col justify-between p-6 sm:p-8 lg:p-10"
             style={{
               background: "linear-gradient(160deg, #FEFDF5 0%, #F7F2E0 100%)",
               borderRight: "1.5px solid rgba(212,201,138,0.35)",
@@ -87,14 +87,14 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
           >
             <div>
               {/* Logo + Name */}
-              <div className="flex items-center gap-3 mb-10">
+              <div className="flex items-center gap-3 mb-6 sm:mb-10">
                 <img
                   src={ayursutraLogo}
                   alt="AyurSutra Logo"
-                  className="w-12 h-12 object-contain rounded-full shadow-sm"
+                  className="w-10 h-10 sm:w-12 sm:h-12 object-contain rounded-full shadow-sm"
                 />
                 <span
-                  className="text-3xl font-bold text-[#15803d] tracking-wide"
+                  className="text-2xl sm:text-3xl font-bold text-[#15803d] tracking-wide"
                   style={{ fontFamily: "'Playfair Display', serif" }}
                 >
                   AyurSūtra
@@ -103,7 +103,7 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
 
               {/* Heading */}
               <h1
-                className="text-4xl md:text-5xl font-bold text-[#111111] mb-5 leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#111111] mb-3 sm:mb-5 leading-tight"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 Welcome Back!
@@ -111,32 +111,32 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
 
               {/* Subtitle */}
               <p
-                className="text-[15px] text-[#5a6472] leading-relaxed max-w-xs"
+                className="text-xs sm:text-[15px] text-[#5a6472] leading-relaxed max-w-xs"
                 style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
               >
                 Login to continue to your account and manage your Ayurvedic health journey seamlessly.
               </p>
             </div>
 
-            {/* Image at bottom */}
-            <div className="flex justify-center mt-8">
+            {/* Image at bottom — hidden on mobile */}
+            <div className="hidden md:flex justify-center mt-8">
               <img
                 src={loginImage}
                 alt="Ayurvedic Login"
                 className="w-full object-contain"
-                style={{ maxHeight: "240px" }}
+                style={{ maxHeight: "220px" }}
               />
             </div>
           </div>
 
           {/* RIGHT SIDE */}
-          <div className="w-full lg:w-[55%] flex flex-col justify-center p-10 relative">
+          <div className="w-full lg:w-[55%] flex flex-col justify-center p-6 sm:p-8 lg:p-10 relative">
             {/* Close Button */}
             <button
               id="role-login-close-btn"
               onClick={handleClose}
               aria-label="Close"
-              className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full border border-[#E8E0C0] text-[#6b7280] hover:bg-[#f0fdf4] hover:text-[#15803d] hover:border-[#15803d] transition-all duration-200"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 min-w-[40px] min-h-[40px] flex items-center justify-center rounded-full border border-[#E8E0C0] text-[#6b7280] hover:bg-[#f0fdf4] hover:text-[#15803d] hover:border-[#15803d] transition-all duration-200 cursor-pointer"
             >
               <X size={18} />
             </button>
@@ -160,7 +160,7 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
                   key={role.id}
                   id={`role-select-${role.id}`}
                   onClick={() => onRoleSelect?.(role.id)}
-                  className="flex items-center gap-4 w-full px-5 py-4 rounded-2xl border border-[#E8E0C0] hover:border-[#15803d] hover:shadow-md transition-all duration-200 group text-left"
+                  className="flex items-center gap-3.5 sm:gap-4 w-full min-h-[52px] px-4 py-3 sm:px-5 sm:py-4 rounded-2xl border border-[#E8E0C0] hover:border-[#15803d] hover:shadow-md transition-all duration-200 group text-left cursor-pointer"
                   style={{ background: "rgba(255,253,245,0.8)" }}
                 >
                   {/* Icon */}

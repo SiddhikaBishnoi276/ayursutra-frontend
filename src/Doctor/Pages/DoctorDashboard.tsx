@@ -90,7 +90,7 @@ export const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onNavigateTab 
         <span className="text-xs font-bold uppercase tracking-wider text-gray-700 font-serif">
           Quick Clinical Workflows
         </span>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 sm:gap-3">
           <button
             type="button"
             onClick={() => onNavigateTab('patients')}

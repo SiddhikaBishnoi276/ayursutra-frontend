@@ -348,6 +348,7 @@ export const MyPatients: React.FC<MyPatientsProps> = ({
         data={patients}
         keyExtractor={(item) => item.id}
         emptyMessage="No patients match the selected search criteria or status filter."
+        mobileView="cards"
       />
 
       {/* Intake Modal */}

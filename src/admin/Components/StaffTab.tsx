@@ -249,6 +249,7 @@ export const StaffTab: React.FC<StaffTabProps> = ({
           data={filteredStaff}
           keyExtractor={(item) => item.id}
           emptyMessage="No staff records available."
+          mobileView="cards"
         />
       )}
 

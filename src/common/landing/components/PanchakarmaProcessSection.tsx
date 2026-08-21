@@ -74,14 +74,14 @@ export const PanchakarmaProcessSection: React.FC = () => {
         </div>
 
         {/* Bottom Part: Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-5 mb-10">
           {CARDS.map((card) => (
             <div 
               key={card.id}
-              className="flex flex-col items-center text-center p-6 bg-white rounded-2xl border border-[#E1E4DA]/60 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="flex flex-col items-center text-center p-3.5 sm:p-5 bg-white rounded-2xl border border-[#E1E4DA]/60 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               {/* Icon Circle */}
-              <div className="w-14 h-14 rounded-full bg-[#f0fdf4] border border-[#dcfce7] flex items-center justify-center mb-4">
+              <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-[#f0fdf4] border border-[#dcfce7] flex items-center justify-center mb-3 sm:mb-4 shrink-0">
                 {card.icon}
               </div>
               

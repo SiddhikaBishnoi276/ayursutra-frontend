@@ -89,12 +89,12 @@ export const AppointmentsPage: React.FC = () => {
         </div>
       )}
 
-      {/* 3. Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-gray-200 pb-3">
+      {/* 3. Filter Tabs (Horizontal scroll on mobile) */}
+      <div className="flex items-center gap-2 border-b border-gray-200 pb-3 overflow-x-auto flex-nowrap -mx-1 px-1 sm:mx-0 sm:px-0">
         <button
           type="button"
           onClick={() => setActiveTab('upcoming')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 min-h-[44px] ${
             activeTab === 'upcoming'
               ? 'bg-purple-700 text-white shadow-xs'
               : 'bg-white text-gray-600 hover:bg-stone-100 border border-stone-200/80'
@@ -113,7 +113,7 @@ export const AppointmentsPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('completed')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 min-h-[44px] ${
             activeTab === 'completed'
               ? 'bg-purple-700 text-white shadow-xs'
               : 'bg-white text-gray-600 hover:bg-stone-100 border border-stone-200/80'
@@ -132,7 +132,7 @@ export const AppointmentsPage: React.FC = () => {
         <button
           type="button"
           onClick={() => setActiveTab('cancelled')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+          className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer whitespace-nowrap shrink-0 min-h-[44px] ${
             activeTab === 'cancelled'
               ? 'bg-purple-700 text-white shadow-xs'
               : 'bg-white text-gray-600 hover:bg-stone-100 border border-stone-200/80'

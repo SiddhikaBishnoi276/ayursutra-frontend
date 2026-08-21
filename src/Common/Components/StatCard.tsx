@@ -54,8 +54,8 @@ export const StatCard: React.FC<StatCardProps> = ({
           )}
         </div>
 
-        {/* Row 2: Big Value (fixed min-height & aligned baseline across all cards) */}
-        <div className="text-3xl font-black text-gray-900 font-serif leading-tight mb-1 min-h-[2.25rem] flex items-end">
+        {/* Row 2: Big Value (responsive typography & aligned baseline across cards) */}
+        <div className="text-2xl sm:text-3xl font-black text-gray-900 font-serif leading-tight mb-1 min-h-[2rem] sm:min-h-[2.25rem] flex items-end">
           {value}
         </div>
 

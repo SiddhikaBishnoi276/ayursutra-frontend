@@ -53,16 +53,16 @@ export const ProfilePage: React.FC = () => {
 
       {/* 2. Personal Information Card */}
       <Card className="border border-ayur-sand/70 p-5 sm:p-6 bg-white shadow-xs">
-        <div className="flex flex-wrap items-start justify-between gap-4 pb-4 border-b border-gray-100">
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-50 text-purple-700 text-2xl font-bold font-serif border border-purple-200">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b border-gray-100">
+          <div className="flex flex-col xs:flex-row items-start xs:items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-50 text-purple-700 text-2xl font-bold font-serif border border-purple-200 shrink-0">
               {profile.name
                 .split(' ')
                 .map((n) => n[0])
                 .join('')}
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 font-serif">
                   {profile.name}
                 </h2>
@@ -76,7 +76,7 @@ export const ProfilePage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-start sm:items-end">
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               Ayurvedic Constitution (Prakriti)
             </span>

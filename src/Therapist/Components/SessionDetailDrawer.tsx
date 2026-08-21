@@ -209,7 +209,7 @@ export const SessionDetailDrawer: React.FC<SessionDetailDrawerProps> = ({
         </div>
 
         {/* Drawer Footer Actions */}
-        <div className="p-4 sm:p-5 border-t border-ayur-sand/60 bg-[#fbf9f5] flex items-center justify-between gap-3">
+        <div className="p-3.5 sm:p-5 border-t border-ayur-sand/60 bg-[#fbf9f5] flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 shrink-0 [&>*]:w-full sm:[&>*]:w-auto">
           <Button variant="secondary" size="sm" onClick={onClose}>
             Close
           </Button>

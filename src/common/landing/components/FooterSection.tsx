@@ -48,8 +48,8 @@ export const FooterSection: React.FC<FooterSectionProps> = ({ onRoleLogin }) => 
     <footer style={{ background: "#033015", color: "#fff" }}>
       <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 24px 24px" }}>
 
-        {/* ── Grid ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1.5fr", gap: "40px" }}>
+        {/* ── Responsive Grid ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
 
           {/* Brand */}
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>

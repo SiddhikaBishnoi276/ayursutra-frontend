@@ -51,15 +51,16 @@ export const Topbar: React.FC<TopbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-10 flex h-20 w-full items-center justify-between border-b border-ayur-sand/60 bg-white px-4 sm:px-6 md:px-8 shadow-2xs">
-      {/* Left: Hamburger (Mobile) + Clinic Context */}
-      <div className="flex items-center gap-3">
+    <header className="sticky top-0 z-10 flex h-20 w-full items-center justify-between border-b border-ayur-sand/60 bg-white px-3.5 sm:px-6 md:px-8 shadow-2xs">
+      {/* Left: Hamburger (Mobile & Tablet < lg) + Clinic Context */}
+      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
         {onMenuToggle && (
           <button
             type="button"
             onClick={onMenuToggle}
-            className="flex md:hidden p-2 rounded-xl border border-ayur-sand/80 text-gray-700 hover:bg-[#fbf9f5] hover:text-ayur-primary transition cursor-pointer"
+            className="flex lg:hidden min-w-[44px] min-h-[44px] items-center justify-center p-2 rounded-xl border border-ayur-sand/80 text-gray-700 hover:bg-[#fbf9f5] hover:text-ayur-primary transition cursor-pointer shrink-0"
             title="Open Navigation Menu"
+            aria-label="Open Navigation Menu"
           >
             <svg
               className="w-5 h-5"
@@ -77,22 +78,22 @@ export const Topbar: React.FC<TopbarProps> = ({
           </button>
         )}
 
-        <h2 className="text-sm sm:text-base font-bold text-gray-900 tracking-tight font-serif truncate max-w-[200px] sm:max-w-none">
+        <h2 className="text-sm sm:text-base font-bold text-gray-900 tracking-tight font-serif truncate max-w-[150px] xs:max-w-[200px] sm:max-w-none">
           {clinicName}
         </h2>
-        <span className="hidden sm:inline-block h-4 w-px bg-ayur-sand/80"></span>
+        <span className="hidden sm:inline-block h-4 w-px bg-ayur-sand/80 shrink-0"></span>
         <Badge
           variant="ayur"
           size="sm"
           icon={<Sparkles className="w-3 h-3 text-ayur-brown" />}
-          className="hidden lg:inline-flex"
+          className="hidden xl:inline-flex shrink-0"
         >
           {certificationLabel}
         </Badge>
       </div>
 
       {/* Right: Notifications & Profile with unified click outside container */}
-      <div ref={dropdownRef} className="flex items-center gap-4">
+      <div ref={dropdownRef} className="flex items-center gap-2 sm:gap-4 shrink-0">
         {/* Notification Bell */}
         <div className="relative">
           <button
@@ -103,11 +104,12 @@ export const Topbar: React.FC<TopbarProps> = ({
               )
             }
             title="Operations Alerts & Notifications"
-            className="relative rounded-full p-2 text-ayur-green-mid hover:bg-[#fbf9f5] hover:text-ayur-primary transition-colors cursor-pointer"
+            aria-label="Notifications"
+            className="relative flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full p-2 text-ayur-green-mid hover:bg-[#fbf9f5] hover:text-ayur-primary transition-colors cursor-pointer"
           >
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-ayur-brown text-[10px] font-bold text-white shadow-xs">
+              <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-ayur-brown text-[10px] font-bold text-white shadow-xs">
                 {unreadCount}
               </span>
             )}
@@ -115,7 +117,7 @@ export const Topbar: React.FC<TopbarProps> = ({
 
           {/* Notifications dropdown */}
           {openDropdown === 'notifications' && (
-            <div className="absolute right-0 mt-3 w-80 rounded-2xl border border-ayur-sand/60 bg-white p-4 shadow-xl ring-1 ring-black/5 z-30 animate-in fade-in zoom-in-95 duration-150">
+            <div className="absolute right-0 mt-3 w-72 sm:w-80 rounded-2xl border border-ayur-sand/60 bg-white p-4 shadow-xl ring-1 ring-black/5 z-30 animate-in fade-in zoom-in-95 duration-150">
               <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
                 <h4 className="font-serif font-bold text-gray-900 text-sm">
                   Operations Alerts
@@ -128,12 +130,12 @@ export const Topbar: React.FC<TopbarProps> = ({
                 {notifications.map((item) => (
                   <div
                     key={item.id}
-                    className="p-2.5 rounded-xl bg-[#fbf9f5] border border-ayur-sand/40 text-xs"
+                    className="p-2.5 rounded-xl bg-[#fbf9f5] border border-ayur-sand/30 hover:border-ayur-green-mid/30 transition-colors"
                   >
-                    <p className="font-semibold text-gray-800 leading-snug">
+                    <p className="text-xs text-gray-800 font-medium leading-snug">
                       {item.message}
                     </p>
-                    <span className="text-[10px] text-gray-400 font-medium mt-1 block">
+                    <span className="text-[10px] text-gray-400 font-semibold mt-1 block">
                       {item.time}
                     </span>
                   </div>
@@ -143,10 +145,7 @@ export const Topbar: React.FC<TopbarProps> = ({
           )}
         </div>
 
-        {/* Divider */}
-        <span className="h-6 w-px bg-ayur-sand/60"></span>
-
-        {/* Admin Profile Chip */}
+        {/* Profile Dropdown */}
         <div className="relative">
           <button
             type="button"
@@ -155,24 +154,25 @@ export const Topbar: React.FC<TopbarProps> = ({
                 prev === 'profile' ? null : 'profile'
               )
             }
-            className="flex items-center gap-3 rounded-2xl p-1.5 hover:bg-[#fbf9f5] transition-colors cursor-pointer border border-transparent hover:border-ayur-sand/60"
+            className="flex items-center gap-2 sm:gap-2.5 min-h-[44px] rounded-2xl p-1 sm:p-1.5 hover:bg-[#fbf9f5] transition-colors cursor-pointer border border-transparent hover:border-ayur-sand/60"
+            aria-label="User Profile Menu"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ayur-primary text-xs font-bold text-white shadow-xs font-serif">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f4f7f4] font-serif font-bold text-ayur-primary text-xs border border-ayur-sand/60 shadow-2xs shrink-0">
               {adminName
                 .split(' ')
                 .map((n) => n[0])
                 .join('')
                 .slice(0, 2)}
             </div>
-            <div className="hidden md:flex flex-col text-left">
-              <span className="text-xs font-bold text-gray-900 leading-none font-serif">
+            <div className="hidden md:flex flex-col text-left min-w-0 max-w-[120px] lg:max-w-none">
+              <span className="text-xs font-bold text-gray-900 leading-tight font-serif truncate">
                 {adminName}
               </span>
-              <span className="text-[11px] text-ayur-green-mid font-medium mt-0.5 leading-none">
+              <span className="text-[10px] text-ayur-brown font-semibold uppercase tracking-wider truncate">
                 {adminRole}
               </span>
             </div>
-            <ChevronDown className="h-4 w-4 text-ayur-green-mid" />
+            <ChevronDown className="h-3.5 w-3.5 text-ayur-green-mid hidden sm:block shrink-0" />
           </button>
 
           {/* Profile Dropdown Menu */}

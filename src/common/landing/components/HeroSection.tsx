@@ -32,7 +32,7 @@ export const HeroSection: React.FC = () => {
             {/* Main Heading */}
             <div className="flex flex-col gap-2">
               <h1
-                className="text-5xl md:text-6xl xl:text-[5.5rem] font-bold text-[#033015] leading-[1.05] tracking-tight"
+                className="text-4xl sm:text-5xl md:text-6xl xl:text-[5.5rem] font-bold text-[#033015] leading-[1.05] tracking-tight"
                 style={{ fontFamily: "'Playfair Display', serif" }}
               >
                 AyurSutra

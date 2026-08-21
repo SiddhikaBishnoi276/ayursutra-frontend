@@ -296,13 +296,13 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
       </div>
 
       {/* Step Indicator Flow Bar */}
-      <div className="flex items-center justify-between bg-white p-2.5 rounded-2xl border border-ayur-sand/80 shadow-2xs">
-        <div className="flex items-center gap-2 sm:gap-4 flex-1">
+      <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-ayur-sand/80 shadow-2xs">
+        <div className="flex items-center gap-2 sm:gap-4 flex-1 overflow-x-auto pb-1 sm:pb-0">
           {/* Step 1 Tab Button */}
           <button
             type="button"
             onClick={() => setCurrentStep('packages')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap shrink-0 ${
               currentStep === 'packages'
                 ? 'bg-ayur-primary text-white shadow-xs'
                 : 'text-gray-600 hover:bg-[#fbf9f5] hover:text-ayur-primary'
@@ -318,13 +318,13 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
             <span>Step 1: Protocol Blueprint Selection ({displayedPackages.length} Matched)</span>
           </button>
 
-          <span className="text-gray-300 font-bold hidden sm:inline">→</span>
+          <span className="text-gray-300 font-bold hidden sm:inline shrink-0">→</span>
 
           {/* Step 2 Tab Button */}
           <button
             type="button"
             onClick={() => setCurrentStep('builder')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap shrink-0 ${
               currentStep === 'builder'
                 ? 'bg-ayur-primary text-white shadow-xs'
                 : 'text-gray-600 hover:bg-[#fbf9f5] hover:text-ayur-primary'
@@ -347,7 +347,7 @@ export const TherapyPlanBuilderPage: React.FC<TherapyPlanBuilderPageProps> = ({
             size="sm"
             icon={<ArrowLeft className="w-3.5 h-3.5" />}
             onClick={() => setCurrentStep('packages')}
-            className="shrink-0"
+            className="shrink-0 w-full sm:w-auto"
           >
             Back to Protocols
           </Button>
