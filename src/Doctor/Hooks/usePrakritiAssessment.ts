@@ -50,10 +50,9 @@ export function usePrakritiAssessment(patientId: string) {
   }, [questions, patientId, patient?.dominantPrakriti]);
 
   useEffect(() => {
-    if (patient) {
-      setIsLocked(!!patient.dominantPrakriti);
-    }
-  }, [patientId, patient]);
+    setIsLocked(false);
+  }, [patientId]);
+
 
   const setAnswer = (questionId: string, optionId: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: optionId }));

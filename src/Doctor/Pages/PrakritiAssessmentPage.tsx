@@ -134,26 +134,29 @@ export const PrakritiAssessmentPage: React.FC<PrakritiAssessmentPageProps> = ({
             }}
           />
 
-          <Button
-            variant="primary"
-            icon={<Lock className="w-4 h-4" />}
-            onClick={handleLockSubmit}
-            disabled={isLocking}
-          >
-            {isLocking ? 'Locking...' : isLocked ? 'Re-confirm & Lock Prakriti' : 'Confirm & Lock Prakriti'}
-          </Button>
-
-          {isLocked && onProceedToPlan && (
+          {!isLocked ? (
             <Button
-              variant="secondary"
-              icon={<ArrowRight className="w-4 h-4" />}
-              onClick={onProceedToPlan}
+              variant="primary"
+              icon={<Lock className="w-4 h-4" />}
+              onClick={handleLockSubmit}
+              disabled={isLocking}
             >
-              Proceed to Plan Builder
+              {isLocking ? 'Locking...' : 'Confirm & Lock Prakriti'}
             </Button>
+          ) : (
+            onProceedToPlan && (
+              <Button
+                variant="primary"
+                icon={<ArrowRight className="w-4 h-4" />}
+                onClick={onProceedToPlan}
+              >
+                Proceed to Therapy Plan Builder
+              </Button>
+            )
           )}
         </div>
       </div>
+
 
 
 
@@ -320,19 +323,10 @@ export const PrakritiAssessmentPage: React.FC<PrakritiAssessmentPageProps> = ({
               placeholder="e.g. Lumbar spasm, dry skin..."
               className="rounded-xl border border-ayur-sand/80 p-2 text-xs text-gray-900 bg-[#fbf9f5] focus:outline-none focus:border-ayur-primary resize-none"
             />
-
-            <Button
-              variant="primary"
-              icon={<Lock className="w-4 h-4" />}
-              onClick={handleLockSubmit}
-              disabled={isLocking}
-              className="w-full py-2.5 mt-2"
-            >
-              {isLocking ? 'Locking Baseline...' : isLocked ? 'Re-confirm & Lock Prakriti' : 'Confirm & Lock Prakriti'}
-            </Button>
           </Card>
         </div>
       </div>
+
 
 
       {/* Post Lock Modal Prompt */}
