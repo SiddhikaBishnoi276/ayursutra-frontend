@@ -1,0 +1,185 @@
+{
+  "patientId": "PT-104",
+  "patientName": "Amit Sharma",
+  "doctorName": "Dr. Shrikant Sharma (MD, Panchakarma)",
+  "issuedDate": "2026-08-16",
+  "validTill": "2026-09-20",
+  "profile": {
+    "id": "PT-104",
+    "name": "Amit Sharma",
+    "age": 42,
+    "gender": "Male",
+    "contact": "+91 98201 55432",
+    "email": "amit.sharma@example.com",
+    "address": "402, Shanti Vihar, J.M. Road, Pune - 411004",
+    "prakritiType": "Vata-Kapha",
+    "vikriti": "Aggravated Vata with Ama accumulation in Kati Sandhi (Lumbar spine)",
+    "allergies": [
+      "Mustard Oil (Topical cutaneous erythema)",
+      "Sulfur-based compounds"
+    ],
+    "medicalConditions": [
+      "Chronic Lumbar Spondylosis (L4-L5 disc desiccation)",
+      "Mild Morning Joint Stiffness"
+    ],
+    "precautions": [
+      "Avoid cold water baths and direct air conditioning exposure.",
+      "Strict avoidance of forward bending and weight lifting exceeding 5 kg.",
+      "Consume exclusively warm, freshly cooked satvik meals."
+    ],
+    "assignedDoctor": {
+      "id": "DOC-01",
+      "name": "Dr. Shrikant Sharma",
+      "specialty": "Chief Panchakarma Consultant",
+      "qualification": "BAMS, MD (Ayu), Gold Medalist",
+      "email": "dr.shrikant@ayursutra.com",
+      "phone": "+91 98220 89100",
+      "avatarUrl": ""
+    },
+    "assignedTherapist": {
+      "id": "TH-01",
+      "name": "Dr. Sandeep Kulkarni",
+      "specialty": "Senior Certified Panchakarma Therapist",
+      "experienceYears": 12,
+      "email": "sandeep.kulkarni@ayursutra.com",
+      "phone": "+91 98230 44521",
+      "gender": "Male"
+    },
+    "emergencyContact": {
+      "name": "Sunita Sharma",
+      "relation": "Spouse",
+      "phone": "+91 98201 55433"
+    },
+    "memberSince": "August 2026"
+  },
+  "medications": [
+    {
+      "id": "MED-01",
+      "name": "Sahacharadi Kashayam Tablets",
+      "sanskritName": "सहचरादि कषाय",
+      "dosage": "2 Tablets (500mg each)",
+      "timing": "Before Meals",
+      "frequency": "Twice daily (Morning & Evening)",
+      "duration": "21 Days",
+      "instructions": "Take with half cup of warm boiled water. Acts as a potent neuro-vascular tonic for lower back pain.",
+      "anupana": "Warm Lukewarm Water"
+    },
+    {
+      "id": "MED-02",
+      "name": "Yogaraja Guggulu",
+      "sanskritName": "योगराज गुग्गुलु",
+      "dosage": "2 Tablets",
+      "timing": "After Meals",
+      "frequency": "Twice daily",
+      "duration": "30 Days",
+      "instructions": "Pacifies deep-seated Vata and strengthens bone tissue matrix and synovial joints.",
+      "anupana": "Dashamoola Kwatha / Warm Water"
+    },
+    {
+      "id": "MED-03",
+      "name": "Ashwagandha Rasayana Avaleha",
+      "sanskritName": "अश्वगंधा रसायन",
+      "dosage": "1 Teaspoon (10g)",
+      "timing": "Night",
+      "frequency": "Once daily at bedtime",
+      "duration": "30 Days",
+      "instructions": "Enhances neuromuscular vitality, relieves stress, and aids restful deep sleep.",
+      "anupana": "Warm A2 Cow Milk"
+    },
+    {
+      "id": "MED-04",
+      "name": "Ksheerabala Taila (101 Avarthana) Drops",
+      "sanskritName": "क्षीरबला तैलम् (१०१)",
+      "dosage": "10 Drops",
+      "timing": "Morning",
+      "frequency": "Early morning empty stomach",
+      "duration": "14 Days",
+      "instructions": "Administered internally in warm milk for disc cartilage lubrication and nerve nourishment.",
+      "anupana": "Warm Water or Milk"
+    }
+  ],
+  "dietPlan": {
+    "id": "DIET-PT104-VATA",
+    "planTitle": "AI & Doctor Prescribed Vata-Kapha Pacifying Diet",
+    "doshaTarget": "Vata-Kapha Balance (Warm, Unctuous, Light, Easy Digesting)",
+    "assignedByDoctor": "Dr. Shrikant Sharma (Validated by AyurSutra Clinical AI)",
+    "assignedDate": "2026-08-16",
+    "dietaryGuidelines": [
+      "All meals must be consumed warm and freshly prepared within 3 hours of cooking.",
+      "Maintain a 4-hour gap between primary meals to allow complete digestion of previous food.",
+      "Drink sips of warm water infused with cumin and ginger during meals; avoid drinking large amounts of water immediately after eating.",
+      "Incorporate 1 teaspoon of A2 Gir Cow Ghee into your lunch and dinner."
+    ],
+    "mealPlan": [
+      {
+        "mealTime": "Early Morning (07:00 AM)",
+        "timeRange": "06:30 AM - 07:30 AM",
+        "items": [
+          "1 Glass Lukewarm Water with 2 pinches of Dry Ginger powder (Shunthi)",
+          "5 Soaked & Peeled Almonds + 2 Munakka (Black Raisins)"
+        ],
+        "precautions": "Avoid cold milk, tea bags, or citrus juices on an empty stomach."
+      },
+      {
+        "mealTime": "Breakfast (08:30 AM)",
+        "timeRange": "08:00 AM - 09:00 AM",
+        "items": [
+          "Warm Moong Dal Khichdi OR Soft Steamed Ragi Porridge with Jaggery",
+          "Herbal infusion (Coriander-Fennel-Cumin tea)"
+        ],
+        "precautions": "Avoid fermented bakery bread, eggs, or deep fried snacks."
+      },
+      {
+        "mealTime": "Lunch (01:00 PM)",
+        "timeRange": "12:30 PM - 01:30 PM",
+        "items": [
+          "2 Warm Phulkas with Cow Ghee",
+          "1 Bowl Mudga Yusha (Moong Dal Soup) tempered with Hing and Jeera",
+          "Steamed Bottle Gourd (Lauki) / Ridge Gourd (Turai) sabzi",
+          "Small cup of Fresh Takra (Buttermilk) churned with roasted cumin"
+        ],
+        "precautions": "Do not consume raw salads, heavy paneer, or sour curd (dahi)."
+      },
+      {
+        "mealTime": "Evening Nourishment (05:00 PM)",
+        "timeRange": "04:30 PM - 05:30 PM",
+        "items": [
+          "Roasted Makhana (Fox nuts) with a pinch of rock salt and ghee",
+          "Warm Herbal Ashwagandha-Brahmi infusion"
+        ],
+        "precautions": "Strictly avoid commercially packaged snacks and cold aerated drinks."
+      },
+      {
+        "mealTime": "Dinner (07:30 PM)",
+        "timeRange": "07:00 PM - 08:00 PM",
+        "items": [
+          "1 Bowl Vegetable Dalia OR Clear Vegetable Soup with crushed black pepper",
+          "1 Light Multigrain Roti"
+        ],
+        "precautions": "Dinner must be finished at least 2.5 hours before sleeping. Never sleep immediately after dinner."
+      }
+    ],
+    "forbiddenFoods": [
+      "Sour Yogurt / Curd (Dahi) - blocks micro-channels (Srotorodha)",
+      "Cold water, ice creams, iced beverages",
+      "Nightshades in excess (Tomatoes, Brinjal / Eggplant, Potatoes)",
+      "Raw sprouts and unboiled salads at night (causes Vata bloating)",
+      "Deep fried, refined flour (Maida), and processed junk food"
+    ],
+    "permittedDrinks": [
+      "Lukewarm water boiled with Cumin & Fennel seeds",
+      "Fresh Takra (Spiced Buttermilk with roasted cumin and mint)",
+      "Warm Almond Milk with a pinch of Nutmeg & Cardamom (at bedtime)"
+    ],
+    "lifestyleTips": [
+      "Sleep by 10:00 PM and wake up before sunrise (Brahma Muhurta ~ 06:00 AM).",
+      "Gentle lumbar stretches (Bhujangasana, Marjariasana) only under therapist guidance.",
+      "Never suppress natural biological urges (Adharaneeya Vegas)."
+    ]
+  },
+  "generalPrecautions": [
+    "Strictly avoid cold wind/drafts and high AC settings (keep room at 25-26°C minimum).",
+    "Use a firm mattress with thin pillow to maintain natural cervical-lumbar curvature.",
+    "Do not bathe with cold water during the entire 7-day therapy regimen."
+  ]
+}

@@ -10,11 +10,12 @@ import SessionStartPage from './Therapist/Pages/SessionStartPage';
 import ActiveSessionPage from './Therapist/Pages/ActiveSessionPage';
 import AvailabilityPage from './Therapist/Pages/AvailabilityPage';
 
-const PatientDashboard = () => (
-  <div className="p-10 text-2xl font-bold text-ayur-primary">
-    Patient Dashboard (Coming Soon)
-  </div>
-);
+import PatientPage from './Patient/Pages/PatientPage';
+import PatientDashboard from './Patient/Pages/PatientDashboard';
+import MyTherapyPlanPage from './Patient/Pages/MyTherapyPlanPage';
+import AppointmentsPage from './Patient/Pages/AppointmentsPage';
+import FeedbackPage from './Patient/Pages/FeedbackPage';
+import ProfilePage from './Patient/Pages/ProfilePage';
 
 function App() {
   return (
@@ -41,11 +42,18 @@ function App() {
             <Route path="session/:sessionId/active" element={<ActiveSessionPage />} />
             <Route path="availability" element={<AvailabilityPage />} />
           </Route>
-          {/* Backward-compatibility redirect */}
+          {/* Patient Nested Routes */}
+          <Route path="/patient" element={<PatientPage />}>
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<PatientDashboard />} />
+            <Route path="therapy-plan" element={<MyTherapyPlanPage />} />
+            <Route path="appointments" element={<AppointmentsPage />} />
+            <Route path="feedback" element={<FeedbackPage />} />
+            <Route path="profile" element={<ProfilePage />} />
+          </Route>
+          {/* Backward-compatibility redirects */}
           <Route path="/therapist-dashboard" element={<Navigate to="/therapist/dashboard" replace />} />
-
-          {/* Patient Routes */}
-          <Route path="/patient-dashboard" element={<PatientDashboard />} />
+          <Route path="/patient-dashboard" element={<Navigate to="/patient/dashboard" replace />} />
 
           {/* Catch all unmatched routes and send to home */}
           <Route path="*" element={<Navigate to="/" />} />

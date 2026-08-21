@@ -1,0 +1,219 @@
+{
+  "planId": "PLAN-2026-PT104",
+  "patientId": "PT-104",
+  "patientName": "Amit Sharma",
+  "packageName": "7-Day Vamana & Kati Basti Protocol",
+  "condition": "Chronic Lumbar Spondylosis & Kapha Imbalance",
+  "startDate": "2026-08-17",
+  "endDate": "2026-08-23",
+  "totalSessions": 7,
+  "completedSessions": 4,
+  "remainingSessions": 3,
+  "progressPercent": 57,
+  "doctorName": "Dr. Shrikant Sharma",
+  "doctorSpecialty": "Senior Ayurvedic Physician (MD, Panchakarma)",
+  "doctorPlanLastUpdated": "2026-08-20T14:30:00.000Z",
+  "isPlanUpdatedByDoctor": true,
+  "doctorUpdateNote": "Enhanced Kati Basti oil temperature & switched decoction to Mahatiktaka Ghrita for deeper tissue penetrance.",
+  "currentStageIndex": 4,
+  "currentStageName": "Day 5: Sarvangadhara & Targeted Kati Basti",
+  "stages": [
+    {
+      "stageId": "STG-101",
+      "stageName": "Day 1: Deepana & Pachana Induction",
+      "stageCategory": "Poorvakarma",
+      "dayNumber": 1,
+      "totalDays": 7,
+      "status": "completed",
+      "scheduledDate": "2026-08-17",
+      "scheduledTime": "09:00 AM",
+      "therapistName": "Dr. Sandeep Kulkarni",
+      "roomNumber": "Chamber 204",
+      "durationMinutes": 60,
+      "purpose": "Igniting digestive fire (Agni) and mobilizing metabolic endotoxins (Ama).",
+      "preCareInstructions": [
+        "Fasting for 2 hours prior to session.",
+        "Drink lukewarm water with dry ginger.",
+        "Wear loose, comfortable cotton clothing."
+      ],
+      "postCareInstructions": [
+        "Rest in a warm room for 45 minutes.",
+        "Avoid cold drafts and AC exposure.",
+        "Consume light mudga yusha (moong dal soup) only."
+      ],
+      "herbsAndMaterials": ["Trikatu Churna", "Panchakola Phanta", "Warm Water"],
+      "statusNote": "Completed smoothly. Agni status transitioned from Manda to Sama.",
+      "vasScoreBefore": 8,
+      "vasScoreAfter": 7,
+      "doctorNotesSummary": "Patient tolerated herbal appetizers well. Good initial metabolic ignition."
+    },
+    {
+      "stageId": "STG-102",
+      "stageName": "Day 2: Snehapana (Internal Oleation)",
+      "stageCategory": "Poorvakarma",
+      "dayNumber": 2,
+      "totalDays": 7,
+      "status": "completed",
+      "scheduledDate": "2026-08-18",
+      "scheduledTime": "08:30 AM",
+      "therapistName": "Dr. Sandeep Kulkarni",
+      "roomNumber": "Chamber 204",
+      "durationMinutes": 75,
+      "purpose": "Systemic cellular lubrication and unctuous softening of morbid Doshas.",
+      "preCareInstructions": [
+        "Strict morning empty stomach requirement.",
+        "No breakfast or tea before intake.",
+        "Sip hot water continuously."
+      ],
+      "postCareInstructions": [
+        "Drink hot water when thirsty.",
+        "Do not sleep during daytime.",
+        "Eat only when pure appetite returns."
+      ],
+      "herbsAndMaterials": ["Medicated Ghee (Mahatiktaka Ghrita)", "Boiled Lukewarm Water"],
+      "statusNote": "Snehapana dosage 45ml administered. Belching clear with aroma of ghee.",
+      "vasScoreBefore": 7,
+      "vasScoreAfter": 6,
+      "doctorNotesSummary": "Internal oleation symptoms positive. No nausea or heaviness noted."
+    },
+    {
+      "stageId": "STG-103",
+      "stageName": "Day 3: Abhyanga & Nadi Swedana",
+      "stageCategory": "Poorvakarma",
+      "dayNumber": 3,
+      "totalDays": 7,
+      "status": "completed",
+      "scheduledDate": "2026-08-19",
+      "scheduledTime": "09:30 AM",
+      "therapistName": "Dr. Sandeep Kulkarni",
+      "roomNumber": "Chamber 204",
+      "durationMinutes": 90,
+      "purpose": "Full body rhythmic herbal oil massage followed by localized steam fomentation.",
+      "preCareInstructions": [
+        "Light warm breakfast (Peya/porridge) 1.5 hours prior.",
+        "Keep back and spine relaxed.",
+        "Remove metallic jewelry."
+      ],
+      "postCareInstructions": [
+        "Warm shower after 30 minutes rest.",
+        "Avoid exposure to wind, fan, or AC.",
+        "Light lunch with steamed vegetables."
+      ],
+      "herbsAndMaterials": ["Mahanarayana Taila", "Dashamoola Kwatha Steam"],
+      "statusNote": "Muscle stiffness substantially relieved around L4-L5 lumbar area.",
+      "vasScoreBefore": 6,
+      "vasScoreAfter": 4,
+      "doctorNotesSummary": "Significant drop in lumbar spasm. Swedana sweating was uniform and pleasant."
+    },
+    {
+      "stageId": "STG-104",
+      "stageName": "Day 4: Vamana Karma (Therapeutic Emesis)",
+      "stageCategory": "Pradhanakarma",
+      "dayNumber": 4,
+      "totalDays": 7,
+      "status": "completed",
+      "scheduledDate": "2026-08-20",
+      "scheduledTime": "07:30 AM",
+      "therapistName": "Dr. Sandeep Kulkarni",
+      "roomNumber": "Chamber 204",
+      "durationMinutes": 120,
+      "purpose": "Elimination of deep-rooted toxic Kapha and morbid toxins from upper digestive tract.",
+      "preCareInstructions": [
+        "Complete overnight fasting.",
+        "Morning prayer & mental relaxation before procedure.",
+        "Vital signs (BP, Pulse) pre-checked."
+      ],
+      "postCareInstructions": [
+        "Dhumapana (herbal medicated smoking) administered post emesis.",
+        "Strict Samsarjana Krama (liquid diet regimen) for 24 hours.",
+        "Complete vocal and physical rest."
+      ],
+      "herbsAndMaterials": ["Madanaphala Pippali", "Yashtimadhu Phanta", "Milk", "Saindhava Lavana"],
+      "statusNote": "Samyak Vamana achieved with 6 vegas (clean bile expulsion). Vitals steady.",
+      "vasScoreBefore": 5,
+      "vasScoreAfter": 3,
+      "doctorNotesSummary": "Excellent cleansing response. Chest lightness and breath freedom confirmed."
+    },
+    {
+      "stageId": "STG-105",
+      "stageName": "Day 5: Sarvangadhara & Targeted Kati Basti",
+      "stageCategory": "Pradhanakarma",
+      "dayNumber": 5,
+      "totalDays": 7,
+      "status": "in_progress",
+      "scheduledDate": "2026-08-21",
+      "scheduledTime": "10:00 AM",
+      "therapistName": "Dr. Sandeep Kulkarni",
+      "roomNumber": "Chamber 204",
+      "durationMinutes": 90,
+      "purpose": "Warm herbal oil reservoir treatment over lumbosacral region for deep disc rejuvenation.",
+      "preCareInstructions": [
+        "Light digestible meal 2 hours before session.",
+        "Bladder and bowels evacuated prior to entering chamber.",
+        "Bring cotton undergarments."
+      ],
+      "postCareInstructions": [
+        "Avoid bending forward or lifting weights for 12 hours.",
+        "Keep lower back covered with warm cloth.",
+        "Take prescribed Dashamularishta post lunch."
+      ],
+      "herbsAndMaterials": ["Ksheerabala 101 Avarthana Taila", "Black Gram Dough Dam", "Mahamasha Taila"],
+      "statusNote": "Ready for execution today. Chamber 204 pre-warmed to 26°C.",
+      "vasScoreBefore": 4,
+      "doctorNotesSummary": "Temperature calibrated to 42°C for optimal transdermal absorption."
+    },
+    {
+      "stageId": "STG-106",
+      "stageName": "Day 6: Shirodhara & Spinal Basti Reinforcement",
+      "stageCategory": "Paschatkarma",
+      "dayNumber": 6,
+      "totalDays": 7,
+      "status": "upcoming",
+      "scheduledDate": "2026-08-22",
+      "scheduledTime": "09:30 AM",
+      "therapistName": "Dr. Sandeep Kulkarni",
+      "roomNumber": "Chamber 204",
+      "durationMinutes": 75,
+      "purpose": "Calming the central nervous system, relieving stress, and consolidating spinal strength.",
+      "preCareInstructions": [
+        "Avoid caffeinated drinks on procedure morning.",
+        "Light breakfast permissible 1 hour before.",
+        "Hair should be clean and oil-free."
+      ],
+      "postCareInstructions": [
+        "Do not wash hair with cold water.",
+        "Wear scarf/cap when traveling back.",
+        "Early light dinner before 7:30 PM."
+      ],
+      "herbsAndMaterials": ["Brahmi Taila", "Ksheerabala Taila", "Copper Dhara Vessel"],
+      "statusNote": "Scheduled for tomorrow.",
+      "doctorNotesSummary": "Aimed at restoring psychosomatic balance."
+    },
+    {
+      "stageId": "STG-107",
+      "stageName": "Day 7: Rasayana Therapy & Discharge Consultation",
+      "stageCategory": "Paschatkarma",
+      "dayNumber": 7,
+      "totalDays": 7,
+      "status": "upcoming",
+      "scheduledDate": "2026-08-23",
+      "scheduledTime": "11:00 AM",
+      "therapistName": "Dr. Sandeep Kulkarni",
+      "roomNumber": "Consultation Suite 101",
+      "durationMinutes": 60,
+      "purpose": "Comprehensive rejuvenation regimen, lifestyle transition plan, and post-cleansing diet guidance.",
+      "preCareInstructions": [
+        "Bring all prescription journals and personal symptom log.",
+        "Normal light breakfast."
+      ],
+      "postCareInstructions": [
+        "Follow prescribed 30-day Rasayana home herbal plan.",
+        "Gradual return to regular routine over 7 days.",
+        "Follow-up consultation in 4 weeks."
+      ],
+      "herbsAndMaterials": ["Chyawanprash Awaleha", "Ashwagandha Granules"],
+      "statusNote": "Final assessment and protocol completion.",
+      "doctorNotesSummary": "Final evaluation of lumbar range of motion and overall vitality."
+    }
+  ]
+}

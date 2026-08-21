@@ -15,6 +15,9 @@ export const apiSlice = createApi({
         'TherapistSession',
         'TherapistAvailability',
         'TherapistWorkload',
+        'PatientPlan',
+        'PatientAppointments',
+        'PatientFeedback',
     ],
     endpoints: () => ({}),
 });

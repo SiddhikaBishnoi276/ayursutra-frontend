@@ -30,9 +30,8 @@ export interface LoginFormData {
 export const ROLE_DASHBOARD_MAP: Record<UserRole, string> = {
   admin: '/admin-dashboard',
   doctor: '/doctor-dashboard',
-  therapist: '/therapist-dashboard',
-  patient: '/patient-dashboard',
-  
+  therapist: '/therapist/dashboard',
+  patient: '/patient/dashboard',
 };
 
 export const ROLE_DISPLAY_NAMES: Record<UserRole, string> = {
