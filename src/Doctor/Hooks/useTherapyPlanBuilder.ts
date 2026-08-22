@@ -12,7 +12,6 @@ import {
   MedicinePrescription,
   TherapyPlan,
 } from '../types/doctor.types';
-import { sendCredentialsSMS } from '../Services/emailService';
 
 export interface UseTherapyPlanBuilderProps {
   patientId: string;
@@ -41,7 +40,7 @@ export function useTherapyPlanBuilder({
 
   const [selectedPackageId, setSelectedPackageId] = useState<string>(initialPackageId || 'PKG-01');
   const [customStages, setCustomStages] = useState<TherapyStage[]>([]);
-  const [selectedTherapistId, setSelectedTherapistId] = useState<string>('TH-01');
+  const [selectedTherapistId, setSelectedTherapistId] = useState<string>('');
   const [startDate, setStartDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );
@@ -120,12 +119,14 @@ export function useTherapyPlanBuilder({
       .sort((a, b) => b.matchScore - a.matchScore);
   }, [therapists, patientGender]);
 
-  // Sync top therapist on patient switch
+  // Sync top therapist on patient switch or therapists load
   useEffect(() => {
     if (rankedTherapists.length > 0) {
       setSelectedTherapistId(rankedTherapists[0].id);
+    } else if (therapists.length > 0) {
+      setSelectedTherapistId(therapists[0].id);
     }
-  }, [rankedTherapists]);
+  }, [rankedTherapists, therapists]);
 
   const updateStageDuration = (stageId: string, deltaDays: number) => {
     setCustomStages((prev) =>
@@ -162,28 +163,16 @@ export function useTherapyPlanBuilder({
       packageName: activePackage.name,
       startDate,
       stages: customStages,
-      assignedTherapistId: mode === 'solo' ? 'DOCTOR-SELF' : selectedTherapistId,
+      assignedTherapistId: mode === 'solo' ? 'DOCTOR-SELF' : (selectedTherapistId || (therapists[0]?.id)),
       medicines,
       customDietNotes: `${customDietNotes} | Diet: ${dietItems.join(', ')}`,
       mode,
     }).unwrap();
 
     setCreatedPlan(plan);
-
-    // Mock SMS credential dispatch
-    const cleanId = patientId.replace(/[^0-9]/g, '') || '101';
-    const loginId = `PT${cleanId}`;
-    const tempPassword = Math.floor(100000 + Math.random() * 900000).toString();
-
-    await sendCredentialsSMS({
-      to: patientContact,
-      loginId,
-      tempPassword,
-      message: `Welcome to AyurSutra. Your therapy plan has been prescribed. Login to your Patient Health Portal with ID: ${loginId} and Password: ${tempPassword}.`,
-    });
-
     return plan;
   };
+
 
   return {
     packages,

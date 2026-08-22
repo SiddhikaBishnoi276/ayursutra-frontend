@@ -157,6 +157,9 @@ export const PrakritiAssessmentPage: React.FC<PrakritiAssessmentPageProps> = ({
         </div>
       </div>
 
+
+
+
       {/* Main Grid: Questions on Left (2 cols), Live Score & Clinical Notes on Right (1 col) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left 2 Cols: 10 Diagnostic Questions */}
@@ -323,6 +326,8 @@ export const PrakritiAssessmentPage: React.FC<PrakritiAssessmentPageProps> = ({
           </Card>
         </div>
       </div>
+
+
 
       {/* Post Lock Modal Prompt */}
       <Modal

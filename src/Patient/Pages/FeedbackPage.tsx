@@ -20,7 +20,6 @@ import { useMyAppointments } from '../Hooks/useMyAppointments';
 import { useFeedbackSubmit } from '../Hooks/useFeedbackSubmit';
 import { FeedbackFormModal } from '../Components/FeedbackFormModal';
 import { formatDate } from '../Services/patientService';
-import feedbackHistoryMock from '../data/myFeedback.json';
 
 export const FeedbackPage: React.FC = () => {
   const { pendingFeedbackSessions, completed, isLoading } = useMyAppointments();
@@ -149,17 +148,17 @@ export const FeedbackPage: React.FC = () => {
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-bold text-gray-900 font-serif">
-            Submitted Feedback History ({submittedSessions.length + feedbackHistoryMock.length})
+            Submitted Feedback History ({submittedSessions.length})
           </h2>
           <span className="text-xs text-gray-500 font-medium">
             Confidential clinical reviews
           </span>
         </div>
 
-        {submittedSessions.length === 0 && feedbackHistoryMock.length === 0 ? (
+        {submittedSessions.length === 0 ? (
           <EmptyState
             title="No Feedback Submitted Yet"
-            message="Your reviews and session improvement ratings will be archived here."
+            message="Your reviews and session improvement ratings will be archived here once submitted."
             icon={<MessageSquare className="w-6 h-6 text-purple-700" />}
           />
         ) : (
@@ -221,65 +220,6 @@ export const FeedbackPage: React.FC = () => {
                     Submitted & Verified
                   </span>
                   <span>Stored in Medical Journal</span>
-                </div>
-              </Card>
-            ))}
-
-            {/* Static Historical Feedback Mock Items if not duplicated */}
-            {feedbackHistoryMock.map((fb) => (
-              <Card
-                key={fb.id}
-                className="border border-ayur-sand/60 p-5 bg-white shadow-2xs hover:border-purple-300 transition-all"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-2 pb-3 border-b border-gray-100">
-                  <div>
-                    <h4 className="text-base font-bold text-gray-900 font-serif">
-                      {fb.stageName}
-                    </h4>
-                    <p className="text-xs text-gray-500 font-medium mt-0.5">
-                      Conducted with <strong className="text-gray-800">{fb.therapistName}</strong> on {formatDate(fb.date)}
-                    </p>
-                  </div>
-
-                  {/* Rating Stars */}
-                  <div className="flex items-center gap-1 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star
-                        key={s}
-                        className={`w-3.5 h-3.5 ${
-                          fb.rating >= s
-                            ? 'text-amber-400 fill-amber-400'
-                            : 'text-stone-200'
-                        }`}
-                      />
-                    ))}
-                    <span className="text-xs font-bold text-amber-900 ml-1">
-                      {fb.rating}.0
-                    </span>
-                  </div>
-                </div>
-
-                <div className="mt-3">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Badge variant="ayur" size="sm">
-                      {fb.overallExperience}
-                    </Badge>
-                    <span className="text-[11px] text-gray-500 font-medium">
-                      Post-Session VAS: <strong>{fb.symptomImprovementScore}/10</strong>
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-gray-700 leading-relaxed font-medium bg-[#fbf9f5] p-3 rounded-xl border border-ayur-sand/50">
-                    &quot;{fb.comments}&quot;
-                  </p>
-                </div>
-
-                <div className="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
-                  <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    Verified Patient Review
-                  </span>
-                  <span>Submitted: {formatDate(fb.submittedAt)}</span>
                 </div>
               </Card>
             ))}

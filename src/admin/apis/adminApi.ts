@@ -222,6 +222,7 @@ export const adminApi = apiSlice.injectEndpoints({
           name: roomData.name,
           clinic_id: roomData.clinic_id || localStorage.getItem('clinicId') || 1,
           status: roomData.status || 'available',
+          room_type: roomData.type,
         },
       }),
       invalidatesTags: ['Rooms'],
@@ -256,23 +257,42 @@ export const adminApi = apiSlice.injectEndpoints({
         const list = Array.isArray(response) ? response : response.data || [];
         return list.map((pkg: any) => ({
           id: String(pkg.id),
+          _raw_id: pkg._raw_id || (pkg.id && !isNaN(Number(pkg.id)) ? Number(pkg.id) : undefined),
           name: pkg.name,
+          therapy_type: pkg.therapy_type || pkg.targetDosha || 'Virechana',
           description: pkg.description || `${pkg.therapy_type || 'Panchakarma'} Protocol Template`,
-          targetDosha: pkg.target_dosha || pkg.therapy_type || 'Tridosha / Custom',
-          durationDays: pkg.duration_days || (pkg.stages?.length ? pkg.stages.reduce((sum: number, st: any) => sum + (st.duration_days || 1), 0) : 7),
-          stages: (pkg.stages || []).map((st: any) => ({
-            id: String(st.id),
-            stageName: st.stage_name || st.stage_type || 'Stage',
-            stageCategory: (st.stage_type || 'Poorvakarma') as any,
-            dayOffset: st.day_offset || 0,
-            durationMinutes: st.session_duration_minutes || 60,
+          targetDosha: pkg.target_dosha || pkg.targetDosha || pkg.therapy_type || 'Virechana',
+          base_price: pkg.base_price !== undefined ? parseFloat(pkg.base_price) : 0,
+          durationDays: pkg.total_duration_days || pkg.duration_days || (pkg.stages?.length ? pkg.stages.reduce((sum: number, st: any) => sum + (st.duration_days || st.durationDays || 1), 0) : 7),
+          duration_days: pkg.total_duration_days || pkg.duration_days || 7,
+          stages: (pkg.stages || []).map((st: any, idx: number) => ({
+            id: String(st.id || `stg-${idx}`),
+            stageName: st.stageName || st.stage_name || `${st.stage_type || 'Poorvakarma'} Stage`,
+            name: st.name || st.stageName || st.stage_name || `${st.stage_type || 'Poorvakarma'} Stage`,
+            stageCategory: (st.stageCategory || st.stage_type || 'Poorvakarma') as any,
+            category: (st.stageCategory || st.stage_type || 'Poorvakarma') as any,
+            stage_type: st.stage_type || st.stageCategory || 'Poorvakarma',
+            sequenceOrder: st.sequenceOrder ?? st.sequence_order ?? (idx + 1),
+            sequence_order: st.sequence_order ?? st.sequenceOrder ?? (idx + 1),
+            dayOffset: st.dayOffset ?? st.day_offset ?? 0,
+            day_offset: st.day_offset ?? st.dayOffset ?? 0,
+            durationDays: st.durationDays ?? st.duration_days ?? 1,
+            duration_days: st.duration_days ?? st.durationDays ?? 1,
+            durationMinutes: st.durationMinutes ?? st.session_duration_minutes ?? 60,
+            session_duration_minutes: st.session_duration_minutes ?? st.durationMinutes ?? 60,
+            preInstructions: st.preInstructions || st.pre_instructions || '',
+            pre_instructions: st.pre_instructions || st.preInstructions || '',
+            postInstructions: st.postInstructions || st.post_instructions || '',
+            post_instructions: st.post_instructions || st.postInstructions || '',
+            base_diet_framework: st.base_diet_framework,
+            baseDietGuidelines: typeof st.base_diet_framework === 'string' ? st.base_diet_framework : JSON.stringify(st.base_diet_framework || {}),
           })),
-          preProcedureInstructions: pkg.pre_instructions || '',
-          postProcedureInstructions: pkg.post_instructions || '',
+          preProcedureInstructions: pkg.pre_instructions || pkg.preProcedureInstructions || '',
+          postProcedureInstructions: pkg.post_instructions || pkg.postProcedureInstructions || '',
           dietFramework: typeof pkg.base_diet_framework === 'string' ? pkg.base_diet_framework : JSON.stringify(pkg.base_diet_framework || {}),
-          createdBy: pkg.created_by_role || 'admin',
-          authorName: pkg.author_name || 'Clinic Administrator',
-          status: (pkg.is_active !== false ? 'Active' : 'Pending Audit') as TherapyPackage['status'],
+          createdBy: pkg.created_by_role || pkg.createdBy || 'admin',
+          authorName: pkg.author_name || pkg.authorName || 'Clinic Administrator',
+          status: (pkg.is_active !== false && pkg.status !== 'Inactive' ? 'Active' : 'Pending Audit') as TherapyPackage['status'],
         }));
       },
       providesTags: ['Protocols', 'Package'],
@@ -291,23 +311,42 @@ export const adminApi = apiSlice.injectEndpoints({
         const list = Array.isArray(response) ? response : response.data || [];
         return list.map((pkg: any) => ({
           id: String(pkg.id),
+          _raw_id: pkg._raw_id || (pkg.id && !isNaN(Number(pkg.id)) ? Number(pkg.id) : undefined),
           name: pkg.name,
+          therapy_type: pkg.therapy_type || pkg.targetDosha || 'Virechana',
           description: pkg.description || `${pkg.therapy_type || 'Panchakarma'} Protocol Template`,
-          targetDosha: pkg.target_dosha || pkg.therapy_type || 'Tridosha / Custom',
-          durationDays: pkg.duration_days || (pkg.stages?.length ? pkg.stages.reduce((sum: number, st: any) => sum + (st.duration_days || 1), 0) : 7),
-          stages: (pkg.stages || []).map((st: any) => ({
-            id: String(st.id),
-            stageName: st.stage_name || st.stage_type || 'Stage',
-            stageCategory: (st.stage_type || 'Poorvakarma') as any,
-            dayOffset: st.day_offset || 0,
-            durationMinutes: st.session_duration_minutes || 60,
+          targetDosha: pkg.target_dosha || pkg.targetDosha || pkg.therapy_type || 'Virechana',
+          base_price: pkg.base_price !== undefined ? parseFloat(pkg.base_price) : 0,
+          durationDays: pkg.total_duration_days || pkg.duration_days || (pkg.stages?.length ? pkg.stages.reduce((sum: number, st: any) => sum + (st.duration_days || st.durationDays || 1), 0) : 7),
+          duration_days: pkg.total_duration_days || pkg.duration_days || 7,
+          stages: (pkg.stages || []).map((st: any, idx: number) => ({
+            id: String(st.id || `stg-${idx}`),
+            stageName: st.stageName || st.stage_name || `${st.stage_type || 'Poorvakarma'} Stage`,
+            name: st.name || st.stageName || st.stage_name || `${st.stage_type || 'Poorvakarma'} Stage`,
+            stageCategory: (st.stageCategory || st.stage_type || 'Poorvakarma') as any,
+            category: (st.stageCategory || st.stage_type || 'Poorvakarma') as any,
+            stage_type: st.stage_type || st.stageCategory || 'Poorvakarma',
+            sequenceOrder: st.sequenceOrder ?? st.sequence_order ?? (idx + 1),
+            sequence_order: st.sequence_order ?? st.sequenceOrder ?? (idx + 1),
+            dayOffset: st.dayOffset ?? st.day_offset ?? 0,
+            day_offset: st.day_offset ?? st.dayOffset ?? 0,
+            durationDays: st.durationDays ?? st.duration_days ?? 1,
+            duration_days: st.duration_days ?? st.durationDays ?? 1,
+            durationMinutes: st.durationMinutes ?? st.session_duration_minutes ?? 60,
+            session_duration_minutes: st.session_duration_minutes ?? st.durationMinutes ?? 60,
+            preInstructions: st.preInstructions || st.pre_instructions || '',
+            pre_instructions: st.pre_instructions || st.preInstructions || '',
+            postInstructions: st.postInstructions || st.post_instructions || '',
+            post_instructions: st.post_instructions || st.postInstructions || '',
+            base_diet_framework: st.base_diet_framework,
+            baseDietGuidelines: typeof st.base_diet_framework === 'string' ? st.base_diet_framework : JSON.stringify(st.base_diet_framework || {}),
           })),
-          preProcedureInstructions: pkg.pre_instructions || '',
-          postProcedureInstructions: pkg.post_instructions || '',
+          preProcedureInstructions: pkg.pre_instructions || pkg.preProcedureInstructions || '',
+          postProcedureInstructions: pkg.post_instructions || pkg.postProcedureInstructions || '',
           dietFramework: typeof pkg.base_diet_framework === 'string' ? pkg.base_diet_framework : JSON.stringify(pkg.base_diet_framework || {}),
-          createdBy: pkg.created_by_role || 'admin',
-          authorName: pkg.author_name || 'Clinic Administrator',
-          status: (pkg.is_active !== false ? 'Active' : 'Pending Audit') as TherapyPackage['status'],
+          createdBy: pkg.created_by_role || pkg.createdBy || 'admin',
+          authorName: pkg.author_name || pkg.authorName || 'Clinic Administrator',
+          status: (pkg.is_active !== false && pkg.status !== 'Inactive' ? 'Active' : 'Pending Audit') as TherapyPackage['status'],
         }));
       },
       providesTags: ['Protocols', 'Package'],
@@ -322,6 +361,7 @@ export const adminApi = apiSlice.injectEndpoints({
         therapy_type?: string;
         targetDosha?: string;
         description?: string;
+        base_price?: number;
         stages?: any[];
         preProcedureInstructions?: string;
         postProcedureInstructions?: string;
@@ -338,15 +378,17 @@ export const adminApi = apiSlice.injectEndpoints({
           clinic_id: newPkg.clinic_id || localStorage.getItem('clinicId') || 1,
           name: newPkg.name,
           therapy_type: newPkg.therapy_type || newPkg.targetDosha || 'Virechana',
+          description: newPkg.description,
+          base_price: newPkg.base_price,
           stages: (newPkg.stages || []).map((st, idx) => ({
-            stage_type: st.stageCategory || st.stage_type || 'Poorvakarma',
-            sequence_order: idx + 1,
-            day_offset: st.dayOffset ?? st.day_offset ?? 0,
-            duration_days: st.durationDays ?? st.duration_days ?? 1,
-            session_duration_minutes: st.durationMinutes ?? st.session_duration_minutes ?? 60,
-            pre_instructions: newPkg.preProcedureInstructions || '',
-            post_instructions: newPkg.postProcedureInstructions || '',
-            base_diet_framework: { notes: newPkg.dietFramework || 'Standard Diet' },
+            stage_type: st.stage_type || st.stageCategory || st.category || 'Poorvakarma',
+            sequence_order: st.sequence_order !== undefined ? st.sequence_order : (st.sequenceOrder !== undefined ? st.sequenceOrder : idx + 1),
+            day_offset: st.day_offset ?? st.dayOffset ?? 0,
+            duration_days: st.duration_days ?? st.durationDays ?? 1,
+            session_duration_minutes: st.session_duration_minutes ?? st.durationMinutes ?? 60,
+            pre_instructions: st.pre_instructions || st.preInstructions || newPkg.preProcedureInstructions || '',
+            post_instructions: st.post_instructions || st.postInstructions || newPkg.postProcedureInstructions || '',
+            base_diet_framework: st.base_diet_framework || (newPkg.dietFramework ? { allowed: [newPkg.dietFramework], forbidden: [] } : { allowed: [], forbidden: [] }),
           })),
         },
       }),
@@ -354,7 +396,7 @@ export const adminApi = apiSlice.injectEndpoints({
     }),
 
     // Backward-compatible alias for createProtocol
-    createPackage: builder.mutation<TherapyPackage, Omit<TherapyPackage, 'id' | 'status' | 'createdBy' | 'authorName'>>({
+    createPackage: builder.mutation<TherapyPackage, any>({
       query: (newPkg) => ({
         url: '/protocols',
         method: 'POST',
@@ -362,20 +404,46 @@ export const adminApi = apiSlice.injectEndpoints({
           'x-user-id': localStorage.getItem('userId') || 'default',
         },
         body: {
-          clinic_id: localStorage.getItem('clinicId') || 1,
+          clinic_id: newPkg.clinic_id || localStorage.getItem('clinicId') || 1,
           name: newPkg.name,
-          therapy_type: newPkg.targetDosha || 'Virechana',
-          stages: (newPkg.stages || []).map((st, idx) => ({
-            stage_type: st.stageCategory || 'Poorvakarma',
-            sequence_order: idx + 1,
-            day_offset: st.dayOffset || 0,
-            duration_days: 1,
-            session_duration_minutes: st.durationMinutes || 60,
-            pre_instructions: newPkg.preProcedureInstructions || '',
-            post_instructions: newPkg.postProcedureInstructions || '',
-            base_diet_framework: { notes: newPkg.dietFramework || 'Standard Diet' },
+          therapy_type: newPkg.therapy_type || newPkg.targetDosha || 'Virechana',
+          description: newPkg.description,
+          base_price: newPkg.base_price,
+          stages: (newPkg.stages || []).map((st: any, idx: number) => ({
+            stage_type: st.stage_type || st.stageCategory || st.category || 'Poorvakarma',
+            sequence_order: st.sequence_order !== undefined ? st.sequence_order : (st.sequenceOrder !== undefined ? st.sequenceOrder : idx + 1),
+            day_offset: st.day_offset ?? st.dayOffset ?? 0,
+            duration_days: st.duration_days ?? st.durationDays ?? 1,
+            session_duration_minutes: st.session_duration_minutes ?? st.durationMinutes ?? 60,
+            pre_instructions: st.pre_instructions || st.preInstructions || newPkg.preProcedureInstructions || '',
+            post_instructions: st.post_instructions || st.postInstructions || newPkg.postProcedureInstructions || '',
+            base_diet_framework: st.base_diet_framework || (newPkg.dietFramework ? { allowed: [newPkg.dietFramework], forbidden: [] } : { allowed: [], forbidden: [] }),
           })),
         },
+      }),
+      invalidatesTags: ['Protocols', 'Package'],
+    }),
+
+    // Update Protocol (PUT /api/protocols/:id)
+    updateProtocol: builder.mutation<
+      TherapyPackage,
+      {
+        id: string | number;
+        name?: string;
+        therapy_type?: string;
+        description?: string;
+        base_price?: number;
+        stages?: any[];
+        is_active?: boolean;
+      }
+    >({
+      query: ({ id, ...body }) => ({
+        url: `/protocols/${id}`,
+        method: 'PUT',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body,
       }),
       invalidatesTags: ['Protocols', 'Package'],
     }),
@@ -460,9 +528,35 @@ export const adminApi = apiSlice.injectEndpoints({
           hasHistoricalResponses: q.has_historical_responses || false,
         }));
       },
+      providesTags: ['Questions'],
     }),
 
-    // 13. Update Question (PUT /api/prakriti-questions/:id)
+    // 13. Create Question (POST /api/prakriti-questions)
+    createQuestion: builder.mutation<
+      PrakritiQuestion,
+      Omit<PrakritiQuestion, 'id' | 'version' | 'hasHistoricalResponses'>
+    >({
+      query: (newQ) => ({
+        url: '/prakriti-questions',
+        method: 'POST',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          questionText: newQ.questionText,
+          attribute: newQ.attribute,
+          options: newQ.options.map((opt) => ({
+            text: opt.text,
+            vata: opt.vata,
+            pitta: opt.pitta,
+            kapha: opt.kapha,
+          })),
+        },
+      }),
+      invalidatesTags: ['Questions'],
+    }),
+
+    // 14. Update Question (PUT /api/prakriti-questions/:id)
     updateQuestion: builder.mutation<PrakritiQuestion, PrakritiQuestion>({
       query: (updated) => ({
         url: `/prakriti-questions/${updated.id}`,
@@ -483,6 +577,51 @@ export const adminApi = apiSlice.injectEndpoints({
           })),
         },
       }),
+      invalidatesTags: ['Questions'],
+    }),
+
+    // 15. Delete Question (DELETE /api/prakriti-questions/:id)
+    deleteQuestion: builder.mutation<{ success: boolean; message?: string }, string>({
+      query: (id) => ({
+        url: `/prakriti-questions/${id}`,
+        method: 'DELETE',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+      }),
+      invalidatesTags: ['Questions'],
+    }),
+
+    // 16. Update Package (PUT /api/protocols/:id)
+    updatePackage: builder.mutation<
+      TherapyPackage,
+      TherapyPackage
+    >({
+      query: (updated) => ({
+        url: `/protocols/${updated.id}`,
+        method: 'PUT',
+        headers: {
+          'x-user-id': localStorage.getItem('userId') || 'default',
+        },
+        body: {
+          name: updated.name,
+          description: updated.description,
+          therapy_type: updated.targetDosha,
+          base_price: 0,
+          is_active: updated.status === 'Active',
+          stages: (updated.stages || []).map((st, idx) => ({
+            stage_type: st.stageCategory || 'Poorvakarma',
+            sequence_order: idx + 1,
+            day_offset: st.dayOffset || 0,
+            duration_days: 1,
+            session_duration_minutes: st.durationMinutes || 60,
+            pre_instructions: updated.preProcedureInstructions || '',
+            post_instructions: updated.postProcedureInstructions || '',
+            base_diet_framework: { notes: updated.dietFramework || 'Standard Diet' },
+          })),
+        },
+      }),
+      invalidatesTags: ['Protocols', 'Package'],
     }),
 
     // 14. Get Notification Logs (GET /api/notifications)
@@ -535,10 +674,13 @@ export const {
   useGetPackagesQuery,
   useCreateProtocolMutation,
   useCreatePackageMutation,
+  useUpdatePackageMutation,
   useGetActivitiesQuery,
   useGetStatsQuery,
   useGetQuestionsQuery,
+  useCreateQuestionMutation,
   useUpdateQuestionMutation,
+  useDeleteQuestionMutation,
   useGetNotificationLogsQuery,
   useRetryNotificationMutation,
 } = adminApi;

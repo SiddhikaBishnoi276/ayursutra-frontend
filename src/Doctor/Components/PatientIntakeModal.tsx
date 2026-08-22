@@ -131,11 +131,12 @@ export const PatientIntakeModal: React.FC<PatientIntakeModalProps> = ({
 
           <div className="flex flex-col gap-1">
             <label className="font-bold uppercase text-gray-700 text-[10px] tracking-wider">
-              Email Address (Optional)
+              Email Address *
             </label>
             <input
               type="email"
               name="email"
+              required
               value={formData.email}
               onChange={handleChange}
               placeholder="patient@example.com"
@@ -143,6 +144,7 @@ export const PatientIntakeModal: React.FC<PatientIntakeModalProps> = ({
             />
           </div>
         </div>
+
 
         {/* Chief Complaint */}
         <div className="flex flex-col gap-1">

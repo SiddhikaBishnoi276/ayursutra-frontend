@@ -31,11 +31,24 @@ export const Badge: React.FC<BadgeProps> = ({
     md: 'px-3 py-1 text-xs',
   };
 
+  const renderIcon = () => {
+    if (!icon) return null;
+    if (React.isValidElement(icon)) return icon;
+    if (
+      typeof icon === 'function' ||
+      (typeof icon === 'object' && icon !== null && ('$$typeof' in icon || 'render' in icon))
+    ) {
+      const IconComponent = icon as unknown as React.ComponentType<{ className?: string }>;
+      return <IconComponent className="w-3.5 h-3.5" />;
+    }
+    return null;
+  };
+
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full font-semibold tracking-wide ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
     >
-      {icon && <span className="shrink-0">{icon}</span>}
+      {icon && <span className="shrink-0">{renderIcon()}</span>}
       <span>{children}</span>
     </span>
   );

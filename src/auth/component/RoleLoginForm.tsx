@@ -60,10 +60,16 @@ export const RoleLoginForm: React.FC<RoleLoginFormProps> = ({ role, onClose }) =
       await login({ email: formData.email, password: formData.password, role }).unwrap();
       onClose();
       navigate(dashboardRoute);
-    } catch {
-      setErrors({ general: 'Login failed. Please check your credentials and try again.' });
+    } catch (err: any) {
+      const serverMessage =
+        err?.data?.message ||
+        err?.data?.error ||
+        err?.error ||
+        'Login failed. Please check your credentials and try again.';
+      setErrors({ general: serverMessage });
     }
   };
+
 
   const handleChange = (field: keyof LoginFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));

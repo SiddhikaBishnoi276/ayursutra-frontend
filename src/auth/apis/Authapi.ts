@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { LoginRequest, LoginResponse } from '../types/login';
+import { setCredentials } from '../authSlice';
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -15,37 +16,49 @@ export const authApi = createApi({
       query: (arg) => {
         const backendRole = arg.role === 'admin' ? 'clinic_admin' : arg.role;
         return {
-          url: '/auth/mock-login',
+          url: '/auth/login',
           method: 'POST',
           body: {
-            role: backendRole,
-            email: arg.email,
+            email: arg.email.trim(),
             password: arg.password,
+            role: backendRole,
           },
         };
       },
       transformResponse: (response: any, _meta, arg) => {
+        const userObj = response.user || response;
         const user = {
-          id: response.user_id || response.user?.id || 'u-1',
-          name: response.name || response.user?.name || `${arg.role.toUpperCase()} User`,
-          email: arg.email || response.email || `${arg.role}@ayursutra.com`,
+          id: userObj.id || response.user_id || 'u-1',
+          name: userObj.name || response.name || `${arg.role.toUpperCase()} User`,
+          email: userObj.email || response.email || arg.email,
           role: arg.role,
-          clinicId: response.clinic_id || response.user?.clinic_id || '1',
+          clinicId: userObj.clinic_id || response.clinic_id || '1',
         };
         const token = response.token || `jwt-${user.id}-${Date.now()}`;
 
-        // Persist session in localStorage for auth headers
+        // Persist session in localStorage for auth headers & session state
         localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('userId', user.id);
         localStorage.setItem('role', user.role);
+        localStorage.setItem('name', user.name);
+        localStorage.setItem('email', user.email);
         if (user.clinicId) {
-          localStorage.setItem('clinicId', user.clinicId);
+          localStorage.setItem('clinicId', String(user.clinicId));
         }
 
         return {
           token,
           user,
         };
+      },
+      async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(setCredentials(data));
+        } catch {
+          // Ignore mutation errors handled by component
+        }
       },
     }),
   }),
