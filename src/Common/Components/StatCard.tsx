@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card } from './Card';
-import { Badge, BadgeVariant } from './Badge';
-import { ArrowRight, TrendingUp, AlertCircle } from 'lucide-react';
+import { AlertCircle, ArrowRight, TrendingUp } from "lucide-react";
+import React from "react";
+import { Badge, BadgeVariant } from "./Badge";
+import { Card } from "./Card";
 
 export interface StatCardProps {
   label: string;
@@ -28,7 +28,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   trend,
   alertPill,
   onClick,
-  className = '',
+  className = "",
 }) => {
   return (
     <Card
@@ -44,7 +44,7 @@ export const StatCard: React.FC<StatCardProps> = ({
           </span>
           {trend && (
             <Badge
-              variant={trend.variant || 'success'}
+              variant={trend.variant || "success"}
               size="sm"
               icon={trend.icon || <TrendingUp className="w-3 h-3" />}
               className="shrink-0 whitespace-nowrap"
@@ -55,7 +55,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         </div>
 
         {/* Row 2: Big Value (responsive typography & aligned baseline across cards) */}
-        <div className="text-2xl sm:text-3xl font-black text-gray-900 font-serif leading-tight mb-1 min-h-[2rem] sm:min-h-[2.25rem] flex items-end">
+        <div className="text-2xl sm:text-3xl font-bold text-gray-900 font-sans leading-tight mb-1 min-h-[2rem] sm:min-h-[2.25rem] flex items-end">
           {value}
         </div>
 
@@ -83,7 +83,7 @@ export const StatCard: React.FC<StatCardProps> = ({
               <span className="truncate">{alertPill.text}</span>
             </div>
             <span className="shrink-0 font-bold text-ayur-brown flex items-center gap-1">
-              {alertPill.linkLabel || 'View Details'}
+              {alertPill.linkLabel || "View Details"}
               <ArrowRight className="w-3 h-3" />
             </span>
           </button>
