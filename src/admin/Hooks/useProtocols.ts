@@ -12,7 +12,7 @@ export const useProtocols = () => {
 
   // Synchronize state with query results
   useEffect(() => {
-    if (initialPackages) {
+    if (initialPackages && initialPackages.length > 0) {
       setPackageList(initialPackages);
     }
   }, [initialPackages]);

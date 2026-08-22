@@ -83,19 +83,6 @@ export const PatientPage: React.FC = () => {
           adminRole="Patient Portal"
           adminEmail={patientEmail}
           onMenuToggle={() => setMobileOpen(!mobileOpen)}
-          notifications={[
-            {
-              id: 'pn-1',
-              message: 'Upcoming session: Sarvangadhara & Kati Basti today at 10:00 AM',
-              time: '15 mins ago',
-            },
-            {
-              id: 'pn-2',
-              message: 'Dr. Shrikant updated your treatment plan formulation note',
-              time: '2 hours ago',
-            },
-          ]}
-          unreadCount={2}
         />
 
         {/* Main Canvas with Persistent Layout-Level Banners */}

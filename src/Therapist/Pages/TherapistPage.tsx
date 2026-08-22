@@ -65,19 +65,6 @@ export const TherapistPage: React.FC = () => {
           adminRole="Certified Panchakarma Therapist"
           adminEmail={therapistEmail}
           onMenuToggle={() => setMobileOpen(!mobileOpen)}
-          notifications={[
-            {
-              id: 'tn-1',
-              message: 'Mahatiktaka Ghrita batch replenishment verified for Chamber 2',
-              time: '15 mins ago',
-            },
-            {
-              id: 'tn-2',
-              message: 'Doctor reviewed Day 4 Kati Basti plan for Rahul Verma',
-              time: '1 hour ago',
-            },
-          ]}
-          unreadCount={1}
         />
 
         {/* Main Canvas */}

@@ -18,7 +18,7 @@ export const useQuestionnaire = () => {
 
   // Keep local state synchronized with database responses
   useEffect(() => {
-    if (initialQuestions) {
+    if (initialQuestions && initialQuestions.length > 0) {
       setQuestionsList(initialQuestions);
     }
   }, [initialQuestions]);

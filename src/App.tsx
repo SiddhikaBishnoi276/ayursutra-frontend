@@ -16,6 +16,7 @@ import MyTherapyPlanPage from './Patient/Pages/MyTherapyPlanPage';
 import AppointmentsPage from './Patient/Pages/AppointmentsPage';
 import FeedbackPage from './Patient/Pages/FeedbackPage';
 import ProfilePage from './Patient/Pages/ProfilePage';
+import NotificationPermissionPrompt from "./Notifications/Components/NotificationPermissionPrompt";
 
 function App() {
   return (
@@ -59,7 +60,9 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>
+      <NotificationPermissionPrompt />
     </Router>
+
   );
 }
 
