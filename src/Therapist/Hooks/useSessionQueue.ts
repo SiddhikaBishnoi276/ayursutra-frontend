@@ -4,8 +4,13 @@ import { useState, useMemo } from 'react';
 import { useGetTherapistQueueQuery } from '../apis/therapistApi';
 import { SessionQueueFilter } from '../types/therapist.types';
 
-export const useSessionQueue = (therapistId: string = 'TH-01') => {
-  const { data: queue = [], isLoading, isError, refetch } = useGetTherapistQueueQuery(therapistId);
+export const useSessionQueue = (therapistId?: string) => {
+  const effectiveTherapistId =
+    therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+      ? therapistId
+      : localStorage.getItem('userId') || '';
+
+  const { data: queue = [], isLoading, isError, refetch } = useGetTherapistQueueQuery(effectiveTherapistId);
   const [filter, setFilter] = useState<SessionQueueFilter>({
     status: 'all',
     searchQuery: '',
@@ -14,6 +19,7 @@ export const useSessionQueue = (therapistId: string = 'TH-01') => {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
 
   const filteredSessions = useMemo(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
     return queue.filter((session) => {
       // 1. Search Query filter (matches patient name, package name, stage, room)
       if (filter.searchQuery.trim()) {
@@ -30,7 +36,7 @@ export const useSessionQueue = (therapistId: string = 'TH-01') => {
 
       // 2. Status Pill filter
       if (filter.status === 'today') {
-        return session.scheduledDate === '2026-08-21' || session.status === 'in_progress';
+        return session.scheduledDate === todayStr || session.status === 'in_progress';
       }
       if (filter.status === 'upcoming') {
         return session.status === 'scheduled';

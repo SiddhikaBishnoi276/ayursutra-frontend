@@ -66,8 +66,13 @@ export const getVASDescriptor = (score: number): VASDescriptor => {
   }
 };
 
-export const useSymptomTracker = (patientId = 'PT-104') => {
-  const { completed } = useMyAppointments(patientId);
+export const useSymptomTracker = (patientId?: string) => {
+  const effectivePatientId =
+    patientId && patientId !== 'PT-104' && patientId !== 'default'
+      ? patientId
+      : localStorage.getItem('userId') || '';
+
+  const { completed } = useMyAppointments(effectivePatientId);
   const [currentVAS, setCurrentVAS] = useState<number>(4);
 
   // Derive historical trend records from completed sessions

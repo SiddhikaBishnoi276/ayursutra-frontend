@@ -83,11 +83,11 @@ export const PatientDashboard: React.FC = () => {
             </Badge>
             <span className="text-gray-300">•</span>
             <span className="text-xs text-gray-500 font-medium">
-              ID: {profile?.id || 'PT-104'}
+              ID: {profile?.id || localStorage.getItem('userId') || 'Patient'}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-gray-900 font-serif tracking-tight">
-            Namaste, {profile?.name || 'Amit Sharma'}
+            Namaste, {profile?.name || localStorage.getItem('name') || 'Patient'}
           </h1>
           <p className="text-xs text-ayur-green-mid font-medium mt-0.5">
             Active Package: <strong className="text-gray-800">{plan.packageName}</strong> (Supervised by {plan.doctorName})

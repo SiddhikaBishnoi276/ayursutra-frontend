@@ -14,7 +14,7 @@ export const useStaffManagement = () => {
   const [activeFilter, setActiveFilter] = useState<StaffFilter>('all');
 
   useEffect(() => {
-    if (initialStaff.length > 0 && staffList.length === 0) {
+    if (initialStaff) {
       setStaffList(initialStaff);
     }
   }, [initialStaff]);
@@ -31,6 +31,7 @@ export const useStaffManagement = () => {
   const addDoctor = async (data: {
     fullName: string;
     email: string;
+    phone: string;
     registrationNum: string;
     gender: 'Male' | 'Female';
     specialization?: string;
@@ -39,6 +40,7 @@ export const useStaffManagement = () => {
       id: `S-${Date.now().toString().slice(-4)}`,
       fullName: data.fullName,
       email: data.email,
+      phone: data.phone,
       role: 'doctor',
       registrationNum: data.registrationNum,
       gender: data.gender,
@@ -48,8 +50,9 @@ export const useStaffManagement = () => {
     setStaffList((prev) => [newDoc, ...prev]);
     try {
       await addStaffMutation(newDoc).unwrap();
-    } catch {
-      // Local state is ready
+    } catch (err) {
+      setStaffList((prev) => prev.filter((s) => s.id !== newDoc.id));
+      throw err;
     }
     return newDoc;
   };
@@ -57,6 +60,7 @@ export const useStaffManagement = () => {
   const addTherapist = async (data: {
     fullName: string;
     email: string;
+    phone: string;
     specialization: string;
     gender: 'Male' | 'Female';
   }) => {
@@ -64,6 +68,7 @@ export const useStaffManagement = () => {
       id: `S-${Date.now().toString().slice(-4)}`,
       fullName: data.fullName,
       email: data.email,
+      phone: data.phone,
       role: 'therapist',
       specialization: data.specialization,
       gender: data.gender,
@@ -72,8 +77,9 @@ export const useStaffManagement = () => {
     setStaffList((prev) => [newTherapist, ...prev]);
     try {
       await addStaffMutation(newTherapist).unwrap();
-    } catch {
-      // Local state is ready
+    } catch (err) {
+      setStaffList((prev) => prev.filter((s) => s.id !== newTherapist.id));
+      throw err;
     }
     return newTherapist;
   };

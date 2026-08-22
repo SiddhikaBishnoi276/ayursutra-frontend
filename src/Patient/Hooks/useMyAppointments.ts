@@ -23,8 +23,13 @@ const parseDateTimeToEpoch = (dateStr: string, timeStr: string): number => {
   }
 };
 
-export const useMyAppointments = (patientId = 'PT-104') => {
-  const { data: appointments = [], isLoading, error, refetch } = useGetMyAppointmentsQuery(patientId);
+export const useMyAppointments = (patientId?: string) => {
+  const effectivePatientId =
+    patientId && patientId !== 'PT-104' && patientId !== 'default'
+      ? patientId
+      : localStorage.getItem('userId') || '';
+
+  const { data: appointments = [], isLoading, error, refetch } = useGetMyAppointmentsQuery(effectivePatientId);
 
   const bucketed = useMemo(() => {
     const upcoming: Appointment[] = [];
@@ -32,7 +37,7 @@ export const useMyAppointments = (patientId = 'PT-104') => {
     const cancelled: Appointment[] = [];
 
     appointments.forEach((apt) => {
-      if (apt.status === 'upcoming') {
+      if (apt.status === 'upcoming' || apt.status === 'in_progress') {
         upcoming.push(apt);
       } else if (apt.status === 'completed') {
         completed.push(apt);
@@ -41,8 +46,10 @@ export const useMyAppointments = (patientId = 'PT-104') => {
       }
     });
 
-    // Chronologically sort upcoming appointments (nearest first)
+    // Chronologically sort upcoming appointments (in_progress first, then nearest date/time)
     upcoming.sort((a, b) => {
+      if (a.status === 'in_progress' && b.status !== 'in_progress') return -1;
+      if (b.status === 'in_progress' && a.status !== 'in_progress') return 1;
       const timeA = parseDateTimeToEpoch(a.date, a.time);
       const timeB = parseDateTimeToEpoch(b.date, b.time);
       return timeA - timeB;
@@ -62,7 +69,7 @@ export const useMyAppointments = (patientId = 'PT-104') => {
       return timeB - timeA;
     });
 
-    // Nearest upcoming session
+    // Nearest active / upcoming session
     const nextSession = upcoming.length > 0 ? upcoming[0] : null;
 
     // Completed sessions pending patient feedback

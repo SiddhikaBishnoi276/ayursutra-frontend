@@ -239,9 +239,12 @@ export const doctorApi = apiSlice.injectEndpoints({
         preferredStartTime?: string;
         customization_notes?: string;
         start_date?: string;
+        therapist_id?: string;
+        therapistId?: string;
+        assignedTherapistId?: string;
       }
     >({
-      query: ({ patientId, package_id, preferredStartTime, customization_notes, start_date }) => ({
+      query: ({ patientId, package_id, preferredStartTime, customization_notes, start_date, therapist_id, therapistId, assignedTherapistId }) => ({
         url: `/doctor/patients/${patientId}/therapy-plan`,
         method: 'POST',
         headers: {
@@ -252,6 +255,8 @@ export const doctorApi = apiSlice.injectEndpoints({
           preferredStartTime: preferredStartTime || '10:00',
           customization_notes: customization_notes || '',
           start_date: start_date || new Date().toISOString().split('T')[0],
+          therapist_id: therapist_id || therapistId || assignedTherapistId,
+          assigned_therapist_id: therapist_id || therapistId || assignedTherapistId,
         },
       }),
       invalidatesTags: ['DoctorPatients', 'TherapistQueue', 'PatientDashboard', 'Progress'],
@@ -272,7 +277,7 @@ export const doctorApi = apiSlice.injectEndpoints({
         mode?: 'clinic' | 'solo';
       }
     >({
-      query: ({ patientId, packageId, startDate, customDietNotes }) => ({
+      query: ({ patientId, packageId, startDate, customDietNotes, assignedTherapistId }) => ({
         url: `/doctor/patients/${patientId}/therapy-plan`,
         method: 'POST',
         headers: {
@@ -282,6 +287,8 @@ export const doctorApi = apiSlice.injectEndpoints({
           package_id: packageId,
           start_date: startDate || new Date().toISOString().split('T')[0],
           customization_notes: customDietNotes,
+          therapist_id: assignedTherapistId,
+          assigned_therapist_id: assignedTherapistId,
         },
       }),
       invalidatesTags: ['DoctorPatients', 'TherapistQueue', 'PatientDashboard', 'Progress'],

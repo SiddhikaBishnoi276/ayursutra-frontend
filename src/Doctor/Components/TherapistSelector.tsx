@@ -30,8 +30,13 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {therapists.map((t, idx) => {
+      {therapists.length === 0 ? (
+        <div className="p-4 rounded-2xl border border-amber-200 bg-amber-50/60 text-xs text-amber-900 font-medium">
+          ⚠️ No active therapists matching the patient&apos;s gender are currently available in the clinic. Please onboard a therapist of the matching gender from the Admin panel or switch to Solo Practitioner mode.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {therapists.map((t, idx) => {
           const isSelected = t.id === selectedId;
           const isTopMatch = idx === 0;
 
@@ -89,7 +94,8 @@ export const TherapistSelector: React.FC<TherapistSelectorProps> = ({
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

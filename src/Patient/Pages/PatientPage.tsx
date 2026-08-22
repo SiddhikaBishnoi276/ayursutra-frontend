@@ -54,8 +54,8 @@ export const PatientPage: React.FC = () => {
     navigate(`/patient/${tabId}`);
   };
 
-  const patientName = profile?.name || 'Amit Sharma';
-  const patientEmail = profile?.email || 'amit.sharma@example.com';
+  const patientName = profile?.name || localStorage.getItem('name') || 'Patient';
+  const patientEmail = profile?.email || localStorage.getItem('email') || 'patient@ayursutra.com';
 
   return (
     <div className="flex min-h-screen bg-[#fbf9f5] font-sans antialiased text-gray-800">

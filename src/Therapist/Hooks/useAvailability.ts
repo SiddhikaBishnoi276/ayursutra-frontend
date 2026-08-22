@@ -8,17 +8,24 @@ import {
   useGetTherapistWorkloadQuery,
 } from '../apis/therapistApi';
 
-export const useAvailability = (therapistId: string = 'TH-01') => {
+export const useAvailability = (therapistId?: string) => {
+  const effectiveTherapistId =
+    therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+      ? therapistId
+      : localStorage.getItem('userId') || '';
+
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
-  const [selectedDate, setSelectedDate] = useState<string>('2026-08-21');
+  const [selectedDate, setSelectedDate] = useState<string>(
+    new Date().toISOString().split('T')[0]
+  );
   const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
   const [leaveReason, setLeaveReason] = useState('');
   const [slotTime, setSlotTime] = useState('Full Day');
   const [isFullDay, setIsFullDay] = useState(true);
 
-  const { data: availabilityData, isLoading: isAvailLoading } = useGetTherapistAvailabilityQuery(therapistId);
-  const { data: profile, isLoading: isProfileLoading } = useGetTherapistProfileQuery(therapistId);
-  const { data: workload, isLoading: isWorkloadLoading } = useGetTherapistWorkloadQuery(therapistId);
+  const { data: availabilityData, isLoading: isAvailLoading } = useGetTherapistAvailabilityQuery(effectiveTherapistId);
+  const { data: profile, isLoading: isProfileLoading } = useGetTherapistProfileQuery(effectiveTherapistId);
+  const { data: workload, isLoading: isWorkloadLoading } = useGetTherapistWorkloadQuery(effectiveTherapistId);
 
   const [updateAvailabilityMutation, { isLoading: isUpdating }] = useUpdateTherapistAvailabilityMutation();
 

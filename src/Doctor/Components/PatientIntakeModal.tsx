@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Modal } from '../../Common/Components/Modal';
 import { Button } from '../../Common/Components/Button';
 import { Patient } from '../types/doctor.types';
-import { UserPlus, Sparkles } from 'lucide-react';
+import { UserPlus, Sparkles, AlertCircle } from 'lucide-react';
 
 export interface PatientIntakeModalProps {
   isOpen: boolean;
@@ -38,19 +38,27 @@ export const PatientIntakeModal: React.FC<PatientIntakeModalProps> = ({
     }));
   };
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(formData);
-    onClose();
-    setFormData({
-      name: '',
-      age: 35,
-      gender: 'Male',
-      contact: '',
-      email: '',
-      chiefComplaint: '',
-      diagnosis: '',
-    });
+    setError(null);
+    try {
+      await onSubmit(formData);
+      onClose();
+      setFormData({
+        name: '',
+        age: 35,
+        gender: 'Male',
+        contact: '',
+        email: '',
+        chiefComplaint: '',
+        diagnosis: '',
+      });
+    } catch (err: any) {
+      const errMsg = err?.data?.error || err?.error || err?.data?.message || err?.message || 'Failed to register patient. Please try again.';
+      setError(errMsg);
+    }
   };
 
   return (
@@ -61,6 +69,12 @@ export const PatientIntakeModal: React.FC<PatientIntakeModalProps> = ({
       subtitle="Register a new patient and automatically start diagnostic Prakriti assessment."
       maxWidth="xl"
     >
+      {error && (
+        <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-800 border border-red-100 flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <span>{error}</span>
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-xs">
         {/* Name & Contact */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

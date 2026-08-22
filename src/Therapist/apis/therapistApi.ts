@@ -14,7 +14,10 @@ export const therapistApi = apiSlice.injectEndpoints({
     // 1. Get Therapist Queue (GET /api/therapist/queue/:therapistId)
     getTherapistQueue: builder.query<TherapistSession[], string | void>({
       query: (therapistId) => {
-        const id = therapistId || localStorage.getItem('userId') || 'default';
+        const id =
+          therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+            ? therapistId
+            : localStorage.getItem('userId') || 'default';
         return `/therapist/queue/${id}`;
       },
       transformResponse: (response: any) => {
@@ -250,7 +253,10 @@ export const therapistApi = apiSlice.injectEndpoints({
     // 8. Get Weekly Shifts (GET /api/therapist/weekly-shifts/:therapistId)
     getWeeklyShifts: builder.query<any[], string | void>({
       query: (therapistId) => {
-        const id = therapistId || localStorage.getItem('userId') || 'default';
+        const id =
+          therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+            ? therapistId
+            : localStorage.getItem('userId') || 'default';
         return `/therapist/weekly-shifts/${id}`;
       },
       providesTags: ['TherapistAvailability'],
@@ -269,7 +275,10 @@ export const therapistApi = apiSlice.injectEndpoints({
     // 10. Get Therapist Profile
     getTherapistProfile: builder.query<TherapistProfile, string | void>({
       query: (therapistId) => {
-        const id = therapistId || localStorage.getItem('userId') || 'default';
+        const id =
+          therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+            ? therapistId
+            : localStorage.getItem('userId') || 'default';
         return `/staff?id=${id}`;
       },
       transformResponse: (response: any) => {
@@ -297,7 +306,10 @@ export const therapistApi = apiSlice.injectEndpoints({
     // 11. Get Availability Exceptions (GET /api/therapist/availability/:therapistId)
     getTherapistAvailability: builder.query<any, string | void>({
       query: (therapistId) => {
-        const id = therapistId || localStorage.getItem('userId') || 'default';
+        const id =
+          therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+            ? therapistId
+            : localStorage.getItem('userId') || 'default';
         return `/therapist/availability/${id}`;
       },
       transformResponse: (response: any) => {
@@ -329,7 +341,10 @@ export const therapistApi = apiSlice.injectEndpoints({
         url: '/therapist/availability',
         method: 'POST',
         body: {
-          therapistId: therapistId || localStorage.getItem('userId'),
+          therapistId:
+            therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+              ? therapistId
+              : localStorage.getItem('userId'),
           date: newBlockedSlot?.date || new Date().toISOString().split('T')[0],
           status: newBlockedSlot?.isFullDayLeave ? 'leave' : 'available',
           reason: newBlockedSlot?.reason || 'Leave declaration',
@@ -341,7 +356,10 @@ export const therapistApi = apiSlice.injectEndpoints({
     // 13. Get Workload Summary
     getTherapistWorkload: builder.query<TherapistWorkload, string | void>({
       query: (therapistId) => {
-        const id = therapistId || localStorage.getItem('userId') || 'default';
+        const id =
+          therapistId && therapistId !== 'TH-01' && therapistId !== 'default'
+            ? therapistId
+            : localStorage.getItem('userId') || 'default';
         return `/therapist/weekly-shifts/${id}`;
       },
       transformResponse: (response: any, _meta, therapistId) => ({

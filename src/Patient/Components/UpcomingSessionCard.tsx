@@ -43,16 +43,32 @@ export const UpcomingSessionCard: React.FC<UpcomingSessionCardProps> = ({
     generateCalendarIcs(session);
   };
 
+  const todayStr = new Date().toISOString().split('T')[0];
+  const isToday = session.date === todayStr;
+  const isInProgress = session.status === 'in_progress';
+
   return (
-    <Card className={`border-2 border-purple-200/80 bg-gradient-to-br from-white via-[#fbf9f5] to-purple-50/20 p-5 sm:p-6 shadow-sm ${className}`}>
+    <Card className={`border-2 ${isInProgress ? 'border-amber-400 bg-amber-50/20 shadow-md' : isToday ? 'border-emerald-300 bg-emerald-50/10 shadow-sm' : 'border-purple-200/80 bg-gradient-to-br from-white via-[#fbf9f5] to-purple-50/20 shadow-sm'} p-5 sm:p-6 ${className}`}>
       {/* Top Banner Tag */}
       <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-gray-100">
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800">
-            <Sparkles className="w-3.5 h-3.5 text-purple-700" />
-            Next Scheduled Session
-          </span>
-          <Badge variant="ayur" size="sm">
+          {isInProgress ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-300 animate-pulse">
+              <span className="w-2 h-2 rounded-full bg-amber-600 animate-ping" />
+              ⚡ Therapy In Progress (Active Chamber)
+            </span>
+          ) : isToday ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+              🌿 Today&apos;s Scheduled Therapy
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-100 text-purple-800">
+              <Sparkles className="w-3.5 h-3.5 text-purple-700" />
+              Next Scheduled Session
+            </span>
+          )}
+          <Badge variant={isInProgress ? 'warning' : 'ayur'} size="sm">
             Day {session.dayNumber} of {session.totalDays}
           </Badge>
         </div>

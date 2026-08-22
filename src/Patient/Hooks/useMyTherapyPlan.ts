@@ -7,8 +7,13 @@ import { calculateOverallProgress } from '../Services/patientService';
 
 const DISMISSED_DOCTOR_UPDATES_KEY = 'ayursutra_dismissed_doctor_updates';
 
-export const useMyTherapyPlan = (patientId = 'PT-104') => {
-  const { data: plan, isLoading, error, refetch } = useGetMyTherapyPlanQuery(patientId);
+export const useMyTherapyPlan = (patientId?: string) => {
+  const effectivePatientId =
+    patientId && patientId !== 'PT-104' && patientId !== 'default'
+      ? patientId
+      : localStorage.getItem('userId') || '';
+
+  const { data: plan, isLoading, error, refetch } = useGetMyTherapyPlanQuery(effectivePatientId);
 
   // Persistent dismissal tracking for doctor plan updates
   const [dismissedUpdates, setDismissedUpdates] = useState<string[]>(() => {

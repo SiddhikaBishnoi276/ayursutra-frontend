@@ -8,9 +8,14 @@ import { useMyAppointments } from './useMyAppointments';
 
 const DISMISSED_NOTIFICATIONS_KEY = 'ayursutra_dismissed_notifications_patient';
 
-export const useNotifications = (patientId = 'PT-104') => {
-  const { plan, isDoctorUpdateVisible } = useMyTherapyPlan(patientId);
-  const { nextSession, pendingFeedbackSessions } = useMyAppointments(patientId);
+export const useNotifications = (patientId?: string) => {
+  const effectivePatientId =
+    patientId && patientId !== 'PT-104' && patientId !== 'default'
+      ? patientId
+      : localStorage.getItem('userId') || '';
+
+  const { plan, isDoctorUpdateVisible } = useMyTherapyPlan(effectivePatientId);
+  const { nextSession, pendingFeedbackSessions } = useMyAppointments(effectivePatientId);
 
   const [dismissedIds, setDismissedIds] = useState<string[]>(() => {
     try {

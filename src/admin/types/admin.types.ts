@@ -2,6 +2,7 @@ export interface StaffMember {
     id: string;
     fullName: string;
     email: string;
+    phone?: string;
     role: 'doctor' | 'therapist';
     specialization: string;   // e.g., "Basti-trained", "Kaya Chikitsa"
     gender: 'Male' | 'Female';

@@ -123,14 +123,14 @@ export const TherapistDashboard: React.FC<TherapistDashboardProps> = ({
         <div>
           <div className="flex items-center gap-2.5 flex-wrap">
             <h1 className="text-2xl md:text-3xl font-black text-gray-900 font-serif tracking-tight">
-              Namaste, {profile?.name || 'Dr. Sandeep Kulkarni'}
+              Namaste, {profile?.name || localStorage.getItem('name') || 'Therapist'}
             </h1>
             <Badge variant="ayur" size="sm">
               Therapist Portal
             </Badge>
           </div>
           <p className="text-sm text-ayur-green-mid font-medium mt-1">
-            {profile?.assignedChamber || 'Chamber 2 (Swedana Shala)'} • {profile?.shiftHours || 'Morning & Mid Shift'}
+            {profile?.assignedChamber || 'Droni Suite 1'} • {profile?.shiftHours || 'Morning & Mid Shift'}
           </p>
         </div>
 

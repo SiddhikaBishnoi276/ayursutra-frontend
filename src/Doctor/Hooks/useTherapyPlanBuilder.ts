@@ -105,13 +105,16 @@ export function useTherapyPlanBuilder({
     }
   }, [activePackage]);
 
-  // Therapist ranking based on specialization, gender matching, and workload
+  // Therapist ranking strictly filtered by matching patient gender (AYUSH clinical protocol requirement)
   const rankedTherapists = useMemo(() => {
     return therapists
+      .filter((t) => {
+        if (!patientGender) return true;
+        return t.gender.toLowerCase() === patientGender.toLowerCase();
+      })
       .map((t) => {
         let score = 50;
         if (t.isAvailable) score += 20;
-        if (patientGender && t.gender.toLowerCase() === patientGender.toLowerCase()) score += 25; // gender continuity
         if (t.activeWorkload <= 2) score += 15; // low workload
         score += t.rating * 5;
         return { ...t, matchScore: score };
@@ -123,10 +126,10 @@ export function useTherapyPlanBuilder({
   useEffect(() => {
     if (rankedTherapists.length > 0) {
       setSelectedTherapistId(rankedTherapists[0].id);
-    } else if (therapists.length > 0) {
-      setSelectedTherapistId(therapists[0].id);
+    } else {
+      setSelectedTherapistId('');
     }
-  }, [rankedTherapists, therapists]);
+  }, [rankedTherapists]);
 
   const updateStageDuration = (stageId: string, deltaDays: number) => {
     setCustomStages((prev) =>

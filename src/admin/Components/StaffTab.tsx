@@ -9,8 +9,8 @@ import { Plus, Users, UserX, UserCheck, Stethoscope } from 'lucide-react';
 
 interface StaffTabProps {
   staff: StaffMember[];
-  onAddDoctor?: (data: { fullName: string; email: string; registrationNum: string; gender: 'Male' | 'Female'; specialization?: string }) => void;
-  onAddTherapist?: (data: { fullName: string; email: string; specialization: string; gender: 'Male' | 'Female' }) => void;
+  onAddDoctor?: (data: { fullName: string; email: string; phone: string; registrationNum: string; gender: 'Male' | 'Female'; specialization?: string }) => Promise<any>;
+  onAddTherapist?: (data: { fullName: string; email: string; phone: string; specialization: string; gender: 'Male' | 'Female' }) => Promise<any>;
   onToggleStatus?: (id: string) => void;
 }
 
@@ -29,15 +29,33 @@ export const StaffTab: React.FC<StaffTabProps> = ({
   // Doctor Form State
   const [docName, setDocName] = useState('');
   const [docEmail, setDocEmail] = useState('');
+  const [docPhone, setDocPhone] = useState('');
   const [docReg, setDocReg] = useState('');
   const [docGender, setDocGender] = useState<'Male' | 'Female'>('Male');
   const [docSpec, setDocSpec] = useState('Kaya Chikitsa & Panchakarma');
+  const [docError, setDocError] = useState<string | null>(null);
+  const [isSubmittingDoc, setIsSubmittingDoc] = useState(false);
 
   // Therapist Form State
   const [thName, setThName] = useState('');
   const [thEmail, setThEmail] = useState('');
+  const [thPhone, setThPhone] = useState('');
   const [thSpec, setThSpec] = useState('');
   const [thGender, setThGender] = useState<'Male' | 'Female'>('Female');
+  const [thError, setThError] = useState<string | null>(null);
+  const [isSubmittingTh, setIsSubmittingTh] = useState(false);
+
+  const openDoctorModal = () => {
+    setDocError(null);
+    setIsSubmittingDoc(false);
+    setAddDoctorOpen(true);
+  };
+
+  const openTherapistModal = () => {
+    setThError(null);
+    setIsSubmittingTh(false);
+    setAddTherapistOpen(true);
+  };
 
   const filteredStaff = staff.filter((member) => {
     if (activeFilter === 'all') return true;
@@ -56,35 +74,86 @@ export const StaffTab: React.FC<StaffTabProps> = ({
     { id: 'Suspended', label: 'Suspended', count: staff.filter((s) => s.status === 'Suspended').length },
   ];
 
-  const handleDoctorSubmit = (e: React.FormEvent) => {
+  // ── Client-side validation helpers ──
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validatePhone = (phone: string) => /^\+?\d{10,15}$/.test(phone.replace(/[\s\-()]/g, ''));
+
+  const handleDoctorSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!docName || !docEmail || !docReg) return;
-    onAddDoctor?.({
-      fullName: docName,
-      email: docEmail,
-      registrationNum: docReg,
-      gender: docGender,
-      specialization: docSpec,
-    });
-    setDocName('');
-    setDocEmail('');
-    setDocReg('');
-    setAddDoctorOpen(false);
+    setDocError(null);
+
+    // ── Client-side field validation ──
+    const errors: string[] = [];
+    if (!docName.trim() || docName.trim().length < 2) errors.push('Full Name is required (min 2 characters).');
+    if (!docEmail.trim() || !validateEmail(docEmail.trim())) errors.push('A valid Email Address is required.');
+    if (!docPhone.trim() || !validatePhone(docPhone.trim())) errors.push('A valid Mobile Number is required (10-15 digits).');
+    if (!docReg.trim() || docReg.trim().length < 3) errors.push('AYUSH Registration Number is required (min 3 characters).');
+
+    if (errors.length > 0) {
+      setDocError(errors.join(' '));
+      return;
+    }
+
+    setIsSubmittingDoc(true);
+    try {
+      await onAddDoctor?.({
+        fullName: docName.trim(),
+        email: docEmail.trim(),
+        phone: docPhone.trim(),
+        registrationNum: docReg.trim(),
+        gender: docGender,
+        specialization: docSpec.trim(),
+      });
+      setDocName('');
+      setDocEmail('');
+      setDocPhone('');
+      setDocReg('');
+      setDocSpec('Kaya Chikitsa & Panchakarma');
+      setAddDoctorOpen(false);
+    } catch (err: any) {
+      const errMsg = err?.data?.message || err?.message || 'Failed to onboard doctor. Please try again.';
+      setDocError(errMsg);
+    } finally {
+      setIsSubmittingDoc(false);
+    }
   };
 
-  const handleTherapistSubmit = (e: React.FormEvent) => {
+  const handleTherapistSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!thName || !thEmail || !thSpec) return;
-    onAddTherapist?.({
-      fullName: thName,
-      email: thEmail,
-      specialization: thSpec,
-      gender: thGender,
-    });
-    setThName('');
-    setThEmail('');
-    setThSpec('');
-    setAddTherapistOpen(false);
+    setThError(null);
+
+    // ── Client-side field validation ──
+    const errors: string[] = [];
+    if (!thName.trim() || thName.trim().length < 2) errors.push('Full Name is required (min 2 characters).');
+    if (!thEmail.trim() || !validateEmail(thEmail.trim())) errors.push('A valid Email Address is required.');
+    if (!thPhone.trim() || !validatePhone(thPhone.trim())) errors.push('A valid Mobile Number is required (10-15 digits).');
+    if (!thSpec.trim()) errors.push('Therapy Certifications field is required.');
+
+    if (errors.length > 0) {
+      setThError(errors.join(' '));
+      return;
+    }
+
+    setIsSubmittingTh(true);
+    try {
+      await onAddTherapist?.({
+        fullName: thName.trim(),
+        email: thEmail.trim(),
+        phone: thPhone.trim(),
+        specialization: thSpec.trim(),
+        gender: thGender,
+      });
+      setThName('');
+      setThEmail('');
+      setThPhone('');
+      setThSpec('');
+      setAddTherapistOpen(false);
+    } catch (err: any) {
+      const errMsg = err?.data?.message || err?.message || 'Failed to onboard therapist. Please try again.';
+      setThError(errMsg);
+    } finally {
+      setIsSubmittingTh(false);
+    }
   };
 
   const columns: Column<StaffMember>[] = [
@@ -181,14 +250,14 @@ export const StaffTab: React.FC<StaffTabProps> = ({
           <Button
             variant="outline"
             icon={<Plus className="w-4 h-4" />}
-            onClick={() => setAddDoctorOpen(true)}
+            onClick={openDoctorModal}
           >
             Add Doctor
           </Button>
           <Button
             variant="primary"
             icon={<Plus className="w-4 h-4" />}
-            onClick={() => setAddTherapistOpen(true)}
+            onClick={openTherapistModal}
           >
             Add Therapist
           </Button>
@@ -261,6 +330,12 @@ export const StaffTab: React.FC<StaffTabProps> = ({
         subtitle="Register medical credentials and practitioner contact."
       >
         <form onSubmit={handleDoctorSubmit} className="flex flex-col gap-4">
+          {docError && (
+            <div className="p-3 bg-rose-50 border border-rose-100 text-rose-700 rounded-xl text-xs font-semibold">
+              {docError}
+            </div>
+          )}
+
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold uppercase text-gray-700">Full Name *</label>
             <input
@@ -287,6 +362,20 @@ export const StaffTab: React.FC<StaffTabProps> = ({
             </div>
 
             <div className="flex flex-col gap-1">
+              <label className="text-xs font-bold uppercase text-gray-700">Mobile Number *</label>
+              <input
+                type="tel"
+                required
+                value={docPhone}
+                onChange={(e) => setDocPhone(e.target.value)}
+                placeholder="e.g. +919876543210"
+                className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1">
               <label className="text-xs font-bold uppercase text-gray-700">AYUSH Reg Number *</label>
               <input
                 type="text"
@@ -297,9 +386,7 @@ export const StaffTab: React.FC<StaffTabProps> = ({
                 className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">
               <label className="text-xs font-bold uppercase text-gray-700">Specialization</label>
               <input
@@ -310,18 +397,18 @@ export const StaffTab: React.FC<StaffTabProps> = ({
                 className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
               />
             </div>
+          </div>
 
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-bold uppercase text-gray-700">Gender</label>
-              <select
-                value={docGender}
-                onChange={(e) => setDocGender(e.target.value as 'Male' | 'Female')}
-                className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase text-gray-700">Gender</label>
+            <select
+              value={docGender}
+              onChange={(e) => setDocGender(e.target.value as 'Male' | 'Female')}
+              className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
           </div>
 
           <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
@@ -333,8 +420,8 @@ export const StaffTab: React.FC<StaffTabProps> = ({
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Save Doctor
+            <Button type="submit" variant="primary" size="sm" disabled={isSubmittingDoc}>
+              {isSubmittingDoc ? 'Saving...' : 'Save Doctor'}
             </Button>
           </div>
         </form>
@@ -348,6 +435,12 @@ export const StaffTab: React.FC<StaffTabProps> = ({
         subtitle="Register therapy capabilities and duty profile."
       >
         <form onSubmit={handleTherapistSubmit} className="flex flex-col gap-4">
+          {thError && (
+            <div className="p-3 bg-rose-50 border border-rose-100 text-rose-700 rounded-xl text-xs font-semibold">
+              {thError}
+            </div>
+          )}
+
           <div className="flex flex-col gap-1">
             <label className="text-xs font-bold uppercase text-gray-700">Full Name *</label>
             <input
@@ -374,6 +467,32 @@ export const StaffTab: React.FC<StaffTabProps> = ({
             </div>
 
             <div className="flex flex-col gap-1">
+              <label className="text-xs font-bold uppercase text-gray-700">Mobile Number *</label>
+              <input
+                type="tel"
+                required
+                value={thPhone}
+                onChange={(e) => setThPhone(e.target.value)}
+                placeholder="e.g. +919988776655"
+                className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-bold uppercase text-gray-700">Therapy Certifications *</label>
+              <input
+                type="text"
+                required
+                value={thSpec}
+                onChange={(e) => setThSpec(e.target.value)}
+                placeholder="e.g. Abhyanga, Shirodhara, Swedana Certified"
+                className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
               <label className="text-xs font-bold uppercase text-gray-700">Gender</label>
               <select
                 value={thGender}
@@ -386,18 +505,6 @@ export const StaffTab: React.FC<StaffTabProps> = ({
             </div>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-bold uppercase text-gray-700">Therapy Certifications *</label>
-            <input
-              type="text"
-              required
-              value={thSpec}
-              onChange={(e) => setThSpec(e.target.value)}
-              placeholder="e.g. Abhyanga, Shirodhara, Swedana Certified"
-              className="rounded-xl border border-ayur-sand/80 px-3.5 py-2 text-sm text-gray-900 focus:outline-none focus:border-ayur-primary"
-            />
-          </div>
-
           <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
             <Button
               type="button"
@@ -407,8 +514,8 @@ export const StaffTab: React.FC<StaffTabProps> = ({
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Save Therapist
+            <Button type="submit" variant="primary" size="sm" disabled={isSubmittingTh}>
+              {isSubmittingTh ? 'Saving...' : 'Save Therapist'}
             </Button>
           </div>
         </form>

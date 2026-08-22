@@ -36,6 +36,9 @@ export const TherapistPage: React.FC = () => {
     navigate(`/therapist/${tabId}`);
   };
 
+  const therapistName = localStorage.getItem('name') || 'Therapist';
+  const therapistEmail = localStorage.getItem('email') || 'therapist@ayursutra.com';
+
   return (
     <div className="flex min-h-screen bg-[#fbf9f5] font-sans antialiased text-gray-800">
       {/* Role-Aware Reused Sidebar */}
@@ -47,8 +50,8 @@ export const TherapistPage: React.FC = () => {
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
         roleTitle="Therapist Portal"
-        adminName="Dr. Sandeep Kulkarni"
-        adminEmail="sandeep.kulkarni@ayursutra.com"
+        adminName={therapistName}
+        adminEmail={therapistEmail}
         navItems={therapistNavItems}
       />
 
@@ -58,9 +61,9 @@ export const TherapistPage: React.FC = () => {
         <Topbar
           clinicName="AyurSutra Wellness & Panchakarma Clinic"
           certificationLabel="AYUSH Certified"
-          adminName="Dr. Sandeep Kulkarni"
-          adminRole="Senior Certified Therapist"
-          adminEmail="sandeep.kulkarni@ayursutra.com"
+          adminName={therapistName}
+          adminRole="Certified Panchakarma Therapist"
+          adminEmail={therapistEmail}
           onMenuToggle={() => setMobileOpen(!mobileOpen)}
           notifications={[
             {
