@@ -1,6 +1,6 @@
 import { CircleCheck, Leaf } from "lucide-react";
 import React from "react";
-import heroImg from "../../../assets/ayursutra-landing-hero.jpg";
+import heroImg from "../../../assets/20-ayur.jpg";
 
 const FEATURE_BADGES = [
   "Smart Scheduling",

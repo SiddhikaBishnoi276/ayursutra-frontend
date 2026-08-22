@@ -1,5 +1,5 @@
 import { Leaf, Droplet, Wind, Activity, Heart } from 'lucide-react';
-import processImage from '../../../assets/02_panchakarma_process.jpg';
+import processImage from '../../../assets/12-ayur.jpeg';
 
 const CARDS = [
   {

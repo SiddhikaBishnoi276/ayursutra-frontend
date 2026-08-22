@@ -7,8 +7,8 @@ import {
   X,
 } from "lucide-react";
 import React from "react";
-import ayursutraLogo from "../../../assets/Ayur-Sutra-logo.jpg";
-import loginImage from "../../../assets/AyurSutra-login.png";
+import ayursutraLogo from "../../../assets/Ayur-Sutra-logo.png";
+import loginImage from "../../../assets/04-ayur.png";
 
 const ROLES = [
   {
@@ -43,7 +43,6 @@ const ROLES = [
     iconBg: "#faf5ff",
     iconBorder: "#e9d5ff",
   },
-  
 ];
 
 interface RoleLoginSectionProps {
@@ -67,7 +66,8 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
     <div
       className="min-h-screen flex items-center justify-center pt-16"
       style={{
-        background: "linear-gradient(135deg, #FEFDF8 0%, #F5F0DC 60%, #EDF5EE 100%)",
+        background:
+          "linear-gradient(135deg, #FEFDF8 0%, #F5F0DC 60%, #EDF5EE 100%)",
       }}
     >
       {/* Outer Card Container */}
@@ -76,7 +76,6 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
         style={{ background: "rgba(255,253,245,0.95)" }}
       >
         <div className="flex flex-col lg:flex-row items-stretch min-h-[580px]">
-
           {/* LEFT SIDE */}
           <div
             className="w-full lg:w-[45%] flex flex-col justify-between p-6 sm:p-8 lg:p-10"
@@ -114,7 +113,8 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
                 className="text-xs sm:text-[15px] text-[#5a6472] leading-relaxed max-w-xs"
                 style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
               >
-                Login to continue to your account and manage your Ayurvedic health journey seamlessly.
+                Login to continue to your account and manage your Ayurvedic
+                health journey seamlessly.
               </p>
             </div>
 
@@ -196,7 +196,6 @@ export const RoleLoginSection: React.FC<RoleLoginSectionProps> = ({
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { Leaf, Menu, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import ayursutraLogo from "../../../assets/Ayur-Sutra-logo.jpg";
+import ayursutraLogo from "../../../assets/Ayur-Sutra-logo.png";
 
 const NAV_LINKS = [
   { label: "Home", href: "#home", id: "home" },

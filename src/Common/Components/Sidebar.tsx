@@ -1,20 +1,21 @@
 import React, { useMemo } from 'react';
 import {
-  LayoutDashboard,
-  Users,
-  FileSpreadsheet,
-  BedDouble,
   BarChart3,
-  ShieldCheck,
-  ClipboardList,
+  BedDouble,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
+  FileSpreadsheet,
+  LayoutDashboard,
+  ShieldCheck,
+  Users,
   X,
 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../app/store';
-import { getInitials } from './Topbar';
-import ayursutraLogo from '../../assets/ayursutra_logo.png';
+import { getInitials } from '../../common/Components/Topbar';
+
+import ayursutraLogo from "../../assets/Ayur-Sutra-logo.png";
 
 export interface NavItem {
   id: string;
@@ -42,17 +43,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setCollapsed,
   mobileOpen = false,
   setMobileOpen,
-  roleTitle = 'Admin Panel',
-  adminName = 'Admin Director',
-  adminEmail = 'admin@ayursutra.com',
+  roleTitle = "Admin Panel",
+  adminName = "Admin Director",
+  adminEmail = "admin@ayursutra.com",
   navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'staff', label: 'Staff Management', icon: Users },
-    { id: 'protocols', label: 'Therapy Protocols', icon: FileSpreadsheet },
-    { id: 'rooms', label: 'Rooms', icon: BedDouble },
-    { id: 'analytics', label: 'Clinic Analytics', icon: BarChart3 },
-    { id: 'oversight', label: 'System Oversight', icon: ShieldCheck },
-    { id: 'questionnaire', label: 'Prakriti Questionnaire', icon: ClipboardList },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "staff", label: "Staff Management", icon: Users },
+    { id: "protocols", label: "Therapy Protocols", icon: FileSpreadsheet },
+    { id: "rooms", label: "Rooms", icon: BedDouble },
+    { id: "analytics", label: "Clinic Analytics", icon: BarChart3 },
+    { id: "oversight", label: "System Oversight", icon: ShieldCheck },
+    {
+      id: "questionnaire",
+      label: "Prakriti Questionnaire",
+      icon: ClipboardList,
+    },
   ],
 }) => {
   const reduxUser = useSelector((state: RootState) => state.auth?.user);
@@ -75,8 +80,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <aside
         className={`fixed inset-y-0 left-0 z-50 lg:sticky lg:top-0 lg:z-20 flex h-screen flex-col border-r border-ayur-sand/60 bg-white transition-all duration-300 shadow-xs shrink-0 ${
           mobileOpen
-            ? 'translate-x-0 w-64'
-            : '-translate-x-full lg:translate-x-0 ' + (collapsed ? 'lg:w-20' : 'lg:w-64')
+            ? "translate-x-0 w-64"
+            : "-translate-x-full lg:translate-x-0 " +
+              (collapsed ? "lg:w-20" : "lg:w-64")
         }`}
       >
         {/* Sidebar Header */}
@@ -104,7 +110,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             type="button"
             onClick={() => setCollapsed(!collapsed)}
             className="hidden lg:flex h-6 w-6 items-center justify-center rounded-full border border-ayur-sand/80 bg-[#fbf9f5] text-ayur-green-mid hover:text-ayur-primary hover:bg-white transition-all absolute -right-3 top-7 shadow-xs cursor-pointer"
-            title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+            title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
             {collapsed ? (
               <ChevronRight className="h-3.5 w-3.5" />
@@ -143,14 +149,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 }}
                 className={`flex items-center gap-3.5 w-full min-h-[44px] rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer text-left ${
                   isActive
-                    ? 'bg-ayur-primary text-white shadow-sm'
-                    : 'text-gray-600 hover:bg-[#fbf9f5] hover:text-ayur-primary'
+                    ? "bg-ayur-primary text-white shadow-sm"
+                    : "text-gray-600 hover:bg-[#fbf9f5] hover:text-ayur-primary"
                 }`}
                 title={collapsed && !mobileOpen ? item.label : undefined}
               >
                 <Icon
                   className={`h-4.5 w-4.5 shrink-0 ${
-                    isActive ? 'text-white' : 'text-ayur-green-mid'
+                    isActive ? "text-white" : "text-ayur-green-mid"
                   }`}
                 />
                 {(!collapsed || mobileOpen) && (
