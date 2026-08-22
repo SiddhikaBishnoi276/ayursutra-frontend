@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { requestNotificationPermission } from "../Services/notificationService";
 import { useRegisterDeviceTokenMutation } from "../Services/notificationApi";
 
@@ -6,8 +6,12 @@ export const useNotificationPermission = () => {
     const [token, setToken] = useState<string | null>(null);
     const [status, setStatus] = useState<"idle" | "loading" | "granted" | "denied">("idle");
     const [registerDeviceToken] = useRegisterDeviceTokenMutation();
+    const hasRequested = useRef(false);
 
     const askPermission = useCallback(async () => {
+        if (hasRequested.current) return;
+        hasRequested.current = true;
+        
         setStatus("loading");
         const fcmToken = await requestNotificationPermission();
         if (fcmToken) {

@@ -3,13 +3,22 @@ import { apiSlice } from "../../app/api";
 export const notificationApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getNotifications: builder.query({
-            query: () => "/notifications/my",
+            query: () => ({
+                url: "/notifications/my",
+                method: "GET",
+                headers: {
+                    'x-user-id': localStorage.getItem('userId') || 'default',
+                },
+            }),
             providesTags: ['Notification'],
         }),
         markNotificationAsRead: builder.mutation({
             query: (id) => ({
                 url: `/notifications/${id}/read`,
                 method: "PATCH",
+                headers: {
+                    'x-user-id': localStorage.getItem('userId') || 'default',
+                },
             }),
             invalidatesTags: ['Notification'],
         }),
@@ -17,6 +26,9 @@ export const notificationApi = apiSlice.injectEndpoints({
             query: () => ({
                 url: "/notifications/read-all",
                 method: "PATCH",
+                headers: {
+                    'x-user-id': localStorage.getItem('userId') || 'default',
+                },
             }),
             invalidatesTags: ['Notification'],
         }),
@@ -24,6 +36,9 @@ export const notificationApi = apiSlice.injectEndpoints({
             query: (body) => ({
                 url: "/notifications/register-token",
                 method: "POST",
+                headers: {
+                    'x-user-id': localStorage.getItem('userId') || 'default',
+                },
                 body,
             }),
         }),
@@ -31,6 +46,9 @@ export const notificationApi = apiSlice.injectEndpoints({
             query: (body) => ({
                 url: "/notifications/test-send",
                 method: "POST",
+                headers: {
+                    'x-user-id': localStorage.getItem('userId') || 'default',
+                },
                 body,
             }),
         }),
