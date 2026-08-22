@@ -106,7 +106,6 @@ const AdminPage: React.FC = () => {
           adminName="Admin Director"
           adminRole="Operations"
           adminEmail="admin@ayursutra.com"
-          unreadCount={notifications.filter((n) => n.status === 'Failed').length}
         />
 
         {/* Main Content View Canvas */}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Bell,
   ChevronDown,
@@ -12,9 +12,17 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../app/store';
+import { apiSlice } from '../../app/api';
 import { logout } from '../../auth/authSlice';
 import { Badge, BadgeVariant } from './Badge';
 import { useClickOutside } from '../Hooks/useClickOutside';
+import { 
+  useGetNotificationsQuery, 
+  useMarkNotificationAsReadMutation, 
+  useMarkAllNotificationsAsReadMutation 
+} from '../../Notifications/Services/notificationApi';
+import { listenForForegroundMessages } from '../../Notifications/Services/notificationService';
+import { useNotificationPermission } from '../../Notifications/Hooks/useNotificationPermission';
 
 export interface TopbarNotification {
   id: string;
@@ -29,8 +37,6 @@ export interface TopbarProps {
   adminRole?: string;
   adminEmail?: string;
   userAvatar?: string;
-  notifications?: TopbarNotification[];
-  unreadCount?: number;
   onMenuToggle?: () => void;
   onSignOut?: () => void;
 }
@@ -114,19 +120,6 @@ export const Topbar: React.FC<TopbarProps> = ({
   adminRole = 'Operations',
   adminEmail = 'admin@ayursutra.com',
   userAvatar,
-  notifications = [
-    {
-      id: 'n1',
-      message: 'Complication flagged in Room 102 during Swedana session',
-      time: '3 hours ago',
-    },
-    {
-      id: 'n2',
-      message: 'Failed SMS delivery for Patient credentials (Rahul Verma)',
-      time: 'Yesterday',
-    },
-  ],
-  unreadCount = 2,
   onMenuToggle,
   onSignOut,
 }) => {
@@ -134,6 +127,74 @@ export const Topbar: React.FC<TopbarProps> = ({
   const dropdownRef = useClickOutside(() => setOpenDropdown(null));
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const { data: notificationsData } = useGetNotificationsQuery(undefined, {
+    pollingInterval: 30000,
+  });
+  const [markAsRead] = useMarkNotificationAsReadMutation();
+  const [markAllAsRead] = useMarkAllNotificationsAsReadMutation();
+
+  const notificationsList = notificationsData?.data || [];
+  const unreadCount = notificationsList.filter((n: any) => !n.is_read).length;
+
+  const { askPermission, status } = useNotificationPermission();
+
+  useEffect(() => {
+    if (status === 'idle') {
+      askPermission();
+    }
+  }, [status, askPermission]);
+
+  useEffect(() => {
+    const unsubscribe = listenForForegroundMessages((payload: any) => {
+      console.log('Received foreground message:', payload);
+      dispatch(apiSlice.util.invalidateTags(['Notification']));
+      
+      if (Notification.permission === 'granted') {
+        const { title, body } = payload.notification || payload.data || {};
+        const notification = new Notification(title || 'New Alert', {
+          body,
+          data: payload.data
+        });
+        
+        notification.onclick = () => {
+          notification.close();
+          const route = payload.data?.route;
+          if (route) {
+            navigate(route);
+          }
+        };
+      }
+    });
+    return () => unsubscribe();
+  }, [dispatch, navigate]);
+
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      await markAsRead(id).unwrap();
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead(undefined).unwrap();
+    } catch (error) {
+      console.error('Failed to mark all as read:', error);
+    }
+  };
+
+  const formatTime = (isoString: string) => {
+    if (!isoString) return 'Just now';
+    const date = new Date(isoString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    return `${Math.floor(diffInSeconds / 86400)}d ago`;
+  };
 
   // 1. Retrieve User Session Data from Global Redux Auth State
   const reduxUser = useSelector((state: RootState) => state.auth?.user);
@@ -258,27 +319,62 @@ export const Topbar: React.FC<TopbarProps> = ({
           {openDropdown === 'notifications' && (
             <div className="absolute right-0 mt-3 w-72 sm:w-80 rounded-2xl border border-ayur-sand/60 bg-white p-4 shadow-xl ring-1 ring-black/5 z-30 animate-in fade-in zoom-in-95 duration-150">
               <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-                <h4 className="font-serif font-bold text-gray-900 text-sm">
-                  Operations Alerts
-                </h4>
-                <Badge variant="warning" size="sm">
-                  {unreadCount} Alerts
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <h4 className="font-serif font-bold text-gray-900 text-sm">
+                    Operations Alerts
+                  </h4>
+                  {unreadCount > 0 && (
+                    <Badge variant="warning" size="sm">
+                      {unreadCount}
+                    </Badge>
+                  )}
+                </div>
+                {unreadCount > 0 && (
+                  <button 
+                    onClick={handleMarkAllAsRead}
+                    className="text-[10px] font-semibold text-ayur-primary hover:underline"
+                  >
+                    Mark all read
+                  </button>
+                )}
               </div>
               <div className="mt-3 flex flex-col gap-2 max-h-60 overflow-y-auto">
-                {notifications.map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-2.5 rounded-xl bg-[#fbf9f5] border border-ayur-sand/30 hover:border-ayur-green-mid/30 transition-colors"
-                  >
-                    <p className="text-xs text-gray-800 font-medium leading-snug">
-                      {item.message}
-                    </p>
-                    <span className="text-[10px] text-gray-400 font-semibold mt-1 block">
-                      {item.time}
-                    </span>
+                {notificationsList.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-gray-500">
+                    No new alerts
                   </div>
-                ))}
+                ) : (
+                  notificationsList.map((item: any) => (
+                    <div
+                      key={item.id}
+                      onClick={() => {
+                        if (!item.is_read) handleMarkAsRead(item.id);
+                        if (item.data?.route) {
+                          navigate(item.data.route);
+                          setOpenDropdown(null);
+                        }
+                      }}
+                      className={`p-2.5 rounded-xl border transition-colors cursor-pointer ${
+                        item.is_read 
+                          ? 'bg-white border-gray-100 text-gray-500 opacity-80' 
+                          : 'bg-[#fbf9f5] border-ayur-sand/50 hover:border-ayur-green-mid/50 text-gray-800'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className={`text-xs font-medium leading-snug ${item.is_read ? 'text-gray-500' : 'text-gray-800'}`}>
+                          {item.title && <span className="font-bold block mb-0.5">{item.title}</span>}
+                          {item.message}
+                        </p>
+                        {!item.is_read && (
+                          <div className="w-1.5 h-1.5 rounded-full bg-ayur-primary shrink-0 mt-1" />
+                        )}
+                      </div>
+                      <span className="text-[10px] text-gray-400 font-semibold mt-1 block">
+                        {formatTime(item.time)}
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           )}

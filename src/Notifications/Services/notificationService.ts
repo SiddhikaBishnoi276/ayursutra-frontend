@@ -1,5 +1,5 @@
 import { getToken, onMessage } from "firebase/messaging";
-import { messaging } from "../../app/firebase";
+import { messaging } from "../../config/firebaseConfig";
 
 export const requestNotificationPermission = async (): Promise<string | null> => {
     try {
@@ -9,8 +9,8 @@ export const requestNotificationPermission = async (): Promise<string | null> =>
         const token = await getToken(messaging, {
             vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
         });
-
-        return token; // is token ko backend ko POST karna hoga
+        
+        return token;
     } catch (error) {
         console.error("Notification permission error:", error);
         return null;
@@ -18,7 +18,7 @@ export const requestNotificationPermission = async (): Promise<string | null> =>
 };
 
 export const listenForForegroundMessages = (
-    callback: (payload: unknown) => void
+    callback: (payload: any) => void
 ) => {
     return onMessage(messaging, callback);
 };
